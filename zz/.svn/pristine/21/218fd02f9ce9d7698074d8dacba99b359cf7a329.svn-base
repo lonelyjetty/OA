@@ -1,0 +1,5 @@
+package com.bizdata.zz.businesstrip.service;
+
+public interface BussinessTripService {
+
+}

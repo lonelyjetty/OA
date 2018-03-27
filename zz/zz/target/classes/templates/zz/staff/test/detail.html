@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>用户个人信息</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/css/bootstrap-editable.min.css}" />
+<style type="text/css">
+.margin_left_10px {
+	margin-left: 10px;
+}
+
+.search {
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>用户个人信息</h1>
+</div>
+
+<div class="row">
+
+	<div class="col-xs-12">
+		<div class="tab-content no-border padding-24">
+			<div id="home" class="tab-pane active">
+				<div class="row">
+					<div class="col-xs-12 col-sm-3 center">
+						<span class="profile-picture"> <img
+							class="editable img-responsive" alt="Alex's Avatar" id="avatar2"
+							src="../assets/temp/profile-pic.jpg" />
+						</span>
+
+						<div class="space space-4"></div>
+
+						<a href="#" class="btn btn-sm btn-block btn-primary"> <i
+							class="ace-icon fa fa-envelope-o bigger-110"></i> <span
+							class="bigger-110">Send a message</span>
+						</a>
+					</div>
+					<!-- /.col -->
+
+					<div class="col-xs-12 col-sm-9">
+						<h4 class="blue">
+							<span class="middle">Alex M. Doe</span> <span
+								class="label label-purple arrowed-in-right"> <i
+								class="ace-icon fa fa-circle smaller-80 align-middle"></i>
+								online
+							</span>
+						</h4>
+
+						<div class="profile-user-info">
+							<div class="profile-info-row">
+								<div class="profile-info-name">Username</div>
+
+								<div class="profile-info-value">
+									<span>alexdoe</span>
+								</div>
+							</div>
+						</div>
+
+
+						<div class="profile-user-info">
+							<div class="profile-info-row">
+								<div class="profile-info-name">
+									<i
+										class="middle ace-icon fa fa-twitter-square bigger-150 light-blue"></i>
+								</div>
+								<span
+									class="ui-spinner ui-widget ui-widget-content ui-corner-all"><input
+									id="spinner" name="value" type="text" class="ui-spinner-input"
+									autocomplete="off" role="spinbutton" aria-valuenow="0"/><a
+									class="ui-spinner-button ui-spinner-up ui-corner-tr ui-button ui-widget ui-state-default ui-button-text-only btn btn-success"
+									tabindex="-1" role="button"><i class="ace-icon fa fa-plus"></i></a><a
+									class="ui-spinner-button ui-spinner-down ui-corner-br ui-button ui-widget ui-state-default ui-button-text-only btn btn-danger"
+									tabindex="-1" role="button"><i class="ace-icon fa fa-minus"></i></a></span>
+							</div>
+						</div>
+					</div>
+					<!-- /.col -->
+				</div>
+				<!-- /.row -->
+
+				<div class="space-20"></div>
+
+				<div class="row">
+					<div class="col-xs-12 col-sm-6">
+						<div class="widget-box transparent">
+							<div class="widget-header widget-header-small">
+								<h4 class="widget-title smaller">
+									<i class="ace-icon fa fa-check-square-o bigger-110"></i> Little
+									About Me
+								</h4>
+							</div>
+
+							<div class="widget-body">
+								<div class="widget-main">
+									<p>My job is mostly lorem ipsuming and dolor sit ameting as
+										long as consectetur adipiscing elit.</p>
+									<p>Sometimes quisque commodo massa gets in the way and sed
+										ipsum porttitor facilisis.</p>
+									<p>The best thing about my job is that vestibulum id ligula
+										porta felis euismod and nullam quis risus eget urna mollis
+										ornare.</p>
+									<p>Thanks for visiting my profile.</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					<div class="col-xs-12 col-sm-6">
+						<div class="widget-box transparent">
+							<div class="widget-header widget-header-small header-color-blue2">
+								<h4 class="widget-title smaller">
+									<i class="ace-icon fa fa-lightbulb-o bigger-120"></i> My Skills
+								</h4>
+							</div>
+
+							<div class="widget-body">
+								<div class="widget-main padding-16">
+									<div class="clearfix">
+										<div class="grid3 center">
+											<div class="easy-pie-chart percentage" data-percent="45"
+												data-color="#CA5952"
+												style="height: 72px; width: 72px; line-height: 71px; color: rgb(202, 89, 82);">
+												<span class="percent">45</span>%
+												<canvas height="72" width="72"></canvas>
+											</div>
+
+											<div class="space-2"></div>
+											Graphic Design
+										</div>
+
+										<div class="grid3 center">
+											<div class="center easy-pie-chart percentage"
+												data-percent="90" data-color="#59A84B"
+												style="height: 72px; width: 72px; line-height: 71px; color: rgb(89, 168, 75);">
+												<span class="percent">90</span>%
+												<canvas height="72" width="72"></canvas>
+											</div>
+
+											<div class="space-2"></div>
+											HTML5 &amp; CSS3
+										</div>
+
+										<div class="grid3 center">
+											<div class="center easy-pie-chart percentage"
+												data-percent="80" data-color="#9585BF"
+												style="height: 72px; width: 72px; line-height: 71px; color: rgb(149, 133, 191);">
+												<span class="percent">80</span>%
+												<canvas height="72" width="72"></canvas>
+											</div>
+
+											<div class="space-2"></div>
+											Javascript/jQuery
+										</div>
+									</div>
+
+									<div class="hr hr-16"></div>
+
+									<div class="profile-skills">
+										<div class="progress">
+											<div class="progress-bar" style="width: 80%">
+												<span class="pull-left">HTML5 &amp; CSS3</span> <span
+													class="pull-right">80%</span>
+											</div>
+										</div>
+
+										<div class="progress">
+											<div class="progress-bar progress-bar-success"
+												style="width: 72%">
+												<span class="pull-left">Javascript &amp; jQuery</span> <span
+													class="pull-right">72%</span>
+											</div>
+										</div>
+
+										<div class="progress">
+											<div class="progress-bar progress-bar-purple"
+												style="width: 70%">
+												<span class="pull-left">PHP &amp; MySQL</span> <span
+													class="pull-right">70%</span>
+											</div>
+										</div>
+
+										<div class="progress">
+											<div class="progress-bar progress-bar-warning"
+												style="width: 50%">
+												<span class="pull-left">Wordpress</span> <span
+													class="pull-right">50%</span>
+											</div>
+										</div>
+
+										<div class="progress">
+											<div class="progress-bar progress-bar-danger"
+												style="width: 38%">
+												<span class="pull-left">Photoshop</span> <span
+													class="pull-right">38%</span>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- /#home -->
+
+		</div>
+	</div>
+	<!-- /.col -->
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [ null,
+		[[@{/assets/js/jquery.easypiechart.min.js}]],
+	null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+		// 必须添加
+		//==================================================================================================
+		$(document).one('ajaxloadstart.page', function(e) {
+			//$(grid_selector).jqGrid('GridUnload');
+			//$('.ui-jqdialog').remove();
+		});
+	})
+	/*]]>*/
+</script>
+</html>

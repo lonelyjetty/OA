@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>登录</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/iview.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/assets/css/login.css}"/>
+    <script type="text/javascript" th:src="@{/assets/js/vue.min.js}"></script>
+    <script type="text/javascript" th:src="@{/assets/js/axios.min.js}"></script>
+    <script type="text/javascript" th:src="@{/assets/js/iview.min.js}"></script>
+</head>
+
+<body class="login-bg">
+<div id="app">
+    <!-- 水平垂直居中 -->
+    <Row type="flex" justify="center" align="middle" class="row-full">
+        <i-col :lg="6">
+            <div class="login-box">
+                <i-form ref="form" :model="domain" :rules="ruleValidator">
+                    <Form-item>
+                        <h2 class="login-box-header">{{title}}</h2>
+                    </Form-item>
+                    <Form-item prop="username">
+                        <i-input ref="username" size="large" type="text" v-model="domain.username" autofocus="true"
+                                 placeholder="Username">
+                                <span slot="prepend">
+                                        &nbsp;<Icon size="22" type="ios-person"></Icon>&nbsp;
+                                </span>
+                        </i-input>
+                    </Form-item>
+                    <Form-item prop="password">
+                        <i-input size="large" type="password" v-model="domain.password" placeholder="Password">
+                                <span slot="prepend">
+                                            &nbsp;<Icon type="ios-locked" size="22"></Icon>&nbsp;
+                                    </span>
+                        </i-input>
+                    </Form-item>
+                    <Form-item>
+                        <Row>
+                            <i-col :lg="8">
+                                <Checkbox v-model="rememberMe"><span class="remember-me">&nbsp;记住我</span></Checkbox>
+                            </i-col>
+                            <i-col :lg="7" offset="9">
+                                <i-button :loading="loading" html-type="submit" long="true" size="large" type="primary"
+                                          v-on:click="handleSubmit('form')"><strong>登&nbsp;&nbsp;录</strong>
+                                </i-button>
+                            </i-col>
+                        </Row>
+                    </Form-item>
+                </i-form>
+            </div>
+        </i-col>
+    </Row>
+</div>
+</body>
+<script type="text/javascript" th:inline="javascript">
+    new Vue({
+        el: '#app',
+        data: {
+            // 平台登录框标题
+            title: '',
+            // 记住我
+            rememberMe: false,
+            // 表单域
+            domain: {
+                username: '',
+                password: ''
+            },
+            // 验证规则
+            ruleValidator: {
+                username: [
+                    {required: true, message: '请填写用户名', trigger: 'blur'},
+                ],
+                password: [
+                    {required: true, message: '请填写密码', trigger: 'blur'},
+                ]
+            },
+            // 登录loading状态
+            loading: false
+        },
+        methods: {
+            // 提交之前执行校验
+            handleSubmit(name) {
+                const vm = this;
+                this.$refs[name].validate(function (valid) {
+                    if (valid) {
+                        // 载入loading动画
+                        vm.loading = true;
+                        var target = /*[[@{/admin/ajaxLogin}]]*/ 'ajax登录'
+                        axios.post(target, {
+                                username: vm.domain.username,
+                                password: vm.domain.password,
+                                rememberMe: vm.rememberMe
+                            },
+                            {
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                }
+                            }
+                        ).then(function (response) {
+                            vm.loading = false;
+                            // 失败情况下提示登录失败消息
+                            if (0 !== response.data.code) {
+                                vm.$Message.error({
+                                    content: response.data.message,
+                                    duration: 3
+                                });
+                                // 重置表单
+                                vm.domain.username = '';
+                                vm.domain.password = '';
+                                // 设置username获取焦点
+                                vm.$refs['username'].focus();
+                            } else {
+                                // 登录成功,执行跳转至主页
+                                var target = /*[[@{/admin/}]]*/ '跳转至/contextPath/admin'
+                                location.href = target
+                            }
+                        })
+                    }
+                })
+            }
+        }
+    });
+</script>
+
+</html>

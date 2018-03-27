@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <style type="text/css">
+        .margin_left_10px {
+            margin-left: 10px;
+        }
+
+        .search {
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: Center;
+        }
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>任务模板</h1>
+    <button style='margin-left: 10px; margin-top:10px' class='btn btn-xs btn-primary' title = '添加' onclick="add_child()">
+    <i class='ace-icon fa fa-trash-o align-top bigger-125'></i>添加子模板</button>
+    <!-- 
+    <button style='margin-left: 10px;' class='btn btn-xs btn-primary' title = '添加' th:onclick="'javascript:update('+${single.parentId}+')'"><i class='ace-icon fa fa-trash-o align-top bigger-125'></i>添加</button>
+	 -->
+</div>
+ 
+<div class="row">
+<!-- 
+		 <div class="search col-sm-12">
+			<label class="control-label margin_left_10px">用户名：</label>
+			<input id="searchRegisterIp" type="text" />
+			<label class="control-label margin_left_10px">入职时间：</label>
+			<input id="searchStartTime" type="text" />
+			<span style="margin-left: 15px;margin-right: 20px;">至</span>
+			<input id="searchEndTime" type="text" />
+			<label class="control-label margin_left_10px"><span style="margin-left: 84px;margin-right: 12px;">手机号码:</span></label>
+			<input id="searchDitchNo" type="text" />
+			<button onclick="search()" style="margin-left: 30px;" 
+				class="btn btn-sm btn-primary fa fa-search">查询</button>
+			
+		</div> 
+-->
+    <div class="col-xs-12">
+    	
+    	<input type="hidden" th:value="${parentId}" id="ppId" name="parentId" />
+		 <table class="table table-bordered" id="grid-table">
+		<tr>
+			<!-- <th>编号</th> -->
+			
+			<th>模板名称</th>
+			<th>操作</th>
+		</tr>
+	
+		<tr th:each="single:${pCM}">
+			<!-- <td th:text="${single.id}"></td> --> 
+			<td th:text="${single.productModelName}"></td>
+			<td>
+				<button style='margin-left: 10px;' class='btn btn-xs btn-primary' id="''+${single.id}+''" title = '修改' th:onclick="'javascript:update(\''+${single.id}+'\')'">
+				<i class='ace-icon fa fa-trash-o align-top bigger-125'></i>修改</button>
+				<button style='margin-left: 10px;' class='btn btn-xs btn-primary' title = '删除' th:onclick="'javascript:del(\''+${single.id}+'\')'">
+				<i class='ace-icon fa fa-trash-o align-top bigger-125'></i>删除</button>
+				
+			</td>
+		</tr>
+</table>
+		
+    </div>
+    <!-- /.col -->
+   	
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null, /*[[@{/assets/js/jqGrid/jquery.jqGrid.src.js}]]*/ '',
+        /*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+
+        // 必须添加
+        //==================================================================================================
+        $(document).one('ajaxloadstart.page', function (e) {
+            //$(grid_selector).jqGrid('GridUnload');
+            //$('.ui-jqdialog').remove();
+        });
+         
+        
+    })
+    /*]]>*/
+    
+    function update(id){    	
+    	location.href="#page/projectmodel/update_c?id="+id;
+    }
+    
+    function del(id){
+    	location.href = "#page/projectmodel/del_child?id="+id;
+ 	   
+ 	   $.post("projectmodel/del",
+ 	      {id: id},
+ 	      function (data) {
+ 	      if (0 === data.code) {
+ 	    	 var pid = document.getElementById("ppId").value;
+ 	    	 location.href = "#page/projectmodel/turn?id="+pid;
+ 	        } else {
+ 	        alert(data.message)
+ 	        }
+ 	      }),"JSON"	   
+ 	}
+    
+    
+    
+    
+    function add_child(){
+    	var pId=document.getElementById("ppId").value;
+    	location.href ="#page/projectmodel/add_child?id="+pId;
+    }
+    
+
+</script>
+</html>

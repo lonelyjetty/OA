@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>运动记录详情</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>运动记录详情</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+            <!-- 应用标识 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">应用标识:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.appid}"></label>
+            </div>
+
+            <!-- 设备SN号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">设备SN号:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.deviceSn}"></label>
+            </div>
+
+            <!-- 设备编号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">设备编号:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.deviceNo}"></label>
+            </div>
+
+            <!-- 用户ID -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">用户ID:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.profileId}"></label>
+            </div>
+
+            <!-- 数据日期 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">数据日期:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${#dates.format(data.dateTime,'yyyy-MM-dd HH:mm:ss')}"></label>
+            </div>
+
+            <!-- 卡洛里 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">卡洛里:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.calories}"></label>
+            </div>
+
+            <!-- 距离 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">距离:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.distance}"></label>
+            </div>
+
+            <!-- 步数 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">步数:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.steps}"></label>
+            </div>
+
+            <!-- 速度 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">速度:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.speed}"></label>
+            </div>
+
+            <!-- 运动项目 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">运动项目:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.sportItem}"></label>
+            </div>
+
+            <!-- 运动水平 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">运动水平:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.level}"></label>
+            </div>
+
+            <!-- 步数目标 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">步数目标:</label>
+                <label style="text-align: left;" class="col-sm-9 control-label no-padding-right"
+                       th:text="${data.target}"></label>
+            </div>
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/sport_data"
+            })
+        })
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>文章编辑</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+	<link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>文章编辑</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+        	<!-- 隐藏字段 -->
+        	<!-- 主键 -->
+			<input type="hidden" name="id" id="id" th:value="${article.id}"/>
+        	<!-- 状态 -->
+            <input type="hidden" name="state" id="state" th:value="${article.state}"/>
+        	<!-- 创建日期 -->
+            <input type="hidden" name="create_date" id="create_date" th:value="${article.create_date}"/>
+        	<!-- 文章序号 -->
+            <input type="hidden" name="column_id" id="column_id" th:value="${article.column_id}"/>
+        	<!-- 评论数 -->
+            <input type="hidden" name="comment_num" id="comment_num" th:value="${article.comment_num}"/>
+        	<!-- 点赞数 -->            
+            <input type="hidden" name="praise_num" id="praise_num" th:value="${article.praise_num}"/>
+        	<!-- 更新时间 -->            
+            <input type="hidden" name="update_date" id="update_date" th:value="${article.update_date}"/>
+        	<!-- ? -->            
+            <input type="hidden" name="no" id="no" th:value="${article.no}"/>
+            <!-- 文章标题 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme"> 文章标题</label>
+                <div class="col-sm-3">
+                    <input type="text" name="article_title" id="article_title" placeholder="最多30个汉字" th:value="${article.article_title}"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+
+            <!-- 所属板块 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="type"> 所属板块</label>
+                <div class="col-sm-3">
+                	<select id="plate" name="plate" class="margin_left_10px">
+            			<option value="1">资讯</option>
+        			</select>
+                </div>
+            </div>
+            
+            <!-- 一级栏目 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="user">一级栏目</label>
+                <div class="col-sm-3">
+                	<select id="columnart_id" name="columnart_id" class="margin_left_10px">
+                		<option  th:value="${article.columnart_id}"><td class="text" th:text="${article.column_name}" ></td></option>
+        			</select>
+                </div>
+            </div>
+            <!-- 二级栏目 --><!-- 需要添加字段+++++++++ -->
+<!--            <div class="form-group">-->
+<!--                <label class="col-sm-3 control-label no-padding-right" for="user">二级栏目</label>-->
+<!--                <div class="col-sm-3">-->
+<!--                	<select id="" name="" class="margin_left_10px">-->         			
+<!--        			</select>-->
+<!--                </div>-->
+<!--            </div>-->
+            <!-- 文章概述 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">文章概述</label>
+                <div class="col-sm-3">
+                    <input type="text" name="intro" id="intro" placeholder="最多100个汉字" th:value="${article.intro}"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 文章标签 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">文章标签</label>
+                <div class="col-sm-3 col-md-9">
+                	<input type="hidden" name="statehid" id="label" th:value="${article.label}"></input>
+					<label><input name="label" type="radio" class="ace" value="0" checked="checked"/>
+								<span class="lbl">无</span></label>
+					<label><input name="label" type="radio" class="ace" value="1"/>
+								<span class="lbl">生理健康知识</span></label>
+					<label><input name="label" type="radio" class="ace" value="2"/>
+								<span class="lbl">饮食健康知识</span></label>
+					<label><input name="label" type="radio" class="ace" value="3"/>
+								<span class="lbl">心理健康知识</span></label>
+					<label><input name="label" type="radio" class="ace" value="4"/>
+								<span class="lbl">运动健康知识</span></label>
+				</div>
+            </div>
+            
+            
+            <!-- 话题正文-->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="informationcontent"> 消息内容</label>
+                <div class="col-sm-3">
+                	<input type="hidden" id="artcontent" th:value="${article.article_content}"/>
+                	<textarea name="article_content" id="article_content"
+		            		style="width:200px;height:150px;visibility:hidden;"></textarea>
+                </div>
+            </div>
+            
+            <!-- 文章logo -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="pic"> 文章logo:</label>
+                <div class="col-sm-3">
+                    <input type="hidden" name="logoUrl" id="logoUrl" th:value="${article.logoUrl}"/>
+                    <img id="pic_img" th:src="${article.logoUrl}" class="img-responsive center-block"/>
+                    <!-- 图片上传组件 -->
+                    <div id="pic_input" hidden="hidden">
+                    <input multiple="" type="file" id="pic1" name="pic1"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 排序号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme"> 排序号</label>
+                <div class="col-sm-3">
+					<button type="button" id="btndownn1" class="btn btn-sm btn-danger">
+					<i class="icon-only  ace-icon ace-icon fa fa-minus bigger-110"></i>
+					</button>
+					<input type="text" id="sort_no" name="sort_no" class="col-xs-2 col-sm-0" value="0" th:value="${article.sort_no}" min="0"></input>
+					<button type="button" id="btnupp1" class="btn btn-sm btn-success">
+					<i class="icon-only  ace-icon ace-icon fa fa-plus bigger-110"></i>				
+					</button>
+				</div>
+            </div>
+            
+            <!-- 是否首页推荐 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">是否首页推荐</label>
+                <div class="col-sm-3 col-md-9">
+                	<input type="hidden" name="statehid" id="is_recommend" th:value="${article.is_recommend}"></input>
+					<label><input name="is_recommend" type="radio" class="ace" value="0" checked="checked"/>
+								<span class="lbl">是</span></label>
+					<label><input name="is_recommend" type="radio" class="ace" value="1"/>
+								<span class="lbl">否</span></label>
+				</div>
+            </div>
+            
+            <!-- 首页排序号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">首页排序号</label>
+                <div class="col-sm-3">
+					<button type="button" id="btndownn2" class="btn btn-sm btn-danger">
+					<i class="icon-only  ace-icon ace-icon fa fa-minus bigger-110"></i>
+					</button>
+					<input type="text" id="home_sort_no" name="home_sort_no" class="col-xs-2 col-sm-0" value="0" th:value="${article.home_sort_no}" min="0"></input>
+					<button type="button" id="btnupp2" class="btn btn-sm btn-success">
+					<i class="icon-only  ace-icon ace-icon fa fa-plus bigger-110"></i>				
+					</button>
+				</div>
+            </div>
+            
+            <!-- 分享文案 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">分享文案</label>
+                <div class="col-sm-3">
+                    <input type="text" name="share_content" id="share_content" placeholder="最多30个汉字" th:value="${article.share_content}"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 分享缩略图 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme">分享缩略图</label>
+                <div class="col-sm-3">
+                    <input type="hidden" name="share_ico" id="share_ico" th:value="${article.share_ico}"/>
+                    <img id="pic_imgg" th:src="${article.share_ico}" class="img-responsive center-block"/>
+                    <div id="pic_inputt" hidden="hidden">
+                    <!-- 图片上传组件 -->
+                    <input multiple="" type="file" id="pic2" name="pic2"/>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 猜你喜欢 -->
+ <!--            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="theme"> 猜你喜欢</label>
+                <div class="col-sm-3">
+                	<input type="hidden" name="guess_id" id="guess_id" th:value="${article.guess_id}"/>
+					<input type="number" name="guess_id1" id="guess_id1" placeholder="猜你喜欢1"
+                           class="col-xs-10 col-sm-12"/><br/>
+                    <input type="number" name="guess_id2" id="guess_id2" placeholder="猜你喜欢2"
+                           class="col-xs-10 col-sm-12"/><br/>
+		            <input type="number" name="guess_id3" id="guess_id3" placeholder="猜你喜欢3"
+                           class="col-xs-10 col-sm-12"/>  
+                </div>
+            </div> -->
+            
+            
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+ <!--                     &nbsp; &nbsp; &nbsp;-->
+  <!--                   <button id="release" class="btn btn-success" type="button">-->
+  <!--                       <i class="ace-icon fa fa-check bigger-110"></i>-->
+  <!--      	 重置-->
+   <!--                  </button>-->
+                     &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+	<script type="text/javascript" th:inline="javascript">
+	    /*<![CDATA[*/
+	    var scripts = [
+	        null,
+      		/*[[@{/assets/js/jquery.validate.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+	        null
+	    ]
+	
+	    $('.page-content-area').ace_ajax(
+	        'loadScripts',
+	        scripts,
+	        function () {
+	        	// 添加富文本域
+	        	/* KindEditor.ready(function(K) {
+	                window.editor = K.create('#answer');
+	       	 	});
+	        	
+	        	var options = {
+	        	        cssPath : '/css/index.css',
+	        	        filterMode : true
+	        	};
+	        	var editor = KindEditor.create('textarea[name="content"]', options); */
+	        	
+	        	// 添加富文本域
+	        var editor = KindEditor.create("#article_content",{
+	        		uploadJson :'kindeditor/fileUpload',
+	        		fileManagerJson :'kindeditor/fileManager',
+	        		allowFileManager : true,
+	        		allowImageUpload : true,
+	        	    width: '700px',
+	        	    height: '300px',
+	        	    afterBlur: function (){
+	        	    	this.sync()
+	        	    	}
+	        	    });
+	        	KindEditor.html("#article_content",$('#artcontent').val());
+	        	// 设置文件上传
+            $('#pic1').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片(支持jpeg、jpg、png、gif、bmp,文件不大于2M)',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                maxFileSize : 2000,
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic1");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                var reader = new FileReader();//读取图片数据
+                var width;
+                var height;
+                reader.onload = function (e) {
+                	var data = e.target.result;
+                	var image = new Image();
+                	//加载图片获取图片真实宽度和高度
+                	image.onload=function(){
+                		 width = image.width;
+                		 height = image.height;
+                		 if(0 != width - height){
+                				alert("请保证图片长宽比为1:1!");
+                		 	}else if(0 == width - height){
+         	                $.ajax({
+         	                    type: "POST",    //必须POST
+         	                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+         	                    processData: false,    //必须设置
+         	                    contentType: false,    //必须设置
+         	                    data: formData,    //直接把formData对象作为data属性的值发送
+         	                    success: function (data) {
+         	                        console.log(data)
+         	                        if (0 === data.code) {
+         	                            //如果上传成功,设置url地址
+         	                            $('#logoUrl').val(data.content)
+         	                        } else {
+         	                            alert(data.message)
+         	                        }
+         	                    }
+         	                })
+                		 	}
+                		 };
+                	image.src= data;
+                }
+                reader.readAsDataURL(file)
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+	        	
+	        $('#pic2').ace_file_input({
+	                style: 'well',
+	                btn_choose: '点击选择您要上传的图片(支持jpeg、jpg、png、gif、bmp,文件不大于2M)',
+	                btn_change: null,
+	                no_icon: 'ace-icon fa fa-cloud-upload',
+	                droppable: false,
+	                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+	                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+	                thumbnail: 'fit',
+	                maxFileSize : 2000,
+	                preview_error: function (filename, error_code) {
+	                }
+	            }).on('change', function () {
+//	                console.log("文件上传开始...")
+	                //获取文件
+	                var fileInput = document.getElementById("pic2");
+	                var file = fileInput.files[0];
+	                var formData = new FormData();
+	                formData.append("file", file);
+	                $.ajax({
+	                    type: "POST",    //必须POST
+	                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+	                    processData: false,    //必须设置
+	                    contentType: false,    //必须设置
+	                    data: formData,    //直接把formData对象作为data属性的值发送
+	                    success: function (data) {
+	                        console.log(data)
+	                        if (0 === data.code) {
+	                            //如果上传成功,设置url地址
+	                            $('#share_ico').val(data.content)
+	                        } else {
+	                            alert(data.message)
+	                        }
+	                    }
+	                })
+	            }).on('file.error.ace', function (e, info) {
+	                alert('请保证上传的为图片文件！')
+	            });
+	        	 
+	        	//设置校验
+	            $('#from-detail').validate({
+	                errorElement: 'div',
+	                errorClass: 'help-block',
+	                focusInvalid: false,
+	                ignore: "",
+	                rules: {
+	                	article_title: {
+	                        required: true
+	                    },
+	                    plate: {
+	                        required: true
+	                    },
+	                    columnart_id: {
+	                        required: true
+	                    },
+	                    intro: {
+	                        required: true
+	                    },
+	                    article_content: {
+	                        required: true
+	                    },
+	                    home_sort_no:{
+	                    	range:[1,100000]
+	                    },
+	                    sort_no:{
+	                    	range:[1,100000]
+	                    }
+	                },
+
+	                messages: {
+	                	article_title: "标题不能为空",
+	                	plate: "请选择所属板块",
+	                	columnart_id: "请选择一级栏目",
+	                	intro: "请输入文字概述",
+	                	article_content: "请输入文章内容",
+	                	home_sort_no:"输入值必须介于 1和100000之间",
+	                	sort_no:"输入值必须介于 1和100000之间"
+	                },
+	
+	                highlight: function (e) {
+	                    $(e).closest('.form-group').addClass('has-error');
+	                },
+	
+	                success: function (e) {
+	                    $(e).closest('.form-group').removeClass('has-error');
+	                    $(e).remove();
+	                },
+	
+	                errorPlacement: function (error, element) {
+	                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+	                        var controls = element.closest('div[class*="col-"]');
+	                        if (controls.find(':checkbox,:radio').length > 1)
+	                            controls.append(error);
+	                        else
+	                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+	                    } else if (element.is('.select2')) {
+	                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+	                    } else if (element.is('.chosen-select')) {
+	                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+	                    } else
+	                        error.insertAfter(element.parent());
+	                },
+	            });
+	
+	            // 开始日期初始化
+	            $('#startTime').datetimepicker();
+	            // 结束日期初始化
+	            $('#endTime').datetimepicker();
+	
+	            // 返回
+	            $('#back').click(function () {
+	                location.href = "#page/article";
+	            })
+				// 点击图片隐藏当前图片,并展示图片选择框
+            	$('#pic_imgg').click(function () {
+                	$('#pic_imgg').hide()
+                	$('#pic_inputt').show()
+            	})
+				// 点击图片隐藏当前图片,并展示图片选择框
+            	$('#pic_img').click(function () {
+                	$('#pic_img').hide()
+                	$('#pic_input').show()
+            	})
+	            // 执行提交
+	            $('#commit').click(function () {
+	            	//将picUrl只展示文件名
+	                var url = $('#share_ico').val();
+	                var slice = url.split("/");
+	                $('#share_ico').val(slice[slice.length - 1]);
+	            	//将logoUrl只展示文件名
+	                var logourl = $('#logoUrl').val();
+	                var logoslice = logourl.split("/");
+	                $('#logoUrl').val(logoslice[logoslice.length - 1]);
+	                editor.sync();
+	            	//$('#guess_id').val($('#guess_id1').val()+","+$('#guess_id2').val()+","+$('#guess_id3').val());
+	                if (!$('#from-detail').valid()) {
+	                    return false;
+	                }
+	                $.post("article/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+	                    if (0 === data.code) {
+	                        location.href = "#page/article/"
+	                    } else {
+	                        alert(data.message)
+	                    }
+	                }, "JSON")
+	            })
+	            //初始化状态
+            	$().ready(function(){
+            		var state = $('#label').val();
+            		$(":radio[name='label'][value='" + state + "']").attr("checked", "checked");
+            		var is_recommend = $('#is_recommend').val();
+            		$(":radio[name='is_recommend'][value='" + is_recommend + "']").attr("checked", "checked");
+            		//猜你喜欢
+            		var strs= new Array(); //定义一数组 
+            		strs=$('#guess_id').val().split(",");
+            		$('#guess_id1').val(strs[0]);
+            		$('#guess_id2').val(strs[1]);
+            		$('#guess_id3').val(strs[2]);
+            		//一级栏目
+            		$.get("article/choosecolumn", function (data) {
+    	    			for(var key in data){
+                    		var option = $("<option>").val(key).text(data[key]);
+                        	$('#columnart_id').append(option);
+                    	}
+                	}, "JSON")
+                	
+            	})
+            	
+	        })
+		// 排序号增减
+	    $('#btndownn1').click(function(){
+        	if($('#sort_no').val() == '0')
+        		return false;
+        	$('#sort_no').val(parseInt($('#sort_no').val()) - 1);
+        })
+        $('#btnupp1').click(function(){
+    		$('#sort_no').val(parseInt($('#sort_no').val()) + 1);
+    	}) 
+    	
+    	// 首页排序号增减
+    	$('#btndownn2').click(function(){
+        	if($('#home_sort_no').val() == '0')
+        		return false;
+        	$('#home_sort_no').val(parseInt($('#home_sort_no').val()) - 1);
+        })
+        $('#btnupp2').click(function(){
+    		$('#home_sort_no').val(parseInt($('#home_sort_no').val()) + 1);
+    	}) 
+    	
+	    /*]]>*/
+	</script>
+</html>

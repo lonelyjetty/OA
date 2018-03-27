@@ -1,0 +1,49 @@
+package com.bizdata.zz.project.model.service;
+
+import java.util.List;
+
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+public interface ProductModelService {
+	/**
+	 * 找到所有的
+	 * @return List<ProductModel>
+	 */
+	List<ProductModel> getProductModelAll();
+	/**
+	 * 获取所有的parent_id=0的模板
+	 * @return List<ProductModel>
+	 */
+	List<ProductModel> getProductModelAllById();
+	
+    /**
+     * 获取父模板下的子模板
+     * @param id
+     * @return List<ProductModel>
+     */
+    List<ProductModel> getChildrenProductModelAll(String id);
+    /**
+     * 获取需要修改的模板
+     * @param id
+     * @return ProductModel
+     */
+    ProductModel getOneById(String id);
+    
+    /**
+     * 保存修改后的模板
+     * @param productModel
+     * @return boolean
+     */
+    boolean save(ProductModel productModel);
+    /**
+     * 删除父模板
+     * @param id
+     * @return
+     */
+    boolean delProductModel(String id);
+    
+    boolean delPcModel(String id);
+    
+    String getLastId();
+    
+}

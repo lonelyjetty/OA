@@ -1,0 +1,33 @@
+html, body {
+    height: 100%
+}
+
+#app {
+    height: 100%
+}
+
+.row-full {
+    height: 100%
+}
+
+.login-bg {
+    background: #394557 url('images/bg.jpg') repeat;
+}
+
+.login-box {
+    border: 1px solid #eee;
+    border-radius: 6px;
+    position: relative;
+    transition: all .2s ease-in-out;
+    padding: 30px 40px 10px 40px;
+    background-color: #F7F7F7;
+    margin-bottom: 200px;
+}
+
+.login-box-header {
+    color: #318EC9;
+}
+
+.remember-me {
+    font-size: 14px;
+}

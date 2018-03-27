@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>添加评估</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>添加评估</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	        	<!-- 隐藏字段 -->
+	        	<!-- 状态默认情况为1表示正常 -->
+	        	<input type="hidden" id="state" value="1" />
+	            <!-- 评估名称 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="assessmentName"> 评估名称:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="assessmentName" id="assessmentName" placeholder="评估名称" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	
+	            <!-- 评估编码 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="assessmentCode"> 评估编码:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="assessmentCode" id="assessmentCode" placeholder="评估编码" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	
+				<!-- 一句话描述 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="shortDescription"> 一句话描述:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="shortDescription" id="shortDescription" placeholder="一句话描述" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 评估描述 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="description"> 评估描述:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="description" id="description" placeholder="评估描述" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="type"> 类型:</label>
+	
+	                <div class="col-sm-3">
+	                    <select name="type" id="type" class="form-control">
+	                        <option value="1">健康评估</option>
+	                        <option value="2">疾病评估</option>
+	                        <option value="3">健康史</option>
+	                        <option value="4">肺迪测试</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+				<!-- 来源 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="source"> 来源:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="source" id="source" placeholder="来源" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 评估对象 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="sex"> 评估对象:</label>
+	
+	                <div class="col-sm-3">
+	                    <select name="sex" id="sex" class="form-control">
+	                        <option value="1">男</option>
+	                        <option value="2">女</option>
+	                        <option value="3">不限</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+				<!-- 评估问题js地址 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="assessmentQuestionUrl"> 评估问题js地址:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="assessmentQuestionUrl" id="assessmentQuestionUrl" placeholder="评估问题js地址" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 评估第一问题编码 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="firstQuestionCode"> 评估第一问题编码:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="firstQuestionCode" id="firstQuestionCode" placeholder="评估第一问题编码" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 评估问题总数 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="questionNum"> 评估问题总数:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="questionNum" id="questionNum" placeholder="评估问题总数" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 商品编号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="questionNum"> 商品编号:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="questionNum" id="questionNum" placeholder="商品编号" 
+	                    	class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 评估图片 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pic"> 评估图片:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="hidden" name="assessmentPic" id="assessmentPic"/>
+	                    <!-- 图片上传组件 -->
+	                    <input multiple="" type="file" id="pic" name="pic"/>
+	                </div>
+	            </div>
+	            
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+	<!-- inline scripts related to this page -->
+	<script type="text/javascript" th:inline="javascript">
+	    /*<![CDATA[*/
+	    var scripts = [
+	        null,
+	        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+	        null
+	    ]
+	
+	    $('.page-content-area').ace_ajax(
+	        'loadScripts',
+	        scripts,
+	        function () {
+	            // 设置文件上传
+	            $('#pic').ace_file_input({
+	                style: 'well',
+	                btn_choose: '点击选择您要上传的图片',
+	                btn_change: null,
+	                no_icon: 'ace-icon fa fa-cloud-upload',
+	                droppable: false,
+	                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+	                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+	                thumbnail: 'fit',
+	                preview_error: function (filename, error_code) {
+	                }
+	            }).on('change', function () {
+	//                console.log("文件上传开始...")
+	                //获取文件
+	                var fileInput = document.getElementById("pic");
+	                var file = fileInput.files[0];
+	                var formData = new FormData();
+	                formData.append("file", file);
+	                $.ajax({
+	                    type: "POST",    //必须POST
+	                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+	                    processData: false,    //必须设置
+	                    contentType: false,    //必须设置
+	                    data: formData,    //直接把formData对象作为data属性的值发送
+	                    success: function (data) {
+	                        console.log(data)
+	                        if (0 === data.code) {
+	                            //如果上传成功,设置url地址
+	                            $('#assessmentPic').val(data.content)
+	                        } else {
+	                            alert(data.message)
+	                        }
+	                    }
+	                })
+	            }).on('file.error.ace', function (e, info) {
+	                alert('请保证上传的为图片文件！')
+	            });
+	            
+	            // 返回
+	            $('#back').click(function () {
+	                location.href = "#page/assess";
+	            })
+	
+	            // 执行提交
+	            $('#commit').click(function () {
+	                if (!$('#from-detail').valid())
+	                    return false;
+	                $.post("assess/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+	                    if (0 === data.code) {
+	                        location.href = "#page/assess"
+	                    } else {
+	                        alert(data.message)
+	                    }
+	                }, "JSON")
+	            })
+	        })
+	    /*]]>*/
+	</script>
+</html>

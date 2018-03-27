@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>圈子分类编辑</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>圈子分类编辑</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+        	<!-- 隐藏字段 -->
+        	<input type="hidden" name="id" id="id" th:value="${circleClass.id}"/>
+        	<input type="hidden" name="createdate" id="createdate" th:value="${circleClass.createdate}"/>
+        	<input type="hidden" name="createname" id="createname" th:value="${circleClass.createname}"/>
+            <!-- 圈子分类标题 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="title"> 圈子分类标题:</label>
+                <div class="col-sm-3">
+                    <input type="text" name="title" id="title" th:value="${circleClass.title}" placeholder="标题" class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+
+            <!-- 排序 -->
+			<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" for="pic">排序号:</label>
+					<div class="col-sm-3">
+					<button type="button" id="btndownn" class="btn btn-sm btn-danger">
+					<i class="icon-only  ace-icon ace-icon fa fa-minus bigger-110"></i>
+					</button>
+						<input type="number" id="serialNum" name="serialNum" class="col-xs-2 col-sm-0" th:value="${circleClass.serialNum}" min="1"></input>
+					<button type="button" id="btnupp" class="btn btn-sm btn-success">
+					<i class="icon-only  ace-icon ace-icon fa fa-plus bigger-110"></i>				
+					</button>
+					</div>
+			</div>
+			
+			<!-- 状态 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="pic">状态</label>
+					<div class="col-sm-3 col-md-9">
+					<input type="hidden" name="statehid" id="statehid" th:value="${circleClass.stateEnum}"></input>
+					<label><input name="stateEnum" type="radio" class="ace" value="NORMAL"/>
+								<span class="lbl">正常</span></label>
+					<label><input name="stateEnum" type="radio" class="ace" value="DELETED"/>
+								<span class="lbl">删除</span></label>
+					</div>
+					
+			</div>
+			
+
+			<!-- 提交返回 -->
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    
+    
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	title: {
+                        required: true
+                    },
+                    serialNum: {
+                        range: [1,100000]
+                    }
+                },
+
+                messages: {
+                	title: "标题必须填写",
+                    serialNum: "排序序号必须介于1-100000之间"
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+                
+                
+            });
+			
+            // 开始日期初始化
+            $('#startTime').datetimepicker();
+            // 结束日期初始化
+            $('#endTime').datetimepicker();
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/circle_classification"
+            })
+			
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("circle_classification/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/circle_classification"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+            //初始化状态
+            $().ready(function(){
+            	var state = $('#statehid').val();
+            	$(":radio[name='stateEnum'][value='" + state + "']").attr("checked", "checked");
+            })
+        })
+        
+        $('#btndownn').click(function(){
+        	if($('#serialNum').val() == '0')
+        		return false;
+        	$('#serialNum').val(parseInt($('#serialNum').val()) - 1);
+        })
+        $('#btnupp').click(function(){
+    		$('#serialNum').val(parseInt($('#serialNum').val()) + 1);
+    	})
+    	
+        
+    /*]]>*/
+</script>
+</html>

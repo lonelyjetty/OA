@@ -1,0 +1,39 @@
+package com.bizdata.zz.businesstrip.service;
+
+import java.util.List;
+
+
+import com.bizdata.zz.businesstrip.domain.BusinessTrip;
+
+public interface BusinessTripService {
+    /**
+     * 执行更新操作
+     *
+     * @param banner banner实体
+     * @return 执行反馈
+     */
+    boolean save(BusinessTrip product);
+	/**
+	 *  //通过用户名获取所有出差信息
+   /**
+     * 根据ID删除
+     *
+     * @param id id
+     * @return 执行反馈
+     */
+    boolean delete(String id);
+    /**
+     * 根据id获取出差记录
+     *
+     * @param id id
+     * @return 一条出差记录
+     */
+    BusinessTrip findOne(String id);
+    
+    /**
+     * 获取所有出差信息
+     * @return
+     */
+	List<BusinessTrip> findAll();
+
+}

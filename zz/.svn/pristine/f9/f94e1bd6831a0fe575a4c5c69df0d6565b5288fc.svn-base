@@ -1,0 +1,123 @@
+package com.bizdata.zz.project.projectSourceEdit.service.impl;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.project.projectSourceEdit.constant.ProjectSourceEditPositionEnum;
+import com.bizdata.zz.project.projectSourceEdit.controller.vo.ProjectSourceEditSearchVO;
+import com.bizdata.zz.project.projectSourceEdit.domain.ProjectSourceEdit;
+import com.bizdata.zz.project.projectSourceEdit.repository.ProjectSourceEditRepository;
+import com.bizdata.zz.project.projectSourceEdit.service.ProjectSourceEditService;
+
+import lombok.extern.slf4j.Slf4j;
+import me.sdevil507.enum_util.EnumUtils;
+import me.sdevil507.vo.JpaPageParamVO;
+import me.sdevil507.vo.JpaSortParamVO;
+
+/**
+ * BannerServiceImpl
+ * <p>
+ * Created by sdevil507 on 2017/9/6.
+ */
+@Service
+@Slf4j
+public class ProjectSourceEditServiceImpl implements ProjectSourceEditService {
+
+    private final ProjectSourceEditRepository projectSourceEditRepository;
+
+    @Autowired
+    public ProjectSourceEditServiceImpl(ProjectSourceEditRepository projectSourceEditRepository) {
+        this.projectSourceEditRepository = projectSourceEditRepository;
+    }
+
+    @Override
+    public boolean save(ProjectSourceEdit projectSourceEdit) {
+        boolean state;
+        try {
+        	projectSourceEditRepository.save(projectSourceEdit);
+            state = true;
+        } catch (Exception e) {
+            log.error("保存或更新失败:", e);
+            state = false;
+        }
+        return state;
+    }
+
+    @Override
+    public Page<ProjectSourceEdit> findAllByPage(JpaPageParamVO jpaPageParamVO, JpaSortParamVO jpaSortParamVO, ProjectSourceEditSearchVO projectSourceEditSearchVO) {
+        return projectSourceEditRepository.findAll(listWhereClause(projectSourceEditSearchVO), jpaPageParamVO.getPageable(jpaSortParamVO.getSort()));
+    }
+    
+    
+
+    @Override
+    public boolean delete(String id) {
+        boolean state;
+        try {
+        	projectSourceEditRepository.delete(id);
+            state = true;
+        } catch (Exception e) {
+            log.error("删除失败:", e);
+            state = false;
+        }
+        return state;
+    }
+
+    @Override
+    public ProjectSourceEdit findOne(String id) {
+        return projectSourceEditRepository.findOne(id);
+    }
+
+    /**
+     * 条件查询
+     *
+     * @param bannerSearchVO 条件查询VO
+     * @return 条件
+     */
+    private Specification<ProjectSourceEdit> listWhereClause(ProjectSourceEditSearchVO projectSourceEditSearchVO) {
+        return new Specification<ProjectSourceEdit>() {
+            @Override
+            public Predicate toPredicate(Root<ProjectSourceEdit> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+                //如果位置信息是枚举中值
+                if (EnumUtils.contains(projectSourceEditSearchVO.getBannerPositionEnum(), ProjectSourceEditPositionEnum.class)) {
+                    list.add(criteriaBuilder.equal(root.get("bannerPositionEnum").as(String.class), projectSourceEditSearchVO.getBannerPositionEnum()));
+                }
+
+                //如果开始时间存在
+                if (null != projectSourceEditSearchVO.getStartTime()) {
+                    list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startTime").as(Date.class), projectSourceEditSearchVO.getStartTime()));
+                }
+
+                //如果结束时间存在
+                if (null != projectSourceEditSearchVO.getEndTime()) {
+                    list.add(criteriaBuilder.lessThanOrEqualTo(root.get("endTime").as(Date.class), projectSourceEditSearchVO.getEndTime()));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        };
+    }
+
+	@Override
+	public List<ProjectSourceEdit> findAll() {
+		return projectSourceEditRepository.findAll();
+	}
+
+	@Override
+	public List<ProjectSourceEdit> findAllByShow() {
+		return projectSourceEditRepository.findAllByShow();
+	}
+}

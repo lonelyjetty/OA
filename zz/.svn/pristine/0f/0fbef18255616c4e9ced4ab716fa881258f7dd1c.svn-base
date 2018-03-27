@@ -1,0 +1,96 @@
+package com.bizdata.zz.staff.domain;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import me.sdevil507.base.JpaUUIDBaseEntity;
+
+/**
+ * zz_staff_main实体
+ * <p>
+ * Created by wr on 2018/1/3.
+ */
+@Table(name = "zz_staff_main")
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class StaffMain extends JpaUUIDBaseEntity {
+	/**
+	 * 员工姓名
+	 */
+	@Column
+	private String name;
+	/**
+	 * 性别
+	 */
+	@Column
+	private String sex;
+	/**
+	 * 出生日期
+	 */
+	@Column
+	private Date birthdate;
+	/**
+	 * 籍贯
+	 */
+	@Column
+	private String birthplace;
+	/**
+	 * 年龄
+	 */
+	@Column
+	private String age;
+	/**
+	 * 家庭住址
+	 */
+	@Column
+	private String address;
+	/**
+	 * 电话
+	 */
+	@Column
+	private String tel;
+	/**
+	 * 头像
+	 */
+	@Column
+	private String pic;
+	/**
+	 * 入职时间
+	 */
+	@Column
+	private Date hiredate;
+	/**
+	 * 最高学历
+	 */
+	@Column
+	private String hightedu;
+	/**
+	 * 毕业学校
+	 */
+	@Column
+	private String gradute_school;
+	/**
+	 * 专业
+	 */
+	@Column
+	private String professional;
+	/**
+	 * 添加时间
+	 */
+	@Column
+	private Date addtime;
+	/**
+	 * 修改时间
+	 */
+	@Column
+	private Date edittime;
+	
+	
+	
+}

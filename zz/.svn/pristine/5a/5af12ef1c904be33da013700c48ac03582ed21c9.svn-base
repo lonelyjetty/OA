@@ -1,0 +1,105 @@
+package com.bizdata.zz.project.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.repository.ProductRepository;
+import com.bizdata.zz.project.service.ProductService;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * BannerServiceImpl
+ * <p>
+ * Created by sdevil507 on 2017/9/6.
+ */
+@Service
+@Slf4j
+public class ProductServiceImpl implements ProductService {
+
+    private final ProductRepository productRepository;
+
+    @Autowired
+    public ProductServiceImpl(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+    @Override
+    public boolean save(Product product) {
+        boolean state;
+        try {
+        	productRepository.save(product);
+        	
+            state = true;
+        } catch (Exception e) {
+            log.error("保存项目失败:", e);
+            state = false;
+        }
+        return state;
+    }
+
+    @Override
+    public boolean delete(String id) {
+        boolean state;
+        try {
+        	productRepository.delete(id);
+            state = true;
+        } catch (Exception e) {
+            log.error("Banner删除失败:", e);
+            state = false;
+        }
+        return state;
+    }
+
+    @Override
+    public Product findOne(String id) {
+        return productRepository.findOne(id);
+    }
+
+	@Override
+	public List<Product> findAll() {
+		// TODO Auto-generated method stub
+		return productRepository.getAllDesc();
+	}
+
+	@Override
+	public int deleteByIslocked(String id,String islocked) {
+		// TODO Auto-generated method stub
+		return productRepository.deleteByIslocked(id,islocked);
+	}
+
+    /**
+     * 条件查询
+     *
+     * @param bannerSearchVO 条件查询VO
+     * @return 条件
+     */
+ /*   private Specification<Banner> listWhereClause(BannerSearchVO bannerSearchVO) {
+        return new Specification<Banner>() {
+            @Override
+            public Predicate toPredicate(Root<Banner> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
+                List<Predicate> list = new ArrayList<>();
+                //如果位置信息是枚举中值
+                if (EnumUtils.contains(bannerSearchVO.getBannerPositionEnum(), BannerPositionEnum.class)) {
+                    list.add(criteriaBuilder.equal(root.get("bannerPositionEnum").as(String.class), bannerSearchVO.getBannerPositionEnum()));
+                }
+
+                //如果开始时间存在
+                if (null != bannerSearchVO.getStartTime()) {
+                    list.add(criteriaBuilder.greaterThanOrEqualTo(root.get("startTime").as(Date.class), bannerSearchVO.getStartTime()));
+                }
+
+                //如果结束时间存在
+                if (null != bannerSearchVO.getEndTime()) {
+                    list.add(criteriaBuilder.lessThanOrEqualTo(root.get("endTime").as(Date.class), bannerSearchVO.getEndTime()));
+                }
+
+                Predicate[] p = new Predicate[list.size()];
+                return criteriaBuilder.and(list.toArray(p));
+            }
+        };
+    }*/
+}

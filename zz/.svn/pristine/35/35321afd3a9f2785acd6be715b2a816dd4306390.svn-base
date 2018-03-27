@@ -1,0 +1,21 @@
+package com.bizdata.zz.project.projectSourceEdit.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+
+import com.bizdata.zz.project.projectSourceEdit.domain.ProjectSourceEdit;
+
+import me.sdevil507.base.JpaBaseRepository;
+
+/**
+ * BannerRepository
+ * <p>
+ * Created by sdevil507 on 2017/9/5.
+ */
+public interface ProjectSourceEditRepository extends JpaBaseRepository<ProjectSourceEdit, String> {
+
+	
+	@Query(value="select * from zz_project_source_edit where serial_num = 1",nativeQuery=true)
+	List<ProjectSourceEdit> findAllByShow();
+}

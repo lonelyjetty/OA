@@ -1,0 +1,68 @@
+package com.bizdata.zz.project.controller.vo;
+
+import java.util.List;
+
+import com.bizdata.admin.domain.Organization;
+import com.bizdata.admin.domain.User;
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+public class ProjectTemp {
+	
+	private Product product;
+	
+	
+	private List<User> users;
+	
+	private Organization organization;
+	
+	private User manager;
+	
+	private ProductModel productModel;
+	
+	
+	public User getManager() {
+		return manager;
+	}
+
+	public void setManager(User manager) {
+		this.manager = manager;
+	}
+
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public List<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+
+	public Organization getOrganization() {
+		return organization;
+	}
+
+	public void setOrganization(Organization organization) {
+		this.organization = organization;
+	}
+
+	public ProductModel getProductModel() {
+		return productModel;
+	}
+
+	public void setProductModel(ProductModel productModel) {
+		this.productModel = productModel;
+	}
+
+	
+	
+	
+	
+}

@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>话题管理</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <style type="text/css">
+        .margin_left_10px {
+            margin-left: 10px;
+        }
+
+        .search {
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: Center;
+        }
+
+        .position {
+            display: flex;
+            justify-content: flex-start;
+            align-items: Center;
+        }
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>话题管理</h1>
+</div>
+
+<div class="row">
+    <div class="search col-sm-12">
+	        
+	        
+	        <label class="control-label margin_left_10px">话题属性:</label>
+	        	<select id="searchType" class="margin_left_10px">
+	            	<option value="">--请选择--</option>
+	            	<option value="1">精华帖</option>
+	            	<option value="2">置顶</option>
+	            	<option value="3">推广</option>
+	        	</select>
+	        <label class="control-label margin_left_10px">圈子分类:</label>
+	        	<select id="searchCircleClassid" class="margin_left_10px" onchange="changecir()">
+	            	<option value="">--请选择--</option>
+	            	<tr th:each="column : ${map}">
+            			<option th:value="${column.key}"><td class="text" th:text="${column.value}" ></td></option>
+		            </tr>
+	        	</select>
+	        <label class="control-label margin_left_10px">圈子:</label>
+	        	<select id="searchCircleid" class="margin_left_10px">
+	            	<option value="">--请选择--</option>
+	            	<tr  th:each="column : ${columnmap}">
+            			<option th:value="${column.key}"><td class="text" th:text="${column.value}" ></td></option>
+		            </tr>
+	        	</select>
+	       	<label class="control-label margin_left_10px">状态:</label>
+	        	<select id="searchState" class="margin_left_10px">
+	            	<option value="">请选择</option>
+	            	<option value="1">正常</option>
+	            	<option value="2">锁定</option>
+	            	<option value="3">删除</option>
+	        	</select>
+	        <label class="control-label margin_left_10px">创建时间：</label>
+				<input id="searchStartTime" type="text" />
+				<span style="margin-left: 10px;margin-right: 10px;">--</span>
+				<input id="searchEndTime" type="text" />
+	</div>
+	<div class="search col-sm-12"></div>
+	<div class="search col-sm-12">
+	        <label class="control-label margin_left_10px">论坛标题:</label>
+	        	<input id="searchTopicTitle" type="text"/>
+	        <label class="control-label margin_left_10px">作者ID:</label>
+	        	<input id="searchUserid" type="text"/>
+	        <button onclick="search()" class="btn btn-sm btn-primary margin_left_10px">查询</button>
+	        <button onclick="add()" class="btn btn-sm btn-success margin_left_10px">添加</button>
+	</div>
+    <div class="col-xs-12">
+        <table id="grid-table"></table>
+
+        <div id="grid-pager"></div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jqGrid/jquery.jqGrid.src.js}]]*/ '',
+        /*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+        /* 选择器 */
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
+
+        //调整大小为page-content宽度
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        //配置settings设置
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+
+        /* jqgrid定义 */
+        jQuery(grid_selector).jqGrid({
+            //解析从Server返回的json数据
+            jsonReader: {
+                root: "rows", // json中每行的记录
+                page: "currentPage", //json中代表当前页码的数据
+                total: "totalPageSize", //json中代表页码总数的数据
+                records: "totalRecords",//总记录数
+                repeatitems: false,//通常设置为false
+                id: "id",//解析rows中的id值,作为该行的id(默认就是id)
+            },
+            caption: "",//表格的名称
+            cellEdit: false,//设置单元格是否可点击修改,false为不可以
+            url: "theme/list",//请求路径
+            datatype: "json",//数据类型
+            mtype: "GET",//提交方式
+            height: 350,//jqgrid高度
+            hoverrows: true,//当为false时mouse hovering会被禁用,true时鼠标移动到行时高亮显示
+            rownumbers: false,//添加行号
+            rownumWidth: 40,//rownum列宽
+            viewrecords: true,//显示总记录数
+            altRows: true,//设置为交替表格,交替颜色区分
+            rowNum: 10,//一页显示记录条数
+            rowList: [
+                10, 20, 30
+            ],//可选的一页显示记录数
+            autowidth: true,//true，重新计算表格相对于父元素的宽度。在表格建立时执行。如果建立之后表格父元素宽度改变，需要自动调整宽度，使用setGridWidth方法来实现
+            emptyrecords: "当前获取数据为空...",//当表格没有数据时显示的提示信息，仅当viewrecords配置为true时有效。
+            loadtext: "数据加载中...",
+            pager: pager_selector,//分页元素
+            pagerpos: "center",//定义分页栏位置,left、center、right
+            pgbuttons: true,//显示分页按钮
+            pginput: true,//是否显示跳转页面输入框
+            pgtext: "{0} 共 {1} 页",//显示页数与总页数信息
+            sortname: "topicid",
+            sortorder: "asc",
+            recordpos: "right",//定义了记录信息的位置： left, center, right
+            /* JSON数组对象描述列的参数。 */
+            colModel: [
+            	{
+                    label: '主键',
+                    name: "topicid",
+                    width: 20,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "topicid",
+                    align: 'center'
+                }, {
+		            label: '标题',
+		            name: 'title',
+		            width: 60,
+		            edittable: false,
+		            sortable: false,
+		            jsonmap: "title",
+		            align: 'center'
+            	}, {
+                	label: '作者id',
+	                name: "userId",
+	                width: 30,
+	                edittable: false,
+	                sortable: false,
+	                jsonmap: "userId",
+	                align: 'center',
+	            }, {
+	                label: '回复数',
+	                name: "reply",
+	                width: 30,
+	                editable: false,
+	                sortable: false,
+	                jsonmap: "reply",
+	                align: 'center'
+	            }, {
+	                label: '分享数',
+	                name: "share",
+	                width: 30,
+	                editable: false,
+	                sortable: false,
+	                jsonmap: "share",
+	                align: 'center'
+	            }, {
+	                label: '查看数',
+	                name: "examine",
+	                width: 30,
+	                editable: false,
+	                sortable: false,
+	                jsonmap: "examine",
+	                align: 'center'
+	            }, {
+	                label: '点赞数',
+	                name: "praiseNum",
+	                width: 30,
+	                editable: false,
+	                sortable: false,
+	                jsonmap: "praiseNum",
+	                align: 'center'
+	            }, {
+	                label: '板块',
+	                name: "circleclassname",
+	                width: 40,
+	                editable: false,
+	                sortable: false,
+	                jsonmap: "circleclassname",
+	                align: 'center'
+	            }, {
+                	label: '圈子',
+                    name: "circlename",
+                    width: 40,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "circlename",
+                    align: 'center'
+                }, {
+                    label: '精华',
+                    name: "isEssence",
+                    width: 20,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "isEssence",
+                    align: 'center',
+					formatter: ynFormatter
+                }, {
+                    label: '置顶',
+                    name: "isStick",
+                    width: 20,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "isStick",
+                    align: 'center',
+					formatter: ynFormatter
+                }, {
+                    label: '推广',
+                    name: "isGeneralize",
+                    width: 20,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "isGeneralize",
+                    align: 'center',
+					formatter: ynFormatter
+                }, {
+                    label: '状态',
+                    name: "state",
+                    width: 30,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "state",
+                    align: 'center',
+                    formatter: stateFormatter
+                }, {
+                    label: '首页排序',
+                    name: "homeSort",
+                    width: 40,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "homeSort",
+                    align: 'center'
+                }, {    
+                	label: '创建时间',
+                    name: "createDate",
+                    width: 80,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "createDate",
+                    formatter: "date",
+                    align: 'center'
+                }, {
+                    label: '分享文案',
+                    name: "shareCopy",
+                    width: 30,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "shareCopy",
+                    align: 'center',
+                }, {
+                    label: '分享缩略图',
+                    name: "sharePic",
+                    width: 30,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "sharePic",
+                    align: 'center',
+                    formatter: imgFormatter
+                }, {
+                    label: '操作',
+                    width: 80,
+                    align: 'center',
+                    formatter: initOper
+                }
+            ],
+            //在所有数据加载进入表格和所有处理已经完成后触发。在排序，分页等操作后也会触发。
+            loadComplete: function () {
+                var table = this;
+                setTimeout(function () {
+                    //加载完成后，替换分页按钮图标
+                    updatePagerIcons(table);
+                }, 0)
+
+                // 设置操作按钮
+
+            }
+        })
+
+        //初始化操作栏目
+        function initOper(value, grid, rows, state) {
+            var id = rows.id;
+            var state = rows.state
+            var edit = "edit('" + id + "')";
+            var del = "del('" + id + "')";
+            var template = "<button class='btn btn-xs btn-primary' onclick=\"" + edit + "\"><i class='ace-icon fa fa-pencil align-top bigger-125'></i>编辑</button>";
+            if('1' === state){
+	            template += "<button style='margin-left: 10px;' class='btn btn-xs btn-danger' onclick=\"" + del + "\"><i class='ace-icon fa fa-trash-o align-top bigger-125'></i>删除</button>"
+            }else{
+	            template += "<button style='margin-left: 10px;' class='btn btn-xs' onclick=\"" + del + "\"><i class='ace-icon fa fa-trash-o align-top bigger-125'></i>恢复</button>"
+            }
+            return template;
+        }
+        function ynFormatter(cellvalue, options, cell) {
+            if ('1' == cellvalue) {
+                return '是'
+            } else if ('-1' == cellvalue) {
+                return '否'
+            } 
+        }
+        function ynFormatter(cellvalue, options, cell) {
+            if ('1' == cellvalue) {
+                return '是'
+            } else if ('-1' == cellvalue) {
+                return '否'
+            } 
+        }
+        function ynFormatter(cellvalue, options, cell) {
+            if ('1' == cellvalue) {
+                return '是'
+            } else if ('-1' == cellvalue) {
+                return '否'
+            } 
+        }
+        //将状态格式化
+        function stateFormatter(cellvalue, options, cell) {
+            if ('1' === cellvalue) {
+                return '正常';
+            } else if ('2' === cellvalue) {
+                return '锁定';
+            } else if ('3' === cellvalue) {
+                return '删除';
+            }
+        }
+
+        //将图片url格式化为预览
+        function imgFormatter(cellvalue, options, cell) {
+            var url = cellvalue;
+            return "<img class='img-responsive center-block' src='" + url + "'/>"
+        }
+
+        //替换分页按钮为奥森字体图标
+        function updatePagerIcons(table) {
+            var replacement = {
+                'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+                'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+                'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+                'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
+            };
+            $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
+                var icon = $(this);
+                var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+                if ($class in replacement)
+                    icon.attr('class', 'ui-icon ' + replacement[$class]);
+            })
+        }
+
+        // 搜索开始日期初始化
+        $('#searchStartTime').datetimepicker();
+        // 搜索结束日期初始化
+        $('#searchEndTime').datetimepicker();
+
+        //触发window的resize.jqGrid事件
+        $(window).triggerHandler('resize.jqGrid');
+
+        // 必须添加
+        //==================================================================================================
+        $(document).one('ajaxloadstart.page', function (e) {
+            $(grid_selector).jqGrid('GridUnload');
+            $('.ui-jqdialog').remove();
+        });
+    })
+    /*]]>*/
+
+    // 编辑操作
+    function edit(id) {
+        console.log("执行编辑操作:" + id)
+        location.href = "#page/theme/edit_view?id=" + id;
+    }
+
+
+    function del(id) {
+//        console.log("执行删除操作:" + id)
+        $.post("theme/del",
+            {id: id},
+            function (data) {
+                if (0 === data.code) {
+                    $('#grid-table').trigger('reloadGrid');
+                } else {
+                    alert(data.message)
+                }
+            }),
+            "JSON"
+    }
+
+    // 查询按钮点击
+    function search() {
+        var searchType = $('#searchType').val();
+        var startTime = $('#searchStartTime').val();
+        var endTime = $('#searchEndTime').val();
+        var searchCircleClassid = $('#searchCircleClassid').val();
+        var searchCircleid = $('#searchCircleid').val();
+        var searchState = $('#searchState').val();
+        var searchTopicTitle = $('#searchTopicTitle').val();
+        var searchUserid = $('#searchUserid').val();
+      //判断开始时间和结束时间
+        var d1 = new Date(startTime.replace(/\-/g, "\/"));
+        var d2 = new Date(endTime.replace(/\-/g, "\/"));
+        if(d1 >= d2){
+        	alert("开始时间不能大于结束时间！");
+        	return false;
+        }
+        $('#grid-table').jqGrid('setGridParam', {
+            postData: {"starttime": startTime,
+            			"endtime": endTime,
+            			"type": searchType,
+            			"classId": searchCircleClassid,
+            			"circleeeid": searchCircleid,
+            			"state": searchState,
+            			"title": searchTopicTitle,
+            			"userId": searchUserid},
+        }).trigger('reloadGrid');
+    }
+
+    // 新增按钮点击
+    function add() {
+        location.href = "#page/theme/add_view"
+    }
+    function changecir(){
+    	var circlclassid = $('#searchCircleClassid').val();
+    	var obj = document.getElementById('searchCircleid');
+    	obj.options.length=0;
+    	obj.options.add(new Option("请选择",""));
+    	$.get("theme/choosecircle?classid="+circlclassid, function (data) {
+    		for(var key in data){
+            	obj.options.add(new Option(data[key],key));
+            }
+        }, "JSON");
+    }
+
+</script>
+</html>

@@ -1,0 +1,16 @@
+package com.bizdata.zz.project.projectTask.service;
+
+import java.util.List;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+
+public interface ProductChildDutiesService {
+	/**
+	 * 根据用户名获取其所有子任务
+	 * @param creator
+	 * @return
+	 */
+	List<ProductChildrenDuties> findAllChildDuties(String creator);
+	
+	List<ProductChildrenDuties> findAll();
+}

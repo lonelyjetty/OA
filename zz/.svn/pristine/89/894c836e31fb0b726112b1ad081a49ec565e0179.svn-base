@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>项目查看</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/ztree-css/zTreeStyle.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<style type="text/css">
+#col-sm-4{overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width:300px;}
+#col-sm-4:hover
+{
+ overflow: visible ;white-space:normal;text-overflow: ellipsis;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>项目查看</h1>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<!-- form表单 -->
+		<form class="form-horizontal" id="from-detail" role="form">
+			<!-- 项目名称 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="name">
+					项目名称:</label>
+
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.productName}">
+					</label>	
+				</div>
+			</div>
+
+			<!-- 图片 -->
+			<!-- <div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="pic">
+					项目图片:</label>
+				<div class="col-sm-3">
+					<input type="hidden" name="picUrl" id="picUrl" />
+				</div>
+			</div> -->
+
+
+			<!-- 选择模版 -->
+			<div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="productModel"> 项目模型:</label>
+                <div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.productModel.productModelName}">
+					</label>	
+				</div>
+            </div>
+            
+            <!-- 所属部门 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 所属部门:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.organization.name}">
+					</label>	
+				</div>
+			</div>
+            
+            <!-- 项目负责人 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 负&nbsp;责&nbsp;人:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.manager.username}">
+					</label>	
+				</div>
+			</div>
+            
+			<!-- 参与者 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 团队成员:</label>
+					
+				<div class="col-sm-4" >
+						<label class="control-label no-padding-right" th:each="user : ${view.users}" th:text="${user.username}">
+					</label>
+				</div>
+			</div>
+			
+			<!-- 地点选择 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="location"> 项目地址:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.productLocation}">
+					</label>	
+				</div>
+			</div>        
+
+			<!-- 开始时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 开始时间:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.startTime}">
+					</label>	
+				</div>
+			</div>
+
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="endTime">
+					结束时间:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.endTime}">
+					</label>	
+				</div>
+			</div>
+			<!-- 迭代周期 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="iteration">
+					迭代周期:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.iteration}">
+					</label>	
+				</div>
+			</div>
+			<!-- 周期内工时 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="workhour">
+					每周期工时:</label>
+				<div class="col-sm-4">
+					<label class="control-label no-padding-right" th:text="${view.product.workhour}">
+					</label>	
+				</div>
+			</div>
+			<!-- 项目描述 -->
+			<div class="form-group" >
+				<label class="col-sm-3 control-label no-padding-right" >
+					项目描述:</label>
+				<div class="col-sm-4" id='col-sm-4'  >
+				<label class="control-label no-padding-right" th:text="${view.product.productDesc}">
+					</label>
+					
+				</div>
+			</div>
+
+			<div class="clearfix form-actions" style="margin:0 auto; display:flex; justify-content: center; align-items:center">
+				<div class="col-md-offset-3 col-md-9" style="margin:0 auto; display:flex; justify-content: center; align-items:center">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/kindeditor/kindeditor-all-min.js}]]*/'',
+			/*[[@{/assets/js/kindeditor/lang/zh_CN.js}]]*/'',
+			null ]
+
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+		
+		//富文本框
+		var editor = KindEditor.create("#editor_id",{
+       		width: '550px',
+        	height: '250px',
+        	afterCreate: function () {
+     	        this.sync();
+     	    },
+     	    afterBlur: function () {
+     	        this.sync();
+     	    }
+     	})
+		
+
+		// 返回
+		$('#back').click(function() {
+			location.href = "#page/projectList"
+		})
+
+		})
+	/*]]>*/
+</script>
+</html>

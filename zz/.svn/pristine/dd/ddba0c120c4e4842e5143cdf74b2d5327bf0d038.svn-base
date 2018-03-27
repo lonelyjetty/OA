@@ -1,0 +1,80 @@
+package com.bizdata.zz.staff.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.staff.domain.StaffMain;
+import com.bizdata.zz.staff.repository.StaffMainRepository;
+import com.bizdata.zz.staff.service.StaffMainService;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * StaffMainServiceImpl
+ * @author wr 2018/1/3
+ *
+ */
+@Service
+@Slf4j
+public class StaffMainServiceImpl implements StaffMainService{
+	@Autowired
+	private StaffMainRepository staffMainRepository;
+	
+	@Override
+	public boolean save(StaffMain staffMain) {
+		boolean state;
+		
+		try {
+			staffMainRepository.save(staffMain);
+			state=true;
+		} catch (Exception e) {
+			log.error("员工保存失败", e);
+			state=false;
+		}
+		
+		return state;
+	}
+
+	@Override
+	public boolean delete(String id) {
+		boolean state;
+		
+		try {
+			staffMainRepository.delete(id);
+			state=true;
+		} catch (Exception e) {
+			log.error("员工删除", e);
+			state=false;
+		}
+		
+		return state;
+	}
+
+	@Override
+	public StaffMain findOne(String id) {
+		return staffMainRepository.findOne(id);
+	}
+
+	@Override
+	public List<StaffMain> findAll() {
+		return staffMainRepository.findAll();
+	}
+
+	@Override
+	public StaffMain getByName(String name) {
+		return staffMainRepository.getByName(name);
+	}
+
+	@Override
+	public boolean staffedit(StaffMain staffMain) {
+		boolean state;
+		
+		staffMainRepository.save(staffMain);
+		
+		
+		return false;
+	}
+
+}

@@ -1,0 +1,66 @@
+package com.bizdata.zz.project.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.bizdata.zz.project.domain.ProductStoriesAndDuties;
+
+import me.sdevil507.base.JpaBaseRepository;
+
+/**
+ * BannerRepository
+ * <p>
+ * Created by sdevil507 on 2017/9/5.
+ */
+public interface ProductStoriesAndDutiesRepository extends JpaBaseRepository<ProductStoriesAndDuties, String> {
+	
+	
+	/**
+	 * 根据父id查询出子节点个数
+	 *
+	 * @param parent id
+	 * @return int
+	 */
+	@Query("select count(1) from ProductStoriesAndDuties where parent= :parent")
+	int countByParentId(@Param("parent") String parent);
+	
+	/**
+	 * 根据父id查询子节点
+	 *
+	 * @param parent 资源父id
+	 * @return List<Resource>
+	 */
+	@Query("from ProductStoriesAndDuties where parent= :parent") 
+	List<ProductStoriesAndDuties> findAllByParentId(@Param("parent") String parent);
+
+	/**
+	 *  判断项目是否需要初始化数据
+	 * @Title: canInit 
+	 * @Description: TODO
+	 * @param id
+	 * @return
+	 * @return: ProductStoriesAndDutiesRepository
+	 */
+	@Query(value="select * from zz_product_stories_duties where pro_id=:id and parent=0",nativeQuery=true) 
+	ProductStoriesAndDuties canInit(@Param("id") String id);
+	
+	/**
+	 *  根据项目的id查找
+	 * @Title: findAllByProId 
+	 * @Description: TODO
+	 * @param id
+	 * @return
+	 * @return: List<ProductStoriesAndDuties>
+	 */
+	@Query(value="select * from zz_product_stories_duties where pro_id=:id",nativeQuery=true) 
+	List<ProductStoriesAndDuties> findAllByProId(@Param("id")String id);
+	/**
+	 * 获取最后一个添加的故事的冲刺周期
+	 * @param id 项目ID
+	 * @return run
+	 */
+	@Query(value="select * from zz_product_stories_duties where pro_id=:id order by id desc limit 1",nativeQuery=true)
+	ProductStoriesAndDuties getRunNum(@Param("id")String id);
+}

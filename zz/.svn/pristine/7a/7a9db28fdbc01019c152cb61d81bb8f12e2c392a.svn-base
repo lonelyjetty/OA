@@ -1,0 +1,79 @@
+package com.bizdata.zz.project.childrenduties.service;
+
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.childrenduties.vo.ChildrenDutiesVo;
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+/**
+ * BannerService
+ * <p>
+ * Created by xq on 2017/12/7.
+ */
+public interface ProductChildrenDutiesService {
+
+    /**
+     * 执行更新操作
+     *
+     * @param banner banner实体
+     * @return 执行反馈
+     */
+    boolean save(ProductChildrenDuties productChildrenDuties);
+
+    
+    boolean saveModelId(ProductChildrenDuties productChildrenDuties);
+    /**
+     * 分页查询
+     *
+     * @param jpaPageParamVO 分页参数
+     * @param jpaSortParamVO 排序参数
+     * @param bannerSearchVO banner查询参数VO
+     * @return 分页记录
+     */
+    //Page<Product> findAllByPage(JpaPageParamVO jpaPageParamVO, JpaSortParamVO jpaSortParamVO, BannerSearchVO bannerSearchVO);
+
+    /**
+     * 根据ID删除
+     *
+     * @param id id
+     * @return 执行反馈
+     */
+    boolean delete(String id);
+
+    /**
+     * 根据ID获取Banner记录
+     *
+     * @param id id
+     * @return banner记录
+     */
+    ProductChildrenDuties findOne(String id);
+
+	List<ProductChildrenDuties> findAll();
+	
+	/**
+	 *  根据任务的id 和 模版id 查找相应的子任务
+	 * @Title: findByDutyIdAndModelId 
+	 * @Description: TODO
+	 * @return
+	 * @return: List<ProductChildrenDuties>
+	 */
+	List<ChildrenDutiesVo> findByDutyIdAndModelId(String productid);
+
+
+	boolean singleUpdate(ProductChildrenDuties productChildrenDuties);
+	
+	/**
+	 * 查找项目下所有冲刺周期一样的子任务
+	 * @param pid
+	 * @param r
+	 * @return List<ProductChildrenDuties> 
+	 */
+	List<ProductChildrenDuties> getAllRun(String pid,String r);
+	
+}

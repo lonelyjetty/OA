@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>百度地图</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+</head>
+
+<style type="text/css">
+#container {
+	height: calc(100vh - 200px);
+}
+</style>
+
+<div class="row">
+	<!-- 左边  百度地图-->
+	<div class="col-xs-6">
+		<div id="container"></div>
+	</div>
+
+	<!-- 右边 -->
+	<div class="col-xs-6">
+	  请输入地址: <input type="text" id="suggestId" value="百度"  />
+	  <div id="searchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+	  
+		<div id="right" style="width: 600px;"></div>
+	</div>
+</div>
+<!-- 第二展示部分 end -->
+<div class="row">
+	<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+					&nbsp; &nbsp; &nbsp;
+					<button id="commit" class="btn btn-success" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 确定
+					</button>
+				</div>
+			</div>
+		</div>
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	var scripts = [
+		null,
+		[[@{/assets/js/echarts.min.js}]],
+		null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+	// 必须添加
+	//==================================================================================================
+	$(document).one('ajaxloadstart.page', function(e) {
+		//$(grid_selector).jqGrid('GridUnload');
+		//$('.ui-jqdialog').remove();
+	});
+	
+	
+	//返回事件
+	$("#back").on("click",function(){
+		location.href="#page/projectList/add"
+	})
+	
+	//确定事件
+	$("#commit").on("click",function(){
+		alert("确定事件")
+	})
+	
+	// 百度地图API功能
+	function G(id) {
+		return document.getElementById(id);
+	}
+	
+	/* 百度地图 */
+	var map = new BMap.Map("container");          // 创建地图实例  
+	var point = new BMap.Point(118.787061,31.9785);  // 创建点坐标  
+	map.centerAndZoom(point, 15);                 // 初始化地图，设置中心点坐标和地图级别 
+	map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+	var marker = new BMap.Marker(point);        // 创建标注    
+	map.addOverlay(marker);                     // 将标注添加到地图中
+	
+	
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+			{"input" : "suggestId"
+			,"location" : map
+		});
+
+		ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+			var str = "";
+			var _value = e.fromitem.value;
+			var value = "";
+			if (e.fromitem.index > -1) {
+				value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+			}    
+			str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+			
+			value = "";
+			if (e.toitem.index > -1) {
+				_value = e.toitem.value;
+				value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+			}    
+			str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+			G("searchResultPanel").innerHTML = str;
+		});
+
+		var myValue;
+		ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+		var _value = e.item.value;
+			myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+			G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+			
+			setPlace(myValue);
+		});
+		
+		$("#suggestId").on("blur",function(){
+			var obj = $("#suggestId").val()
+			setPlace(obj)
+		})
+		
+
+		function setPlace(obj){
+			map.clearOverlays();    //清除地图上所有覆盖物
+			var local = new BMap.LocalSearch(map, {
+				renderOptions: {map: map, panel: "right"}
+			});
+			local.search(obj);
+		}
+
+})
+/*]]>*/
+
+
+</script>
+</html>

@@ -1,0 +1,43 @@
+package com.bizdata.zz.staff.service;
+
+import java.util.List;
+
+import com.bizdata.zz.staff.domain.StaffMain;
+
+public interface StaffMainService {
+	/**
+	 * 执行更新操作
+	 * @param staffMain
+	 * @return 执行反馈
+	 */
+	boolean save(StaffMain staffMain);
+	/**
+	 * 根据id删除
+	 * @param id
+	 * @return 执行反馈
+	 */
+	boolean delete(String id);
+	/**
+	 * 根据id查找
+	 * @param id
+	 * @return
+	 */
+	StaffMain findOne(String id);
+	/**
+	 * 找到所有
+	 * @return
+	 */
+	
+	List<StaffMain> findAll();
+	/**
+	 * 根据姓名查找
+	 * @param name
+	 * @return
+	 */
+	StaffMain getByName(String name);
+	/**
+	 * 执行修改操作
+	 */
+	boolean staffedit(StaffMain staffMain);
+	
+}

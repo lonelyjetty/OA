@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>项目列表信息</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/bootstrap-dialog.css}" />
+<style type="text/css">
+.td_div {
+	width: 250px;
+	height: calc(( 100vh -200) - 300px);
+	background-color: #e5e5e5;
+	border-radius: 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	position: relative;
+}
+td {
+	padding: 5px;
+}
+.div_children {
+	width: 180px;
+	height: 450px;
+	margin-top: calc(( 100vh -200) - 100vh);
+	overflow: auto;
+}
+.widget-placeholder {
+  border: 2px dashed #438eb9;
+}
+li{
+	list-style-type: none; 
+	margin: 0; 
+	padding: 0;
+}
+.div_children_head {
+	width: 180px;
+	height: calc(( 100vh -200) - 95vh);
+	position: absolute;
+	top: calc(( 100vh -200) - 98vh);
+}
+.li_div{
+	background-color: white;
+	margin:3px;
+	height: 45px;
+    border-radius: 5px;
+}
+ul{
+	    margin-left: 0px;
+}
+.head{
+	font-size: medium;
+}
+.profile-activity{
+    border-left: 0px dotted #FFF;
+    border-right: 0px dotted #FFF;
+    background-color: white;
+    border-radius: 5px;
+    margin: 2px 0px;
+    padding: 5px 3px;
+}
+.widget-main{
+	background-color: #e5e5e5;
+	height: calc(( 100vh -200) - 350px);
+	
+}
+.widget-box{
+	height: calc(( 100vh -200) - 300px);
+	border: 0px solid #CCC;
+	border-radius: 10px;
+	background-color: #e5e5e5;
+	opacity: 1; 
+	z-index: 0;
+	width: 250px;
+	box-shadow: 1.5px 1.5px 1.5px 1.5px #888888;
+	
+}
+.widget-header{
+	background-image: linear-gradient(to bottom, #dae6ed 0%, #e5e5e5 100%);
+	border-radius: 10px;
+}
+.widget-body{
+    background-color: #e5e5e5;
+	overflow:auto;
+	height: calc(( 100vh -200) - 350px);
+}
+</style>
+
+<style type="text/css">
+
+#menu li{
+	list-style-type: none;
+	float: left;
+	padding: 0px 5px;
+}
+.selector {
+	min-height: 50px;
+}
+#num{
+	margin-left:10px;
+}
+.str_num{ margin-left:100px}
+.clearfix{width:100%}
+.col-md-offset-3{ display:flex; justify-content:center  ; align-items:center; width:100%;  margin-left:0  }
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div id='op'></div>
+<div class="page-header">
+	<h1>项目列表信息</h1>
+	<div style="float: right;">
+		<ul id="menu">
+			<li><i class="fa fa-flag blue bigger-150"></i>&nbsp; <font>一般</font></li>
+			<li><i class="fa fa-flag orange bigger-150"></i>&nbsp; <font>重要</font></li>
+			<li><i class="fa fa-flag red bigger-150"></i>&nbsp; <font>紧急</font></li>
+		</ul>
+	</div>	
+</div>
+
+<div class="row">
+<input type="hidden" id="projectid" th:value="${proId}"/>
+<input type="hidden" id="num" th:value="${col}"/>
+	<div class="col-xs-12">
+	
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="table-responsive">
+			<table style="width: auto;" id='opo'>
+			
+			<!-- 	<tr id="selector_tr">-->
+				
+					<!-- <td><input type="hidden" value="1"/><div class="widget-box"><div class="widget-header">
+					<h4 class="widget-title"><font color="black">已完成</font></h4><div class="widget-toolbar">
+					<div class="widget-menu"><a href="#" data-action="settings" data-toggle="dropdown" aria-expanded="false">
+					<i class="ace-icon fa fa-bars" style="color: #40545a;"></i></a>
+					<ul class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer" style="padding:3px 3px">
+					<li><input type="text" class="form-control" value="wancheng"/>
+					<input type="hidden" class="form-control" value="wancheng"/>
+					</li></ul></div><a href="javascript:reload()" data-action="reload">
+					<i class="ace-icon fa fa-refresh" style="color: #387b0b;"></i></a>
+					<a href="#" data-action="close"><i class="ace-icon fa fa-times" style="color: #d02510;"></i>
+					</a></div></div><div class="widget-body"><div class="widget-main"><ul class="selector">
+					<li><input type="hidden" value="3-1"/><div class="profile-activity clearfix">
+					<i class="fa fa-flag blue bigger-130"></i>
+					<img class="pull-left" alt="Alex Doe's avatar" src="../assets/temp/avatar4.png"/> Alex Doe 
+					<div class="time"><i class="ace-icon fa fa-bars bigger-110"></i> 0/2
+					<i class="ace-icon fa fa-clock-o bigger-110"></i> an hour ago</div></div></li></ul></div></div></div></td> -->
+					
+					
+					<!-- 增加子模块 start-->
+					<!-- <td class="notmove"><input type="hidden" value="last"/>
+						<div class="td_div">
+							<div title="增加任务列表" id="addElement" class="img-circle" style="background-color: white;width:100px;height: 100px;">
+								
+							</div>
+						</div>
+					</td> -->
+					<!-- 增加子模块 end-->
+				<!--  </tr>*/-->
+			</table>
+		</div>
+		<!-- PAGE CONTENT ENDS -->
+	</div>
+</div>
+
+<!--  <div class="row">
+	<div class="col-xs-12">
+		<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+
+					&nbsp; &nbsp; &nbsp;
+					<button id="fresh" class="btn btn-success" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 刷新
+					</button>
+				</div>
+			</div>
+	</div>
+</div>
+-->
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+
+	var scripts = [
+			null,
+			/*[[@{/assets/js/moment.min.js}]]*/'',
+			/*[[@{/assets/js/bootbox.min.js}]]*/'',
+			/*[[@{/assets/js/Sortable.js}]]*/'',
+			null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+	
+		$.get("projectChildren/getChildren?productid="+$("#projectid").val(),function(data){
+		
+			console.log('<hr>')
+			var jsonData = JSON.parse(data)
+			console.log(jsonData)
+			var html = ""
+			
+			
+			
+			if(jsonData.rows != null){
+				 
+				 $.each(jsonData.rows,function(index,val){
+					
+					 console.log('<hr>')
+					 console.log(val)
+					 
+					 ////////修改（1）
+					 var nums=val.childrenDutiesList.length
+					 
+					 
+					 
+					var temp = val.productModel
+					html += '<td ><input type="hidden" value="'+temp.id+'"/><div class="widget-box" ><div class="widget-header" >'
+					html += '<h4  class="widget-title"><font color="black">'+temp.productModelName+'<span id="num" class="str_num">'+nums+'</span></font></h4>'
+					html += '<div  class="widget-toolbar">'
+					html += '<div  class="widget-menu"><a href="#" data-action="settings" data-toggle="dropdown" aria-expanded="false">'
+					<!-- <i class="ace-icon fa fa-bars" style="color: #40545a;"></i> -->
+					html += '</a>'
+					html += '<ul  class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer" style="padding:3px 3px" >'
+					html += '<li><input type="text" class="form-control" value="'+temp.productModelName+'"/>'
+					html += '<input type="hidden" class="form-control" value="'+temp.productModelName+'"/>'
+					html += '</li></ul></div><a onclick="reload()" data-action="reload">'
+					html += '<i class="ace-icon fa fa-refresh" style="color: #387b0b;" ></i></a>'
+					html += '</div></div><div class="widget-body" ><div class="widget-main" ><ul   class="selector">'
+				
+						
+					if(val.childrenDutiesList.length != 0){//拼接子任务
+						
+						$.each(val.childrenDutiesList,function(index,val1){
+							var time = formatDateTime(val1.startTime)
+							html += '<li  class="lis"    ><input  type="hidden" value="'+val1.id+'"/><div class="profile-activity clearfix">'
+							switch(val1.state)//判断小旗子
+							{
+							case '0':
+								html += '<i class="fa fa-flag blue bigger-130"></i>'
+							  break;
+							case '1':
+								html += '<i class="fa fa-flag orange bigger-130"></i>'
+							  break;
+							case '2':
+								html += '<i class="fa fa-flag red bigger-130" ></i>'
+							  break;
+							}
+							html += '<img class="pull-left" alt="Alex Doeavatar" src="../assets/temp/avatar4.png"/>'
+							html += '<a style="cursor:pointer;" onclick="editSingle(this)">'+val1.name+'</a>'
+							html += '<div class="time">'
+							html += '<i class="ace-icon fa fa-clock-o bigger-110"></i>'+val1.span+'-------<a class="str">'+val1.run+'</a></div></div></li>'
+						})
+					}
+					html += '</ul></div></div></div></td>'
+				}) 
+				
+				
+			
+				
+				
+			}
+			
+     
+			
+			
+			var num = $("#num").val();
+			
+	        for(var i=0;i<num ;i++){
+	        	
+           	 $('table').append($("<tr><td>"+html+"</td></tr>")) ;
+	        }; 
+	      
+	        $('.widget-title')[0].style.display='inline-block';
+	        $('.widget-title')[0].style.width=200+'px';
+           	 var str=$('.str_num');
+           	 console.log(str.length)
+           	 for(var i=0;i<str.length;i++){
+           		 console.log(123)
+           		str[i].style.marginLeft=140+'px'
+           	 } 
+           		 
+           		 
+           	 
+           	 
+           	 
+           	 
+          //刷新页面是个横列和竖列排版样式 	 
+         function gai(){    
+           var $trs=$('tr')
+         console.log($trs.length+'ge')                          
+                  for(var i=0;i<$trs.length;i++){ //循环竖直列的个数              	 
+                	  var sel=$trs[i].getElementsByClassName('selector');
+                	  for(var st=0;st<sel.length;st++){//循环横列的个数
+                		    var lis=$trs[i].getElementsByClassName('selector')[st].getElementsByClassName('lis');
+	                	     for(var v=0;v<lis.length;v++){//循环每个单元的子元素
+	                		       var str=lis[v].getElementsByClassName('str')[0].innerHTML;           		                  		  
+	                		        console.log(str+'str');
+	                		         if(parseInt(str)!=i){                			  	            			  
+	                				  lis[v].setAttribute('class','lis pot');
+	                		    }else{
+	                			  lis[v].setAttribute('class','lis po');                			  
+	                		  } ;         		  
+	                	  } ;
+	                	  document.getElementsByClassName('pot').remove;
+	                 	 $('.pot').remove(); 
+	                	      var rt=$trs[i].getElementsByClassName('selector')[st].getElementsByClassName('po');
+	                	      $trs[i].getElementsByClassName('str_num')[st].innerHTML=rt.length;
+                	  };
+              	                	                  	
+                  }                                            
+         } 
+
+         gai()
+			//执行排序
+			sort();
+		})
+		
+		
+		
+		// 必须添加
+		//==================================================================================================
+		$(document).one('ajaxloadstart.page', function(e) {
+			//$(grid_selector).jqGrid('GridUnload');
+			//$('.ui-jqdialog').remove();
+		});
+		
+		
+		//inoput失去焦点的事件
+		/* $(document).find("input[type=text]").blur(function(){
+			var val = $(this).val()
+			var old = $(this).next().val()
+			if($.trim(val) == $.trim(old)){
+				alert("1")
+				return 
+			}
+			
+			if('' != val && '' != $.trim(val)){
+				//调用接口
+				alert("2")
+			}else{
+				alert("请输入合法的名称！！！")
+			}
+		}) */
+		
+		//刷新
+		$("#fresh").on("click",function(){
+			self.location.reload(true);
+		})
+		
+		var move = '';
+		function sort(){
+			//开始排序
+			var before = '';
+		       $(".selector").sortable({
+				revert: true, //缓冲效果 
+				cursor: 'move', //拖动的时候鼠标样式 
+				items: 'li:not(.notmove)' ,//指定在排序对象中，哪些元素是可以进行拖拽排序的。    items : Selector : '> *'  
+				connectWith: ".selector",//连接列表
+				dropOnEmpty: true,//是否允許拖拽到一個空的sortable对象中
+				appendTo: "ul",
+				placeholder: 'widget-placeholder',
+				start:function(event,ui){//获取被拖拽元素的原始父元素
+					 before = $(ui.item).parent()					 
+				},
+				stop: function(event, ui) {
+					var nodeid = $(ui.item).find("input[type=hidden]").val()//表示当前拖拽的元素
+					var afterArray = [];
+					var beforeArray = [];
+					$(ui.item).parent().find("li").each(function(){//获取被拖拽的元素后所在的现有父元素的所有子元素
+						afterArray.push($(this).find("input[type=hidden]").val());
+					
+					})
+					
+					
+					///////修改
+					
+					$(ui.item).parent().parent().parent().parent().find("span").html(afterArray.length)
+					
+
+					
+					
+					var afterId = $(ui.item).parents(".widget-box").prev().val()
+					//alert("最新数据："+afterId+"=========="+afterArray)
+					$(before).find("li").each(function(){//获取被拖拽元素的原始父元素的现有子元素
+						beforeArray.push($(this).find("input[type=hidden]").val())
+					})
+					
+					//////////////修改
+					$(before).parent().parent().parent().parent().find("span").html(beforeArray.length)
+					
+					
+					
+					
+					
+					var beforeId = $(before).parents(".widget-box").prev().val()
+					//alert("前一个数据："+beforeId+"========="+beforeArray)
+					//调用接口
+					updateNode(afterId,nodeid);
+					
+				}
+				
+			});
+		       //更新排序
+		       function updateNode(afterId,nodeid){
+					//alert("最新数据："+afterId+"=========="+nodeid)
+					$.post("projectChildren/reupdate",
+							{'modelid':afterId,'dutyid':nodeid},
+							function(data){
+								if (0 === data.code) {
+			                        //location.href = "#page/banner/"
+			                    } else {
+			                        alert(data.message)
+			                    }
+								
+							})
+				}
+		}
+		
+		
+		//处理tr下的拖拽排序
+		/* $( "#selector_tr").sortable({
+			revert: true, //缓冲效果 
+			handle: ".widget-header",// 为列表中对象设置手柄，按住对象的拖动手柄才可以进行拖动
+			cursor: 'move', //拖动的时候鼠标样式 
+			dropOnEmpty: true,//是否允許拖拽到一個空的sortable对象中
+			scroll: true,
+			items: 'td:not(.notmove)' ,//指定在排序对象中，哪些元素是可以进行拖拽排序的。    items : Selector : '> *'    
+			//helper: 'clone' ,//设置是否在拖拽元素时，显示一个辅助的元素。可选值：'original', 'clone' 
+			opacity: 0.8,//定义当排序时，辅助元素(helper)显示的透明度。   
+			//scrollSensitivity: 40,//设置当元素移动至边缘多少像素时，便开始滚动页面。
+			//handle: ace.vars['touch'] ? '.widget-title' : false,
+			//cancel: '.fullscreen',
+			forceHelperSize:true,
+			placeholder: 'widget-placeholder',//设置当排序动作发生时，空白占位符的CSS样式。   
+			forcePlaceholderSize:true,
+			tolerance:'pointer',//设置当拖动元素越过其它元素多少时便对元素进行重新排序。可选值：'intersect', 'pointer'
+			update: function(event, ui) {//当排序动作结束时且元素坐标已经发生改变时触发此事件。   
+				var parentArray = [];
+				var temp = $(ui.item).parent().find("td").each(function(){
+					parentArray.push($(this).find("input[type=hidden]").val())
+				})
+				event.stopPropagation();
+				//alert("tr下的排序"+parentArray)
+			 } ,
+		}); */
+		
+		//增加任务
+		/* $(".profile-activity.clearfix.add").on("click",function(event){
+			var val = $(this).parents("td").find("input[type=hidden]").val()
+			location.href = "#page/projectList/addduty?val="+val
+		}) */
+		
+		//增加任务列表
+		/* $("#addElement").on("click",function(event){
+			var param = this;
+			//输入名称任务列表名称
+			bootbox.prompt("请输入任务列表名称",function(result){
+				if('' != $.trim(result)){
+					var temp = $(param).parents("td").prev().clone(true)//克隆前一个对象,包含事件处理
+					$(temp).children(":first").val(new Date().getTime())//修改任务的input的值
+					$(temp).find("font").html(result.length > 4 ? result.substring(0,4)+"..." : result)
+					$(temp).find(".selector").children("li:not(.notmove)").remove()//移除.widget-main下的所有节点  不包含最后一个节点
+					$(param).parents("td").before(temp)
+				}else{
+					
+				}
+			});
+		}) */
+	
+		// 返回
+		$('#back').click(function() {
+			location.href ="#page/projectList";
+		})
+		
+		//selector点击项目修改项目详情
+		$(".selector").each(function(index, element){
+			console.log(element)
+			$(element).find("li:not(:last-child)").on("dblclick",function(event){
+				var val = $(this).find("input[type=hidden]").val()
+				location.href = "#page/projectList/addduty?val="+val
+			})
+		})
+		
+		function formatDateTime(date) {
+        	date = new Date(date)
+		    var y = date.getFullYear();  
+		    var m = date.getMonth() + 1;  
+		    m = m < 10 ? ('0' + m) : m;  
+		    var d = date.getDate();  
+		    d = d < 10 ? ('0' + d) : d;  
+		    var h = date.getHours();  
+		    var minute = date.getMinutes();  
+		    minute = minute < 10 ? ('0' + minute) : minute;  
+		    return y + '-' + m + '-' + d+' '+h+':'+minute;  
+		}
+		
+	})
+	/*]]>*/
+	
+	
+	function editSingle(obj){
+		var id = $(obj).parents("li").find("input[type=hidden]").val()
+		id= id + ","+ $("#projectid").val()
+		location.href = "#page/projectList/toAdddutyEdit?id="+id
+	}
+	//刷新单个
+	/*
+	function reload(projectid,modelid){
+		alert("调用接口:projectid------modelid ")
+	}*/
+	
+	
+		
+	
+</script>
+</html>

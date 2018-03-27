@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>问题编辑</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+	
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>问题编辑</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	        	<!-- 隐藏字段 -->
+	        	<!-- 主键 -->
+                <input type="hidden" name="id" th:value="${haQuestion.id}"/>
+                <!-- 创建时间 -->
+                <input type="hidden" name="createTime" th:value="${haQuestion.createTime}"/>
+                <!-- 评估问题的id -->
+                <input type="hidden" name="assessmentId" th:value="${haQuestion.assessmentId}"/>
+	
+	            <!-- 问题编码 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="questionCode"> 问题编码:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="number" name="questionCode" id="questionCode" placeholder="问题编码" 
+	                    	class="col-xs-10 col-sm-12" th:value="${haQuestion.questionCode}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 问题 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="questionName"> 问题:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="questionName" id="questionName" placeholder="问题"
+	                           class="col-xs-10 col-sm-12" th:value="${haQuestion.questionName}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 父id-->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pid"> 父id:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="pid" id="pid" placeholder="父id" 
+	                    	class="col-xs-10 col-sm-12" th:value="${haQuestion.pid}"/>
+	                </div>
+	            </div>
+	
+	            <!-- 所属分类 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="category"> 所属分类:</label>
+	                <div class="col-sm-3">
+	                    <select name="category" id="category" class="form-control">
+	                        <option value="1" th:selected="${haQuestion.category == 1}">一般信息</option>
+	                        <option value="2" th:selected="${haQuestion.category == 2}">健康状况及家庭病史</option>
+	                        <option value="3" th:selected="${haQuestion.category == 3}">饮食习惯和生活方式</option>
+	                        <option value="4" th:selected="${haQuestion.category == 4}">体检指标</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 问题类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="questionType"> 问题类型:</label>
+	                <div class="col-sm-3">
+	                    <select name="questionType" id="questionType" class="form-control">
+	                        <option value="1" th:selected="${haQuestion.questionType == 1}">单选</option>
+	                        <option value="2" th:selected="${haQuestion.questionType == 2}">多选</option>
+	                        <option value="3" th:selected="${haQuestion.questionType == 3}">填空</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 答案类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="answerType"> 答案类型:</label>
+	                <div class="col-sm-3">
+	                    <select name="answerType" id="answerType" class="form-control">
+	                        <option value="1" th:selected="${haQuestion.answerType == 1}">数字</option>
+	                        <option value="2" th:selected="${haQuestion.answerType == 2}">文字</option>
+	                        <option value="3" th:selected="${haQuestion.answerType == 3}">日期</option>
+	                        <option value="4" th:selected="${haQuestion.answerType == 4}">地址</option>
+	                        <option value="5" th:selected="${haQuestion.answerType == 5}">民族</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	           <!-- 问题描述 -->
+	           <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="description"> 问题描述:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="description" id="description" placeholder="问题描述" 
+	                    	class="col-xs-10 col-sm-12" th:value="${haQuestion.description}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 排序 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="sortNo"> 排序:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="number" name="sortNo" id="sortNo" placeholder="排序" 
+	                    	class="col-xs-10 col-sm-12" th:value="${haQuestion.sortNo}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 状态 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="state"> 状态:</label>
+	
+	                <div class="col-sm-3" style="font-size:18px;">
+	                    <input type="radio" name="state" id="" value="1" th:checked="${haQuestion.state == '1'}" /> 正常
+	                    <input type="radio" name="state" id="" value="-1" th:checked="${haQuestion.state == '-1'}"/> 删除
+	                </div>
+	            </div>
+	
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/date-time/bootstrap-datepicker.js}]]*/ '',
+        /*[[@{/assets/js/date-time/daterangepicker.js}]]*/ '',
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置文件上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#assessmentPic').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	assessmentName: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                	assessmentName: "评估名称不能为空。",
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 返回
+            $('#back').click(function () {
+                //console.log();
+            	window.history.back();
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+
+                if (!$('#from-detail').valid()) {
+                    return false;
+                }
+                $.post("assess/question/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                    	window.history.back(); //返回上一个页面
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+
+            // 点击图片隐藏当前图片,并展示图片选择框
+            $('#pic_img').click(function () {
+                $('#pic_img').hide()
+                $('#pic_input').show()
+            })
+        })
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,54 @@
+package com.bizdata.zz.project.projectTask.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.projectTask.service.ProductChildDutiesService;
+import com.bizdata.zz.project.service.ProductService;
+
+
+@Controller
+@RequestMapping("/admin/whiteboard")
+public class WhiteBorderController {
+	
+	@Autowired
+	private ProductService productService;
+	@Autowired
+	ProductChildDutiesService productChildDutiesService;
+	
+	@RequiresPermissions("whiteboard_:view")
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView childDuties(HttpServletRequest req) {
+		List<ProductChildrenDuties> allChild = new ArrayList<>();
+    	String name = (String)req.getSession().getAttribute("username");
+		List<ProductChildrenDuties> list = productChildDutiesService.findAllChildDuties(name);
+		for (ProductChildrenDuties child : list) {
+			ProductChildrenDuties pcd= new ProductChildrenDuties();
+			pcd.setName(child.getName());
+			pcd.setCreator(child.getCreator());
+			String pid = child.getProductId();
+			Product findOne = productService.findOne(pid);
+			pcd.setProductId(findOne.getProductName());
+			allChild.add(pcd);
+		}
+		ModelAndView mav = new ModelAndView("zz/whiteboard/list");
+		mav.addObject("childduties", allChild);
+		
+		return mav ;
+	}
+	
+	
+}

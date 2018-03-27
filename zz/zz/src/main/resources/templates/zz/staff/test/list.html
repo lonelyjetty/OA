@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <style type="text/css">
+        .margin_left_10px {
+            margin-left: 10px;
+        }
+
+        .search {
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: Center;
+        }
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>用户管理</h1>
+</div>
+
+<div class="row">
+		<div class="search col-sm-12">
+			<label class="control-label margin_left_10px">用户名：</label>
+			<input id="searchRegisterIp" type="text" />
+			<label class="control-label margin_left_10px">入职时间：</label>
+			<input id="searchStartTime" type="text" />
+			<span style="margin-left: 15px;margin-right: 20px;">至</span>
+			<input id="searchEndTime" type="text" />
+			<label class="control-label margin_left_10px"><span style="margin-left: 84px;margin-right: 12px;">手机号码:</span></label>
+			<input id="searchDitchNo" type="text" />
+			<button onclick="search()" style="margin-left: 30px;" 
+				class="btn btn-sm btn-primary fa fa-search">查询</button>
+			
+		</div>
+
+    <div class="col-xs-12">
+        <table id="grid-table"></table>
+
+        <div id="grid-pager"></div>
+        <!-- PAGE CONTENT ENDS -->
+    </div>
+    <!-- /.col -->
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null, /*[[@{/assets/js/jqGrid/jquery.jqGrid.src.js}]]*/ '',
+        /*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+        /* 选择器 */
+        var grid_selector = "#grid-table";
+        var pager_selector = "#grid-pager";
+
+        //调整大小为page-content宽度
+        $(window).on('resize.jqGrid', function () {
+            $(grid_selector).jqGrid('setGridWidth', $(".page-content").width());
+        })
+        //resize on sidebar collapse/expand
+        var parent_column = $(grid_selector).closest('[class*="col-"]');
+        //配置settings设置
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+        
+        var mydata=[
+        	{"id":"1","nickname":"baishui","picture":"baishui","mobile":"120","createTime":"2017-11-11","adderss":"江苏","status":"在职"}
+        ]
+
+        /* jqgrid定义 */
+        jQuery(grid_selector).jqGrid({
+            //解析从Server返回的json数据
+            jsonReader: {
+                root: "rows", // json中每行的记录
+                page: "currentPage", //json中代表当前页码的数据
+                total: "totalPageSize", //json中代表页码总数的数据
+                records: "totalRecords",//总记录数
+                repeatitems: false,//通常设置为false
+                id: "id",//解析rows中的id值,作为该行的id(默认就是id)
+            },
+            caption: "",//表格的名称
+            data:mydata,
+            cellEdit: false,//设置单元格是否可点击修改,false为不可以
+            //url: "",//请求路径
+            datatype: "local",//数据类型
+            //datatype: "json",//数据类型
+            mtype: "GET",//提交方式
+            height: 350,//jqgrid高度
+            hoverrows: true,//当为false时mouse hovering会被禁用,true时鼠标移动到行时高亮显示
+            rownumbers: false,//添加行号
+            rownumWidth: 40,//rownum列宽
+            viewrecords: true,//显示总记录数
+            altRows: true,//设置为交替表格,交替颜色区分
+            rowNum: 10,//一页显示记录条数
+            rowList: [
+                10, 20, 30
+            ],//可选的一页显示记录数
+            autowidth: true,//true，重新计算表格相对于父元素的宽度。在表格建立时执行。如果建立之后表格父元素宽度改变，需要自动调整宽度，使用setGridWidth方法来实现
+            emptyrecords: "当前获取数据为空...",//当表格没有数据时显示的提示信息，仅当viewrecords配置为true时有效。
+            loadtext: "数据加载中...",
+            pager: pager_selector,//分页元素
+            pagerpos: "center",//定义分页栏位置,left、center、right
+            pgbuttons: true,//显示分页按钮
+            pginput: true,//是否显示跳转页面输入框
+            pgtext: "{0} 共 {1} 页",//显示页数与总页数信息
+            sortname: "createTime",
+            sortorder: "desc",
+            recordpos: "right",//定义了记录信息的位置： left, center, right
+            /* JSON数组对象描述列的参数。 */
+            colModel: [
+            	{
+                    label: '用户ID',
+                    name: 'id',
+                    width: 15,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "id",
+                }, {
+                    label: '昵称',
+                    name: 'nickname',
+                    width: 30,
+                    edittable: false,
+                    sortable: false,
+                    jsonmap: "nickname",
+                }, {
+                    label: '头像',
+                    name: 'picture',
+                    width: 30,
+                    edittable: false,
+                    sortable: false,
+                    jsonmap: "picture",
+                },{
+                    label: '手机号',
+                    name: "mobile",
+                    width: 25,
+                    edittable: false,
+                    sortable: false,
+                    jsonmap: "mobile",
+                }, {
+                    label: '入职时间',
+                    name: "createTime",
+                    width: 35,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "createTime",
+                    //formatter: "date",
+                }, {
+                    label: '家庭住址',
+                    name: "adderss",
+                    width: 25,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "adderss",
+                }, {
+                    label: '状态',
+                    name: "status",
+                    width: 15,
+                    editable: false,
+                    sortable: false,
+                    jsonmap: "status",
+                },{
+                    label: '操作',
+                    width: 38,
+                    align: 'center',
+                    title: false,
+                    formatter: initOper
+                }
+            ],
+            //在所有数据加载进入表格和所有处理已经完成后触发。在排序，分页等操作后也会触发。
+            loadComplete: function () {
+                var table = this;
+                setTimeout(function () {
+                    //加载完成后，替换分页按钮图标
+                    updatePagerIcons(table);
+                }, 0)
+            }
+        })
+        // 状态初始化
+	        function initState(value) {
+	            var result = '';
+	            switch (value) {
+	                case 1:
+	                    result = '正常';
+	                    break;
+	                case -1:
+	                    result = '锁定';
+	                    break;
+	            }
+	            return result;
+	        }
+        
+        
+        
+       //初始化操作
+        function initOper(value, grid, rows, state) {
+          /*   var id = rows.id; */
+          	var id = "1";
+            var detail = "detail('" + id + "')";
+            var del = "del('" + id + "')";
+            var template = "<button class='btn btn-xs btn-primary btn-danger' title = '查看' onclick='detail()'><i class='ace-icon fa fa-pencil align-top bigger-125'></i>查看</button>";
+            template += "<button style='margin-left: 10px;' class='btn btn-xs btn-primary' title = '删除' onclick='del()'><i class='ace-icon fa fa-trash-o align-top bigger-125'></i>删除</button>";
+            return template;
+        }
+		
+       
+        //替换分页按钮为奥森字体图标
+        function updatePagerIcons(table) {
+            var replacement = {
+                'ui-icon-seek-first': 'ace-icon fa fa-angle-double-left bigger-140',
+                'ui-icon-seek-prev': 'ace-icon fa fa-angle-left bigger-140',
+                'ui-icon-seek-next': 'ace-icon fa fa-angle-right bigger-140',
+                'ui-icon-seek-end': 'ace-icon fa fa-angle-double-right bigger-140'
+            };
+            $('.ui-pg-table:not(.navtable) > tbody > tr > .ui-pg-button > .ui-icon').each(function () {
+                var icon = $(this);
+                var $class = $.trim(icon.attr('class').replace('ui-icon', ''));
+
+                if ($class in replacement)
+                    icon.attr('class', 'ui-icon ' + replacement[$class]);
+            })
+        }
+
+        // 搜索开始日期初始化
+        $('#searchStartTime').datetimepicker();
+        // 搜索结束日期初始化
+        $('#searchEndTime').datetimepicker();
+
+        //触发window的resize.jqGrid事件
+        $(window).triggerHandler('resize.jqGrid');
+
+        // 必须添加
+        //==================================================================================================
+        $(document).one('ajaxloadstart.page', function (e) {
+            //$(grid_selector).jqGrid('GridUnload');
+            //$('.ui-jqdialog').remove();
+        });
+    })
+    /*]]>*/
+    
+    function detail(){
+    	location.href ="#page/staffs/staffs_test_detail"
+    }
+        
+	function del(){
+	   alert("删除！！！")	
+	}
+       
+
+    // 查询按钮点击
+    function search() {
+    	var userId = $('#searchUserId').val();
+        //alert(profileId);
+        var userName = $('#searchUserName').val();
+        var userPhone = $('#searchUserPhone').val();
+        var registerIp = $('#searchRegisterIp').val();
+        var startTime = $('#searchStartTime').val();
+        var endTime = $('#searchEndTime').val();
+        var ditchNo = $('#searchDitchNo').val();
+        var state = $('#searchState').val();
+        var userPhone = $('#searchUserPhone').val();
+        //判断开始时间和结束时间
+        var d1 = new Date(startTime.replace(/\-/g, "\/"));
+        var d2 = new Date(endTime.replace(/\-/g, "\/"));
+        if(d1 >= d2){
+        	alert("开始时间不能大于结束时间！");
+        	return false;
+        }
+        $('#grid-table').jqGrid('setGridParam', {
+            postData: {
+                "userId": userId,
+               	"userName": userName,
+               	"userPhone": userPhone,
+                "registerIp": registerIp,
+                "startTime": startTime,
+                "endTime": endTime,
+                "ditchNo": ditchNo,
+                "state": state
+            },
+        }).trigger('reloadGrid');
+    }
+
+</script>
+</html>

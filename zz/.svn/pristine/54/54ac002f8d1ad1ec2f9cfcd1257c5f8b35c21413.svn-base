@@ -1,0 +1,284 @@
+package com.bizdata.zz.project.childrenduties.controller;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.bizdata.admin.service.UserService;
+import com.bizdata.commons.utils.DateEditor;
+import com.bizdata.config.FileUploadConfig;
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.childrenduties.service.ProductChildrenDutiesService;
+import com.bizdata.zz.project.childrenduties.vo.ChildrenDutiesVo;
+import com.bizdata.zz.project.projectSourceEdit.domain.ProjectSourceEdit;
+import com.bizdata.zz.project.projectSourceEdit.service.ProjectSourceEditService;
+import com.bizdata.zz.project.service.ProductStoriesAndDutiesService;
+import com.google.gson.Gson;
+
+import me.sdevil507.resp.ResultUtil;
+import me.sdevil507.resp.ResultVO;
+
+@Controller
+@RequestMapping("/admin/projectChildren")
+public class ProductChildrenDutiesController {
+	
+
+	@InitBinder
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+		// 对于需要转换为Date类型的属性，使用DateEditor进行处理
+		binder.registerCustomEditor(Date.class, new DateEditor());
+	}
+
+	@Autowired
+	private ProductChildrenDutiesService productChildrenDutiesService;
+
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private ProductStoriesAndDutiesService productStoriesAndDutiesService;
+	
+	@Autowired
+	private ProjectSourceEditService projectSourceEditService;
+	
+	@Autowired
+	private FileUploadConfig fileUploadConfig;
+	/**
+	 *  查找任务
+	 * @Title: getChildren 
+	 * @Description: TODO
+	 * @param productid
+	 * @param dutyid
+	 * @return
+	 * @return: String
+	 */
+	@RequestMapping(value = "getChildren", method = RequestMethod.GET)
+	@ResponseBody
+	public String getChildren(String productid) {
+		Map<String, List> res  =new HashMap<>();
+		try {
+			List<ChildrenDutiesVo> reslut = productChildrenDutiesService
+					.findByDutyIdAndModelId(productid);
+			res.put("rows", reslut);
+			System.out.println(new Gson().toJson(res));
+			return new Gson().toJson(res);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * 增加项目
+	 *
+	 * @param 项目
+	 *            实体
+	 * @return 执行反馈
+	 */
+	@RequestMapping(value = "/reupdate", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultVO addProduct(String modelid,String dutyid) {
+		 ProductChildrenDuties one = productChildrenDutiesService.findOne(dutyid);
+		one.setModelId(modelid);
+		ResultVO resultVO;
+		if (productChildrenDutiesService.saveModelId(one)) {
+			resultVO = ResultUtil.create(0, "项目更新成功!");
+		} else {
+			resultVO = ResultUtil.create(-1, "项目更新失败!");
+		}
+		return resultVO;
+	}
+	
+    /**
+     * 新增或修改
+     *
+     * @param banner 实体
+     * @return 执行反馈
+     */
+    @RequestMapping(value = "/saveOrUpdate", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO saveOrUpdate(ProductChildrenDuties productChildrenDuties) {
+        ResultVO resultVO;
+        String skill=productChildrenDuties.getSkill();
+        String skill_notes="";
+        String[] str = skill.split(",");
+        for (String s : str) {
+        	String notes = projectSourceEditService.findOne(s).getNotes()+"#";
+        	skill_notes +=notes ;
+		}
+        productChildrenDuties.setSkill_notes(skill_notes);
+        
+        String design=productChildrenDuties.getDesign();
+        String design_notes="";
+        String[] str1 = design.split(",");
+        for (String d : str1) {
+        	String notes = projectSourceEditService.findOne(d).getNotes()+"#";
+        	design_notes +=notes ;
+		}
+        productChildrenDuties.setDesign_notes(design_notes);
+        
+        String customer=productChildrenDuties.getCustomer();
+        String customer_notes="";
+        String[] str2 = customer.split(",");
+        for (String s : str2) {
+        	String notes = projectSourceEditService.findOne(s).getNotes()+"#";
+        	customer_notes +=notes ;
+		}
+        productChildrenDuties.setCustomer_notes(customer_notes);
+        String risk=productChildrenDuties.getRisk();
+        String risk_notes="";
+        String[] str3 = risk.split(",");
+        for (String s : str3) {
+        	String notes = projectSourceEditService.findOne(s).getNotes()+"#";
+        	risk_notes +=notes ;
+		}
+        productChildrenDuties.setRisk_notes(risk_notes);
+        if (productChildrenDutiesService.save(productChildrenDuties)) {
+            resultVO = ResultUtil.create(0, "保存成功!");
+        } else {
+            resultVO = ResultUtil.create(-1, "保存失败!");
+        }
+        return resultVO;
+    }
+    /**
+     * 上传附件 .doc或者.docx格式
+     * @param docurl
+     * @return
+     */
+    @RequestMapping(value = "/upload1", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO upload(@RequestParam(value="docurl",required=false)MultipartFile docurl) {
+        ResultVO resultVO = null;
+        if (!docurl.isEmpty()) {
+            // 获取文件名
+            String fileName = docurl.getOriginalFilename();
+            // 获取文件的后缀名
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            // 文件上传后的路径
+            String filePath = fileUploadConfig.getFilePath();
+            fileName = UUID.randomUUID() + suffixName;
+            File dest = new File(filePath + fileName);
+            // 检测是否存在目录
+            if (!dest.getParentFile().exists()) {
+                dest.getParentFile().mkdirs();
+            }
+            try {
+            	System.out.println(dest.getAbsolutePath());
+            	docurl.transferTo(dest);
+                resultVO = ResultUtil.create(0, "文件上传成功!", fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+                resultVO = ResultUtil.create(-2, "上传文件失败!");
+            }
+        } else {
+            ResultUtil.create(-1, "上传文件为空!");
+        }
+        return resultVO;
+    }
+    
+    @RequestMapping(value = "/fileDownLoad", method = RequestMethod.GET)
+	@ResponseBody
+    public void fileDownLoad(String id,HttpServletResponse response) throws Exception {
+    	//获取文件名
+    	String name = productChildrenDutiesService.findOne(id).getPicUrl();
+    	//获取文件的绝对地址
+    	String filePath = fileUploadConfig.getFilePath();
+    	//文件地址
+    	String realPath=filePath+name;
+    	System.out.println(name+"+++"+filePath);
+    	try {
+			File file = new File(realPath);
+			//获取文件后缀名
+			String ext = name.substring(name.lastIndexOf(".")+1).toUpperCase();
+			//以流的形式下载文件
+			InputStream fis = new BufferedInputStream(new FileInputStream(realPath));
+			byte[] buffer = new byte[fis.available()];
+			fis.read(buffer);
+			fis.close();
+			//清空response
+			response.reset();
+			//设置response的Header
+			System.out.println(new String(name.getBytes()));
+			response.setHeader("Content-disposition", "attachment; filename=" + new String(name.getBytes()));
+			response.setHeader("Content-Length",""+file.length());
+			OutputStream output = new BufferedOutputStream(response.getOutputStream());
+			response.setContentType("application/octet-stream");
+			output.write(buffer);
+			output.flush();
+			output.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}    	
+    }
+    
+    /**
+     * 新增或修改
+     * @param banner 实体
+     * @return 执行反馈
+     */
+    @RequestMapping(value = "/singleUpdate", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO singleUpdate(ProductChildrenDuties productChildrenDuties) {
+        ResultVO resultVO;
+        if (productChildrenDutiesService.singleUpdate(productChildrenDuties)) {
+            resultVO = ResultUtil.create(0, "保存成功!");
+        } else {
+            resultVO = ResultUtil.create(-1, "保存失败!");
+        }
+        return resultVO;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+}

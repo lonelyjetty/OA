@@ -1,0 +1,94 @@
+package com.bizdata.zz.project.model.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.project.model.domain.ProductModel;
+import com.bizdata.zz.project.model.repository.ProductModelRepository;
+import com.bizdata.zz.project.model.service.ProductModelService;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class ProductModelServiceImpl implements ProductModelService{
+	
+	@Autowired
+	private ProductModelRepository productModelRepository;
+	
+	@Override
+	public List<ProductModel> getProductModelAll() {
+		List<ProductModel> list = productModelRepository.findAll();
+		return list;
+	}
+
+	@Override
+	public List<ProductModel> getChildrenProductModelAll(String id) {
+		// TODO Auto-generated method stub
+		return productModelRepository.queryByProductId(id);
+	}
+
+	@Override
+	public ProductModel getOneById(String id) {
+		// TODO Auto-generated method stub
+		return productModelRepository.findOne(id);
+	}
+
+
+	@Override
+	public List<ProductModel> getProductModelAllById() {
+		// TODO Auto-generated method stub
+		return productModelRepository.getProductModelAllById();
+	}
+
+
+	@Override
+	public boolean save(ProductModel productModel) {
+		boolean state;
+		try {
+			productModelRepository.save(productModel);
+			state = true; 
+		} catch (Exception e) {
+			log.error("保存或更新失败", e);
+			state = false;
+		}
+		return state;
+	}
+
+	@Override
+	public boolean delProductModel(String id) {
+		boolean state = false;
+		try {
+			productModelRepository.delete(id);
+			state = true;
+		} catch (Exception e) {
+			log.error("删除失败:", e);
+            state = false;
+		}
+		return state;
+	}
+
+	@Override
+	public boolean delPcModel(String id) {
+		boolean state = false;
+		try {
+			productModelRepository.delPCModel(id);
+			state = true;
+		} catch (Exception e) {
+			log.error("删除失败:", e);
+            state = false;
+		}
+		return state;
+	}
+
+	@Override
+	public String getLastId() {
+		return productModelRepository.getLastId();
+	}
+
+	
+
+}
+	

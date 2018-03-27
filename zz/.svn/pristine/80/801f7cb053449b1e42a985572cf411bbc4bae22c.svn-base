@@ -1,0 +1,58 @@
+package com.bizdata.zz.businesstrip.domain;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import me.sdevil507.base.JpaUUIDBaseEntity;
+
+/**
+ * zz_business_trip_main实体
+ * 
+ * @author wp
+ *
+ */
+@Table(name = "zz_business_trip_main")
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class BusinessTrip extends JpaUUIDBaseEntity {
+	// 出差id
+	@Column
+	private String id;
+	// 员工id
+	@Column
+	private String staffId;
+	// 项目id
+	@Column
+	private String productId;
+	// 出差内容
+	@Column
+	private String remark;
+	// 出差开始时间
+	@Column
+	private Date tripTime;
+	// 出差结束时间
+	@Column
+	private Date endTime;
+	// 附件
+	@Column
+	private String attach;
+	// 附件名
+	@Column
+	private String attachName;
+	// 创建时间
+	@Column
+	private Date addtime;
+	// 员工姓名
+	@Column
+	private String staff;
+	// 项目名称
+	@Column
+	private String productName;
+
+}

@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>任务新增</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<style type="text/css">
+td{
+	padding:4px;
+}
+.ui-menu-item.click{
+	background-color: #b7c2c7;
+}
+li{
+	list-style-type: none;
+}
+a{
+	cursor: pointer;
+}
+.inline{
+	border: 1px solid #E1E1E1;
+}
+
+
+.form-group-show{ display:flex; justify-content: center; align-items: center;border-bottom:1px solid silver;padding:6px 0;}
+.control-label-show{width:10%;}
+.col-sm-4-show{width:90%;display:flex; align-items: center;flex-wrap:wrap;}
+.inline-show{ padding:6px 0;width:46%; margin:0 3px;}
+.lbl-show{width:20%; display:block;}
+
+
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>任务新增</h1>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<!-- form表单 -->
+		<form class="form-horizontal" id="from-detail" role="form">
+		<input type="hidden" id="rowid" th:value="${editid.dutyid}" name="dutyId"/>
+		<input type="hidden" id="modelId" th:value="${oneproject.modelId}" name="modelId"/>
+		<input type="hidden" id="id" th:value="${oneproject.id}" name="id"/>
+        <input type="hidden" id="projectid" th:value="${editid.projectid}" name="productId"/>
+        <input type="hidden" id="run" th:value="${oneproject.run}" name="run"/>
+        <input type="hidden" th:value="${oneproject.skill}" id="skill" />
+        <input type="hidden" th:value="${oneproject.risk}" id="risk" />
+        <input type="hidden" th:value="${oneproject.design}" id="design" />
+        <input type="hidden" th:value="${oneproject.customer}" id="customer" />
+        <input type="hidden" th:value="${oneproject.skill_notes}" id="skill_notes" />
+        <input type="hidden" th:value="${oneproject.risk_notes}" id="risk_notes" />
+        <input type="hidden" th:value="${oneproject.design_notes}" id="design_notes" />
+        <input type="hidden" th:value="${oneproject.customer_notes}" id="customer_notes" />
+			<!-- 项目名称 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="name">
+					任务名称:</label>
+
+				<div class="col-sm-3">
+					<input type="text" name="name" id="name" placeholder="任务名称" th:value="${oneproject.name}"
+						class="col-xs-10 col-sm-12" />
+				</div>
+			</div>
+
+			<!-- 参与者 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 指派人:</label>
+				<div class="col-sm-3">
+					<select name="creator" id="creator" for="creator" class="form-control">
+                       <!-- <option value="">选择指派人</option> -->
+                       <option th:value="${oneproject.creator}" th:text="${oneproject.creator}" selected="selected"></option>
+                    </select>
+				</div>
+			</div>
+			
+			<!-- 优先级 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 优先级:</label>
+				<div class="col-sm-3" >
+				<input type="hidden" name="state" id="state" th:value="${oneproject.state}"/>
+					<select style='width:97%;' class="ui-menu ui-widget ui-widget-content"  id="ulState"
+					role="menu" tabindex="0" aria-activedescendant="ui-id-5">
+						<option class="ui-menu-item click" tabindex="-1" role="menuitem" val="0" th:if="${oneproject.state}=='0'">
+							<i class="fa fa-flag blue bigger-150" ></i>&nbsp; <font>一般</font>
+						</option>
+						<option class="ui-menu-item" tabindex="-1" role="menuitem" val="0" th:if="${oneproject.state}!='0'">
+							<i class="fa fa-flag blue bigger-150" ></i>&nbsp; <font>一般</font>
+						</option>
+						
+						<option class="ui-menu-item click" tabindex="-1" role="menuitem" val="1" th:if="${oneproject.state}=='1'">
+							<i class="fa fa-flag orange bigger-150"></i>&nbsp; <font>重要</font>
+						</option>
+						
+						<option class="ui-menu-item" tabindex="-1" role="menuitem" val="1" th:if="${oneproject.state}!='1'">
+							<i class="fa fa-flag orange bigger-150"></i>&nbsp; <font>重要</font>
+						</option>
+						
+						<option class="ui-menu-item click" tabindex="-1" role="menuitem" val="2" th:if="${oneproject.state}=='2'">
+							<i class="fa fa-flag red bigger-150"></i>&nbsp; <font>紧急</font>
+						</option>
+						
+						<option class="ui-menu-item" tabindex="-1" role="menuitem" val="2" th:if="${oneproject.state}!='2'">
+							<i class="fa fa-flag red bigger-150"></i>&nbsp; <font>紧急</font>
+						</option>
+					</select>
+				</div>
+			</div>
+			
+			<!-- 技能项 -->
+			<input type="hidden" name="skill_notes" value="" />
+			<input type="hidden" name="risk_notes" value="" />
+			<input type="hidden" name="design_notes" value="" />
+			<input type="hidden" name="customer_notes" value="" />
+			<div class="form-group form-group-show"  >
+				<label class="col-sm-3 control-label no-padding-right control-label-show"
+					for="startTime" > 技能项:</label>
+				<div class=" col-sm-4 col-sm-4-show" >
+                    <label  th:each="single:${sources.get('skill')}" class='inline-show'>
+                    <input type="checkbox" name="skill" class="ace" th:value="${single.id}" />
+					<span style="display:block; margin-left:30%" class="lbl lbl-show" th:text="${single.name}" ></span>
+					<textarea style="display:block; margin-left:30%" th:text="${single.notes}" name="skill_notes"></textarea>
+					<i style=" margin-left:30%" class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a>
+					</label>
+				</div>
+			</div>
+			
+			<!-- 风险 -->
+			<div class="form-group form-group-show">
+				<label class="col-sm-3 control-label no-padding-right control-label-show"
+					for="startTime"> 风险项:</label>
+				<div class="col-sm-4 col-sm-4-show">
+                    <label class="inline-show" th:each="single:${sources.get('risk')}">
+                    <input type="checkbox" name="risk" class="ace" th:value="${single.id}"/>
+					<span style="display:block; margin-left:30%" class="lbl lbl-show" th:text="${single.name}">
+					</span>
+					<textarea style="display:block; margin-left:30%" th:text="${single.notes}"></textarea>
+					<i style=" margin-left:30%" class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a>
+					</label>
+				</div>
+			</div>
+			
+			<!-- 设计约束 -->
+			<div class="form-group form-group-show">
+				<label class="col-sm-3 control-label no-padding-right control-label-show"
+					for="startTime"> 设计约束:</label>
+				<div class="col-sm-4 col-sm-4-show" >
+                     <label class="inline-show" th:each="single:${sources.get('design')}">
+                     <input  type="checkbox" name="design" class="ace" th:value="${single.id}"/>
+					<span style="display:block; margin-left:30%" class="lbl lbl-show" th:text="${single.name}"></span>
+					<textarea style="display:block; margin-left:30%" th:text="${single.notes}"></textarea>
+					<i style=" margin-left:30%" class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a>
+					</label>
+				</div>
+			</div>
+			
+			<!-- 用户场景 -->
+			<div class="form-group form-group-show">
+				<label class="col-sm-3 control-label no-padding-right control-label-show"
+					for="startTime"> 用户场景:</label>
+				<div class="col-sm-4 col-sm-4-show">
+                    <label class="inline-show" th:each="single:${sources.get('customer')}">
+                    <input type="checkbox" name="customer" class="ace" th:value="${single.id}"/>
+					<span style="display:block; margin-left:30%" class="lbl lbl-show" th:text="${single.name}"></span>
+					<textarea style="display:block; margin-left:30%" th:text="${single.notes}"></textarea>
+					<i style=" margin-left:30%"  class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a>
+					</label>
+				</div>
+			</div>
+			
+			
+			<div id='str' style='background:#fec80d; width:60px; line-height:30px;text-align: center;center; box-shadow:1px 1px 6px  darkgray ;cursor: pointer;font-size:14px'>展示</div>
+			
+			
+			<!-- 参与评审-->
+			<input type="hidden" th:value="${oneproject.review}" id="psr" />
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right "
+					for="startTime"> 参与评审:</label>
+				<div class="col-sm-3">
+					<select   name="review" id="review" for="review" class="form-control" >
+                      <option value=""></option>
+                    </select>
+				</div>
+                	 			
+				
+			</div>
+			<!-- 附件上传 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 附件上传:</label>
+				<div class="col-sm-3">
+					<input type="hidden" name="picUrl" id="picUrl" th:value="${oneproject.picUrl}" />
+					<!-- 图片上传组件 -->
+					<input multiple="" type="file" id="docurl" name="docurl" />
+				</div>
+			</div>
+			<!-- 附件展示 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 附件展示:</label>
+				<div class="col-sm-3">
+					<ul>
+						<li><input value="下载附件" id="downloadd" style="margin-left: 10px;" type="button" /></li>
+						<li><i class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a></li>
+						<li><i class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a></li>
+						<li><i class="ace-icon fa fa-download bigger-130"></i>&nbsp;&nbsp;<a>XXXXX.doc</a></li>
+					</ul>
+				</div>
+			</div>
+			<!-- 子任务描述 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="remark">
+					子任务描述:
+					</label>
+
+				<div class="col-sm-3">
+				
+						<textarea type="text" name="remark" id="remark" placeholder="子任务描述" th:value="${oneproject.remark}"
+						class="col-xs-10 col-sm-12"></textarea>
+				</div>
+			</div>
+			
+			<!-- 子任务时间-->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 完成子任务的时间:</label>
+				<div class="col-sm-3">
+					
+					<select name="span" id="span" for="span" class="form-control">
+                        <option th:value="${oneproject.span}" th:text="${oneproject.span}"></option>
+                        <option value="0.5小时">0.5小时</option>
+	                    <option value="1小时">1小时</option>
+	                    <option value="1.5小时">1.5小时</option>
+	                    <option value="2小时">2小时</option>
+                    </select>
+                     <!-- 
+                     <input type="text" th:value="${oneproject.span}" />
+                     -->
+				</div>
+			</div>
+						
+
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+
+					&nbsp; &nbsp; &nbsp;
+					<button id="commit" class="btn btn-success" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 提交
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+
+
+
+//未完成
+
+
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/jquery.validate.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/'',
+			null ]
+
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+		
+		$(document).ready(function(){
+			f1("span");
+			$.get("/zz/admin/user/read",function(data){
+				var jsonData = JSON.parse(data)
+				//增加部门
+				var html1='';
+				var html2='';
+				$.each(jsonData.rows,function(index,val){
+					html1 += "<option value='"+val.username+"'>"+val.username+"</option>"
+					html2 += "<option value='"+val.id+"'>"+val.username+"</option>"
+				})
+				//$("#productDept").append(html1)
+				//增加人员
+				$("#review").append(html2)
+				
+				
+
+					
+				
+				$("#creator").append(html1)
+				f1("creator");
+				f1("review");
+				
+				f2("#skill","skill");
+				f2("#risk","risk");
+				f2("#design","design");
+				f2("#customer","customer");
+				fff('skill','#skill_notes');
+				fff('risk','#risk_notes');
+				fff('design','#design_notes');
+				fff('customer','#customer_notes');
+				//查看时不能编辑
+				hidenot('skill');
+				hidenot('risk');
+				hidenot('design');
+				hidenot('customer');
+				var a = $("#psr").val();
+				 $("#review").find("option[value='"+a+"']").attr("selected",true);
+		})
+			
+			
+	});
+		function f1(id){
+			var f = document.getElementById(id).selectedIndex;
+			var g = document.getElementById(id).options[f].value;
+			 var h =document.getElementById(id).options.length;
+			 var j = new Array();
+			for(var i=0;i<h;i++){
+				var k=document.getElementById(id).options[i].value;
+				if(g==k){
+					j.push(i);		
+				}
+			}
+			document.getElementById(id).options.remove(j[1]);
+		};
+		
+		function f2(id1,name){
+			//获得所要回显的值，此处为：100,1001,200,1400
+		    var checkeds = $(id1).val();
+		    //拆分为字符串数组
+		    var checkArray =checkeds.split(",");
+		    //获得所有的复选框对象
+		    var checkBoxAll = $("input[name="+name+"]");
+		    //获得所有复选框（新闻,微信,论坛，问答，博客，平媒）的value值，然后，用checkArray中的值和他们比较，如果有，则说明该复选框被选中
+		    for(var i=0;i<checkArray.length;i++){
+		    	//获取所有复选框对象的value属性，然后，用checkArray[i]和他们匹配，如果有，则说明他应被选中
+		    	$.each(checkBoxAll,function(j,checkbox){
+		    		//获取复选框的value属性
+		    		var checkValue=$(checkbox).val();
+		    		if(checkArray[i]==checkValue){
+		           		$(checkbox).attr("checked",true);
+		        	}
+		     	})
+		     }
+		}
+		
+		function fff(name,id){
+			var all1 = $("input[name="+name+"]");
+			var ss = new Array()
+			for(var i=0;i<all1.length;i++){
+				if( $("input[name="+name+"]").eq(i).attr('checked') ){
+					ss.push(i)
+				}
+			}
+			var str = $(id).val();
+			var notes = str.split("#");
+			for(var j=0;j<notes.length-1;j++){
+				all1.eq(ss[j]).next().next("textarea").val(notes[j]);
+			}
+		}
+		
+		
+		//技能，风向等显示与隐藏——勾选的显示
+		function hidenot(name){
+			
+			var a = $("input[name="+name+"]").length;
+			for(var i=0;i<a;i++){
+				if($("input[name="+name+"]")[i].checked){
+					$($("input[name="+name+"]")[i]).parent().show();
+					$($("input[name="+name+"]")[i]).next().next("textarea")[0].readOnly = true;
+				}else{
+					$($("input[name="+name+"]")[i]).parent().hide();
+				}
+			}
+		};
+		
+		
+		//技能，风向等显示与隐藏——都显示
+		$('#str').click(function(){
+			if($(this).html()!='收起'){
+				$(this).html('收起')
+			$('.inline-show').show()			
+						var texs=$('textarea')
+		
+				$.each(texs,function(key,value){
+					value.readOnly = false
+				})
+			}else{
+				$(this).html('展示');
+				hidenot('skill');
+				hidenot('risk');
+				hidenot('design');
+				hidenot('customer');	
+	
+			}	
+		});
+
+		
+		
+		
+		
+		//菜单选项
+		$( "#menu" ).menu();
+		
+		//优先级点击事件
+		$(".ui-menu.ui-widget.ui-widget-content").find("li").each(function(index , element){
+			$(element).on("click",function(){
+				$(this).siblings().removeClass("click")
+				$(this).addClass("click")
+				$("#state").val($(this).attr("val"))
+			})
+		})
+		
+		// 设置文件上传
+		$('#docurl').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["doc","docx"],
+                allowMime: ["application/msword","application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("docurl");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("docurl", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/admin/projectChildren/upload1}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#picUrl').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+		
+		
+		//设置校验
+		$('#from-detail').validate({
+					errorElement : 'div',
+					errorClass : 'help-block',
+					focusInvalid : false,
+					ignore : "",
+					rules : {
+						name : {
+							required : true
+						},
+						startTime : {
+							//dateISO : true,
+							required : true
+						},
+						endTime : {
+							//dateISO : true,
+							required : true
+						}
+					},
+
+					messages : {
+						name : "项目名称必须填写。",
+						startTime : {
+							//dateISO : "开始时间格式必须正确",
+							required : "开始时间必须填写",
+						},
+						endTime : {
+							//dateISO : "结束时间格式必须正确",
+							required : "结束时间必须填写",
+
+						},
+					},
+
+					highlight : function(e) {
+						$(e).closest('.form-group')
+								.addClass('has-error');
+					},
+
+					success : function(e) {
+						$(e).closest('.form-group')
+								.removeClass(
+										'has-error');
+						$(e).remove();
+					},
+
+					errorPlacement : function(error,
+							element) {
+						if (element
+								.is('input[type=checkbox]')
+								|| element
+										.is('input[type=radio]')) {
+							var controls = element
+									.closest('div[class*="col-"]');
+							if (controls
+									.find(':checkbox,:radio').length > 1)
+								controls.append(error);
+							else
+								error
+										.insertAfter(element
+												.nextAll(
+														'.lbl:eq(0)')
+												.eq(0));
+						} else if (element
+								.is('.select2')) {
+							error
+									.insertAfter(element
+											.siblings('[class*="select2-container"]:eq(0)'));
+						} else if (element
+								.is('.chosen-select')) {
+							error
+									.insertAfter(element
+											.siblings('[class*="chosen-container"]:eq(0)'));
+						} else
+							error.insertAfter(element
+									.parent());
+					},
+				});
+
+				// 结束日期初始化
+				$('#actualEndTime').datetimepicker();
+				
+				
+				$('#downloadd').click(function(){
+					var aid = $("input[name='id']").val();
+					alert(aid)
+			    	window.location.href = "projectChildren/fileDownLoad?id="+aid;
+			    })
+				
+				
+
+				// 返回
+				$('#back').click(function() {
+					location.href ="#page/projectList/detail?id="+$("#projectid").val();
+				})
+				
+				function abc(n1,n2){
+					var a= $("input[name="+n1+"]").length;
+					var check="";	
+					for(var i=0;i<a;i++){ 
+					   if($("input[name="+n1+"]")[i].checked){   
+							check+=$($("input[name="+n1+"]")[i]).next().next().val()+"#"
+						}
+					}
+				   $("input[name="+n2+"]").val(check);
+				}
+				// 执行提交
+				$('#commit').click(function() {
+					
+					
+					abc("skill","skill_notes")
+					abc("risk","risk_notes")
+					abc("design","design_notes")
+					abc("customer","customer_notes")
+
+						  $.post("projectChildren/singleUpdate", $("#from-detail").serialize(), function (data) {
+						     if (0 === data.code) {
+						    	 location.href ="#page/projectList/detail?id="+$("#projectid").val();
+						     } else {
+						         alert(data.message)
+						     }
+						 }, "JSON") 
+				})
+				
+			
+				
+				
+		})
+		
+		
+	/*]]>*/
+</script>
+</html>

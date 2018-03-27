@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>项目新增</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/ztree-css/zTreeStyle.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<style type="text/css">
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>项目新增</h1>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<!-- form表单 -->
+		<form class="form-horizontal" id="from-detail" role="form">
+			<!-- 项目名称 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="name">
+					项目名称:</label>
+
+				<div class="col-sm-3">
+					<input type="text" name="productName" id="productName" placeholder="项目名称"
+						class="col-xs-10 col-sm-12" />
+				</div>
+			</div>
+
+			<!-- 图片 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="pic">
+					图片:</label>
+
+				<div class="col-sm-3">
+					<input type="hidden" name="picUrl" id="picUrl" />
+					<!-- 图片上传组件 -->
+					<input multiple="" type="file" id="pic" name="pic" />
+				</div>
+			</div>
+
+
+			<!-- 选择模版 -->
+			<div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="productModel"> 项目模型:</label>
+                <div class="col-sm-3">
+                    <select name="productModel" id="productModel" for="productModel" class="form-control">
+                        <option value="">选择状态</option>
+                        <option value="HOME">模版一</option>
+                        <option value="MIAO_GROUP">模版一</option>
+                        <option value="INFORMATION">模版一</option>
+                        <option value="MALL">模版一</option>
+                        <option value="MIAO_MORE">模版一</option>
+                    </select>
+                    <input type="hidden" name="productModel" id="productModel" />
+                </div>
+            </div>
+            
+            <!-- 所属部门 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 项目所属部门:</label>
+					<div class="col-sm-2">
+					    <select name="productModel" id="productModel" for="productModel" class="form-control">
+	                        <option value="">选择状态</option>
+	                        <option value="HOME">模版一</option>
+	                        <option value="MIAO_GROUP">模版一</option>
+	                        <option value="INFORMATION">模版一</option>
+	                        <option value="MALL">模版一</option>
+	                        <option value="MIAO_MORE">模版一</option>
+                    	</select>
+					</div>
+			</div>
+            
+            <!-- 项目负责人 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 项目负责人:</label>
+					<div class="col-sm-2">
+					    <select name="productModel" id="productModel" for="productModel" class="form-control">
+	                        <option value="">选择状态</option>
+	                        <option value="HOME">模版一</option>
+	                        <option value="MIAO_GROUP">模版一</option>
+	                        <option value="INFORMATION">模版一</option>
+	                        <option value="MALL">模版一</option>
+	                        <option value="MIAO_MORE">模版一</option>
+                    	</select>
+					</div>
+			</div>
+            
+			<!-- 参与者 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 参与者:</label>
+					<div class="col-sm-2">
+						<ul id="treeDemo" class="ztree"></ul>
+					</div>
+					<!-- <input type="hidden" name="productActor" id="productActor" /> -->
+					<div class="col-sm-2">
+						<select multiple="multiple" style="width: 134px; " id="leftselect">
+						</select>
+					</div>
+					<div class="col-sm-2">
+						<select multiple="multiple" style="width: 134px; " id="rightselect" name="productActor">
+						</select>
+					</div>
+			</div>    
+			
+			<!-- 地点选择 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="location"> 选择地图:</label>
+				<div class="col-sm-3">
+					<input type="text" name="productLocation" id="baidumap" placeholder="选择地点"
+						class="col-xs-10 col-sm-12" />
+				</div>
+			</div>        
+
+			<!-- 开始时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="startTime"> 开始时间:</label>
+				<div class="col-sm-3">
+					<input id="startTime" type="text"
+						class="col-xs-10 col-sm-12 input-sm form-control" name="startTime" />
+				</div>
+			</div>
+
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="endTime">
+					结束时间:</label>
+				<div class="col-sm-3">
+					<input id="endTime" type="text"
+						class="col-xs-10 col-sm-12 input-sm form-control" name="endTime" />
+				</div>
+			</div>
+			
+			<!-- 项目描述 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" >
+					项目描述:</label>
+				<div class="col-sm-3">
+					<input id="editor_id" name="productDesc" type="hidden"/>  
+					
+					
+				</div>
+			</div>
+
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+
+					&nbsp; &nbsp; &nbsp;
+					<button id="commit" class="btn btn-success" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 提交
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/ztree-js/jquery.ztree.core.js}]]*/'',
+			/*[[@{/assets/js/ztree-js/jquery.ztree.excheck.min.js}]]*/'',
+			/*[[@{/assets/js/kindeditor/kindeditor-all-min.js}]]*/'',
+			/*[[@{/assets/js/kindeditor/lang/zh_CN.js}]]*/'',
+			/*[[@{/assets/js/jquery.validate.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/'',
+			null ]
+
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+		
+		
+		
+		//富文本框
+		var editor = KindEditor.create("#editor_id",{
+       		width: '550px',
+        	height: '250px',
+        	afterCreate: function () {
+     	        this.sync();
+     	    },
+     	    afterBlur: function () {
+     	        this.sync();
+     	    }
+     	})
+		
+		//ztree 相关的配置
+		var setting = {
+				data: {
+					simpleData: {
+						enable: true,
+						idKey: "id",
+						pIdKey: "parent",
+					}
+				},
+				callback: {
+					onClick: zTreeOnClick,
+					//onCheck: zTreeOnCheck,
+				},/* 
+				   check:{
+					enable: true,
+					chkStyle: "checkbox",
+					chkboxType: { "Y" : "s", "N" : "s" },
+				}   */ 
+			};
+
+		$(document).ready(function(){
+			//初始化部门数据
+			$.get("/zz/admin/organization/organizationList",function(data){
+				var jsonData = JSON.parse(data)
+				if(jsonData.rows != null && jsonData.rows != ''){
+					$.fn.zTree.init($("#treeDemo"), setting, jsonData.rows);
+				}
+			})
+			
+		});
+		
+		function zTreeOnCheck(event, treeId, treeNode) {
+			var oldValue = $("#productActor").val()
+				oldValue = oldValue +treeNode.id+","
+				$("#productActor").val(oldValue)
+		};
+		
+		function zTreeOnClick(event, treeId, treeNode){
+			var deptId = treeNode.id
+			//发送请求
+			$.get("projectList/findAllByOrganizationId?organizationId="+deptId,function(data){
+				$("#leftselect").children().remove()
+				if(data.rows.length > 0){
+					var html ='';
+					$.each(data.rows,function(index,val){
+						html += "<option value='"+val.id+"'>"+val.username+"</option>"
+					})
+					$("#leftselect").append(html)
+				}
+			},"JSON")
+		}
+		
+		//select 标签的点击事件
+		$("#leftselect").on("click",function(){
+			var id = $("#leftselect option:selected").val();
+			if($("#rightselect").children().length == 0){
+				$("#leftselect option:selected").clone().appendTo("#rightselect");
+			}else{
+				var flag =true;
+				$("#rightselect").children().each(function(index,val){
+					if(id == $(val).val()){
+						flag = false;
+					}
+				})
+				if(flag){
+					$("#leftselect option:selected").clone().appendTo("#rightselect");
+				}
+			}
+		})
+		
+		$("#rightselect").on("click",function(){
+			var flag = confirm("是否确定删除该人员？")
+			if(flag){
+				$("#rightselect option:selected").remove();
+			}
+		})
+		
+		//菜单选项
+		$( "#menu" ).menu();
+		
+		//设置百度地图取点
+		$("#baidumap").on("click",function(){
+			//location.href = "#page/projectList/toBaiduMap";
+		})
+		
+		// 设置文件上传
+		$('#pic').ace_file_input(
+				{
+					style : 'well',
+					btn_choose : '点击选择您要上传的图片',
+					btn_change : null,
+					no_icon : 'ace-icon fa fa-cloud-upload',
+					droppable : false,
+					allowExt : [ "jpeg", "jpg", "png", "gif",
+							"bmp" ],
+					allowMime : [ "image/jpg", "image/jpeg",
+							"image/png", "image/gif",
+							"image/bmp" ],
+					thumbnail : 'fit',
+					preview_error : function(filename,
+							error_code) {
+					}
+				}).on('change', function() {
+			var fileInput = document.getElementById("pic");
+			var file = fileInput.files[0];
+			var formData = new FormData();
+			formData.append("file", file);
+			$.ajax({
+				type : "POST", //必须POST
+				url : /*[[@{/upload}]]*/'', //接收请求的URL
+				processData : false, //必须设置
+				contentType : false, //必须设置
+				data : formData, //直接把formData对象作为data属性的值发送
+				success : function(data) {
+					console.log(data)
+					if (0 === data.code) {
+						//如果上传成功,设置url地址
+						$('#picUrl').val(data.content)
+					} else {
+						alert(data.message)
+					}
+				}
+			})
+		}).on('file.error.ace', function(e, info) {
+			alert('请保证上传的为图片文件！')
+		});
+
+		//设置校验
+		$('#from-detail').validate(
+				{
+					errorElement : 'div',
+					errorClass : 'help-block',
+					focusInvalid : false,
+					ignore : "",
+					rules : {
+						name : {
+							required : true
+						},
+						pic : {
+							required : true
+						},
+						location : {
+							required : true
+						},
+						productModel:{
+							required : true
+						},
+						people:{
+							required : true
+						},
+						startTime : {
+							//dateISO : true,
+							required : true
+						},
+						endTime : {
+							//dateISO : true,
+							required : true
+						}
+					},
+
+					messages : {
+						name : "项目名称必须填写。",
+						pic:"图片必须上传",
+						productModel:"项目模版必须选择",
+						location:"项目坐标必须选择",
+						startTime : {
+							//dateISO : "开始时间格式必须正确",
+							required : "开始时间必须填写",
+						},
+						endTime : {
+							//dateISO : "结束时间格式必须正确",
+							required : "结束时间必须填写",
+
+						},
+					},
+
+					highlight : function(e) {
+						$(e).closest('.form-group')
+								.addClass('has-error');
+					},
+
+					success : function(e) {
+						$(e).closest('.form-group')
+								.removeClass(
+										'has-error');
+						$(e).remove();
+					},
+
+					errorPlacement : function(error,
+							element) {
+						if (element
+								.is('input[type=checkbox]')
+								|| element
+										.is('input[type=radio]')) {
+							var controls = element
+									.closest('div[class*="col-"]');
+							if (controls
+									.find(':checkbox,:radio').length > 1)
+								controls.append(error);
+							else
+								error
+										.insertAfter(element
+												.nextAll(
+														'.lbl:eq(0)')
+												.eq(0));
+						} else if (element
+								.is('.select2')) {
+							error
+									.insertAfter(element
+											.siblings('[class*="select2-container"]:eq(0)'));
+						} else if (element
+								.is('.chosen-select')) {
+							error
+									.insertAfter(element
+											.siblings('[class*="chosen-container"]:eq(0)'));
+						} else
+							error.insertAfter(element
+									.parent());
+					},
+				});
+
+				// 开始日期初始化
+				$('#startTime').datetimepicker();
+				// 结束日期初始化
+				$('#endTime').datetimepicker();
+
+				// 返回
+				$('#back').click(function() {
+					location.href = "#page/projectList"
+				})
+
+				// 执行提交
+				$('#commit').click(function() {
+					if (!$('#from-detail').valid())
+						return false;
+					if ('' == $("#picUrl").val())
+						alert("将设置默认图片")
+
+						  $.post("projectList/addProduct", $("#from-detail").serialize(), function (data) {
+						     if (0 === data.code) {
+						         location.href = "#page/projectList/"
+						     } else {
+						         alert(data.message)
+						     }
+						 }, "JSON") 
+				})
+		})
+	/*]]>*/
+</script>
+</html>

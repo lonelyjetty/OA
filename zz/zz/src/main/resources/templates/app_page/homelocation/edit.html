@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>健康资讯位置编辑</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>健康资讯位置编辑</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+            <!-- 名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="name"> 名称:</label>
+                <div class="col-sm-3">
+                    <input type="hidden" name="id" th:value="${home.id}"/>
+                    <input type="text" name="articleName" id="articleName" placeholder="名称"
+                           class="col-xs-10 col-sm-12" th:value="${home.articleName}"/>
+                </div>
+            </div>
+            <!-- 分类 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="name"> 分类:</label>
+                <input type="hidden" id="classi" th:value="${home.classify}"/>
+                <label><input name="classify" type="radio" class="ace" value = "0" checked="checked"/>
+								<span class="lbl">文章</span></label>
+					<label><input name="classify" type="radio" class="ace" value = "1"/>
+								<span class="lbl">栏目</span></label>
+            </div>
+
+            <!-- id -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="serialNum"> id:</label>
+
+                <div class="col-sm-3">
+                    <input type="number" name="locationId" id="locationId" placeholder="id" class="col-xs-10 col-sm-12"
+                           th:value="${home.locationId}"/>
+                </div>
+            </div>
+
+            <!-- 图片 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="pic"> 图片:</label>
+
+                <div class="col-sm-3">
+                    <input type="hidden" name="locationPicture" id="locationPicture" th:value="${home.locationPicture}"/>
+                    <img id="pic_img" th:src="${home.locationPicture}" class="img-responsive center-block"/>
+                    <div id="pic_input" hidden="hidden">
+                        <!-- 图片上传组件 -->
+                        <input multiple="" type="file" id="pic" name="pic"/>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 位置序号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="targetUrl"> 位置序号:</label>
+
+                <div class="col-sm-3">
+                    <input type="number" name="locationNo" id="locationNo" placeholder="位置序号" class="col-xs-10 col-sm-12"
+                           th:value="${home.locationNo}"/>
+                </div>
+            </div>
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置文件上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#locationPicture').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	articleName: {
+                        required: true
+                    },
+                    serialNum: {
+                        required: true
+                    },
+                    locationPicture: {
+                        required: true
+                    },
+                    locationId: {
+                        required: true
+                    },
+                    locationNo: {
+                        required: true
+                    },
+                    locationPicture: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                	articleName: "名称必须填写。",
+                    serialNum: "排序序号必须填写",
+                    locationId: "id必须填写",
+                    locationNo: "位置序号必须填写",
+                    locationPicture: "图片必须上传",
+                    endTime: "结束时间必须填写"
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 开始日期初始化
+            $('#startTime').datetimepicker();
+            // 结束日期初始化
+            $('#endTime').datetimepicker();
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/home_location"
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                //将picUrl只展示文件名
+                var url = $('#locationPicture').val();
+                var slice = url.split("/")
+                $('#locationPicture').val(slice[slice.length - 1])
+
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("home_location/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/home_location/"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+
+            // 点击图片隐藏当前图片,并展示图片选择框
+            $('#pic_img').click(function () {
+                $('#pic_img').hide()
+                $('#pic_input').show()
+            })
+        })
+        
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,32 @@
+package com.bizdata.zz.project.childrenduties.vo;
+
+import java.util.List;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+public class ChildrenDutiesVo {
+	
+	private ProductModel productModel;
+	
+	private List<ProductChildrenDuties> childrenDutiesList;
+
+	public ProductModel getProductModel() {
+		return productModel;
+	}
+
+	public void setProductModel(ProductModel productModel) {
+		this.productModel = productModel;
+	}
+
+	public List<ProductChildrenDuties> getChildrenDutiesList() {
+		return childrenDutiesList;
+	}
+
+	public void setChildrenDutiesList(List<ProductChildrenDuties> childrenDutiesList) {
+		this.childrenDutiesList = childrenDutiesList;
+	}
+	
+	
+
+}

@@ -1,0 +1,86 @@
+package com.bizdata.zz.project.service;
+
+import java.util.List;
+
+import com.bizdata.admin.domain.Organization;
+import com.bizdata.zz.project.domain.ProductStoriesAndDuties;
+
+/**
+ * BannerService
+ * <p>
+ * Created by xq on 2017/12/7.
+ */
+public interface ProductStoriesAndDutiesService {
+
+	/**
+	 * 创建组织机构
+	 *
+	 * @param organization 
+	 * @return 组织机构id
+	 */
+	public String insertProductStoriesAndDuties(ProductStoriesAndDuties productStoriesAndDuties);
+
+	
+	/**
+	 * 更新组织机构
+	 *
+	 * @param organization 更新组织机构
+	 * @return 组织机构id
+	 */
+	public String updateProductStoriesAndDuties(ProductStoriesAndDuties productStoriesAndDuties);
+
+	/**
+	 * 删除组织机构
+	 *
+	 * @param organizationId 组织机构id
+	 */
+	public void deleteProductStoriesAndDuties(String productStoriesAndDutiesId);
+	
+	/**
+	 * 查找组织机构
+	 *
+	 * @param organizationId 组织机构id
+	 * @return 组织机构实体
+	 */
+	ProductStoriesAndDuties findOne(String productStoriesAndDutiesId);
+
+	/**
+	 * 查找组织机构列表
+	 *
+	 * @return List<Organization>
+	 */
+	List<ProductStoriesAndDuties> findAll();
+
+	
+	/**
+	 * 根据条件查询
+	 *
+	 * @param parent_id 组织机构id
+	 * @return List<Organization>
+	 */
+	List<ProductStoriesAndDuties> findAllByParentId(String parent_id);
+
+	/**
+	 * 获取直系子节点个数
+	 *
+	 * @param parent_id 组织机构id
+	 * @return int
+	 */
+	public int countByParentId(String parent_id);
+
+	/**
+	 * 根据父id找到孩子们
+	 *
+	 * @param parent_id 父id
+	 * @return List<Organization>
+	 */
+	public List<ProductStoriesAndDuties> findChildens(String parent_id);
+
+	/**
+	 * 判断组织结构是否可以删除(规则：如果部门下存在用户则无法删除)
+	 *
+	 * @param id 组织机构id
+	 * @return int
+	 */
+	public boolean canDeleteProductStoriesAndDuties(String id);
+}

@@ -1,0 +1,38 @@
+package com.bizdata.zz.project.projectTask.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.childrenduties.repository.ProductChildrenDutiesRepository;
+import com.bizdata.zz.project.projectTask.repository.ProductChildDutiesTaskRepository;
+import com.bizdata.zz.project.projectTask.service.ProductChildDutiesService;
+
+
+
+@Service
+public class ProductChildDutiesServiceImpl implements ProductChildDutiesService{
+	@Autowired
+	private ProductChildrenDutiesRepository productChildrenDutiesRepository;
+	
+	@Autowired
+	private ProductChildDutiesTaskRepository productChildDutiesTaskRepository;
+
+	@Override
+	public List<ProductChildrenDuties> findAllChildDuties(String creator) {
+		
+		List<ProductChildrenDuties> list = productChildrenDutiesRepository.findAll(creator);
+		
+		return list;
+	}
+
+	@Override
+	public List<ProductChildrenDuties> findAll() {
+		return productChildrenDutiesRepository.findAll();
+	}
+
+	
+
+}

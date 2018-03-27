@@ -1,0 +1,27 @@
+package com.bizdata.zz.project.controller.vo;
+
+public class IdVo {
+	
+	private String dutyid;
+	
+	private String projectid;
+
+	public String getDutyid() {
+		return dutyid;
+	}
+
+	public void setDutyid(String dutyid) {
+		this.dutyid = dutyid;
+	}
+
+	public String getProjectid() {
+		return projectid;
+	}
+
+	public void setProjectid(String projectid) {
+		this.projectid = projectid;
+	}
+	
+	
+
+}

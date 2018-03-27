@@ -1,0 +1,42 @@
+package com.bizdata.zz.project.childrenduties.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+import me.sdevil507.base.JpaBaseRepository;
+
+/**
+ * BannerRepository
+ * <p>
+ * Created by sdevil507 on 2017/9/5.
+ */
+public interface ProductChildrenDutiesRepository extends JpaBaseRepository<ProductChildrenDuties, String> {
+	
+	/**
+	 *  //根据模版id 和 duty id 查找相应的子任务
+	 * @Title: queryByModelIdAndDutyId 
+	 * @Description: TODO
+	 * @param mid
+	 * @param did
+	 * @return
+	 * @return: List<ProductChildrenDuties>
+	 */
+	@Query(value="select * from zz_product_children_duties where model_id=:mid and product_id =:pid",nativeQuery=true)
+	List<ProductChildrenDuties>  queryByModelIdAndDutyId(@Param("mid")String mid,@Param("pid")String pid);
+	@Query(value="select * from zz_product_children_duties where creator = :cname",nativeQuery=true)
+	List<ProductChildrenDuties> findAll(@Param("cname")String cname);
+	/**
+	 * 查找项目下所有冲刺周期一样的子任务
+	 * @param pid
+	 * @param r
+	 * @return List<ProductChildrenDuties> 
+	 */
+	@Query(value="select * from zz_product_children_duties where product_id=:pid and run =:r",nativeQuery=true)
+	List<ProductChildrenDuties> getAllRun(@Param("pid")String pid,@Param("r")String r);
+	
+}

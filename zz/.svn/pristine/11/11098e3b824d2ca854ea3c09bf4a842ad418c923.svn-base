@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>白板管理</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}" />
+<style type="text/css">
+.margin_left_10px {
+	margin-left: 10px;
+}
+
+.search {
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+
+.position {
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>白板管理</h1>
+</div>
+
+<div class="row">
+
+	<div class="col-xs-12">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="" id="main-widget-container">
+			<div class="row">
+			
+				<div class="col-xs-12 col-sm-6 widget-container-col ui-sortable"
+					id="widget-container-col-1" style="min-height: 210px;">
+					<div class="widget-box ui-sortable-handle" id="widget-box-1"
+						style="opacity: 1; z-index: 0;">
+						<div class="widget-header">
+							<h5 class="widget-title">分配给我的任务列表</h5>
+							<div class="widget-toolbar">
+								<a href="#" data-action="fullscreen" class="orange2"> <i
+									class="ace-icon fa fa-expand"></i>
+								</a> <a href="#" data-action="reload"> <i
+									class="ace-icon fa fa-refresh"></i>
+								</a> <a href="#" data-action="collapse"> <i
+									class="ace-icon fa fa-chevron-up"></i>
+								</a> 
+							</div>
+						</div>
+						<div class="widget-body" style='height:500px;overflow: auto;'>
+							<div class="widget-main">
+								<p class="alert alert-info" th:each="single:${childduties}" th:text="'尊敬的'+${single.creator}+'用户，您在['+${single.productId}+']项目中完成了任务：'+${single.name}">
+									
+									 
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 widget-container-col ui-sortable"
+					id="widget-container-col-1" style="min-height: 210px;">
+					<div class="widget-box ui-sortable-handle" id="widget-box-1"
+						style="opacity: 1; z-index: 0;">
+						<div class="widget-header">
+							<h5 class="widget-title">活动日志</h5>
+							<div class="widget-toolbar">
+								<a href="#" data-action="fullscreen" class="orange2"> <i
+									class="ace-icon fa fa-expand"></i>
+								</a> <a href="#" data-action="reload"> <i
+									class="ace-icon fa fa-refresh"></i>
+								</a> <a href="#" data-action="collapse"> <i
+									class="ace-icon fa fa-chevron-up"></i>
+								</a>
+							</div>
+						</div>
+						<!-- activeLogger -->
+						<div class="widget-body">
+							<div class="widget-main" style='height:500px;overflow: auto;'>
+							    <p class="alert alert-success" th:each="single:${tmpTasks}" th:text="${single.creator}+'正在操作['+${single.productId}+']项目中的：'+${single.name}+'子任务'">
+									</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- /.span -->
+			</div>
+			<!-- /.row -->
+		</div>
+		<!-- PAGE CONTENT ENDS -->
+	</div>
+
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/'',
+			null ]
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+			
+						// 必须添加
+						//==================================================================================================
+						$(document).one('ajaxloadstart.page', function(e) {
+							//$(grid_selector).jqGrid('GridUnload');
+							//$('.ui-jqdialog').remove();
+						});
+					})
+	/*]]>*/
+	
+
+</script>
+</html>

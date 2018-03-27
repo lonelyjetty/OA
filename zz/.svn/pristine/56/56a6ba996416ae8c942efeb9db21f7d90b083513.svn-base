@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>项目资源新增</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>模板新增</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="name"> 模板名称:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="productModelName" id="name" placeholder="模板名称"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 默认parentId=0 -->
+			<input type="hidden" name="parentId" id="parentId" value="0" />
+            
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+
+            //设置校验
+          /*   $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    serialNum: {
+                        required: true
+                    },
+                    pic: {
+                        required: true
+                    },
+                    bannerPositionEnum: {
+                        required: true
+                    },
+                    startTime: {
+                    	//dateISO : true,
+                        required: true
+                    },
+                    endTime: {
+                    	//dateISO : true,
+                        required: true
+                    }
+                },
+
+                messages: {
+                    name: "Banner名称必须填写。",
+                    serialNum: "排序序号必须填写",
+                    pic: "Banner图片必须上传",
+                    bannerPositionEnum: "展示位置必须填写",
+                    startTime: {
+                    	//dateISO : "开始时间格式必须正确",
+                    	required : "开始时间必须填写",
+                    },
+                    endTime: {
+                    	//dateISO : "结束时间格式必须正确",
+                    	required : "结束时间必须填写",
+                    	
+                    },
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            }); */
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/projectmodel"
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("projectmodel/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/projectmodel"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+           
+        })
+    /*]]>*/
+</script>
+</html>

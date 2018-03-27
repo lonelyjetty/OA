@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>用户信息详情</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>用户信息详情</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+        	<div class="form-group">
+            	<!-- 用户信息-->
+                <label class="col-xs-3 control-label no-padding-right" style="font-size:18px;">用户信息</label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户ID -->
+                <label class="col-xs-3 control-label no-padding-right">用户ID:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.accountnum}"></label>
+                <!-- 用户头像 -->
+                <label class="col-xs-3 control-label no-padding-right">用户头像:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                       th:text="${data.headpic}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户昵称 -->
+                <label class="col-xs-3 control-label no-padding-right">用户昵称:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.nickname}"></label>
+                <!-- 注册时间 -->
+                <label class="col-xs-3 control-label no-padding-right">注册时间:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                        th:text="${#dates.format(data.createTime,'yyyy-MM-dd HH:mm:ss')}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户手机 -->
+                <label class="col-xs-3 control-label no-padding-right">用户手机:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.mobile}"></label>
+                <!-- 注册IP -->
+                <label class="col-xs-3 control-label no-padding-right">注册IP:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                       th:text="${data.accountSource}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户邮箱 -->
+                <label class="col-xs-3 control-label no-padding-right">用户邮箱:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.email}"></label>
+                <!-- 渠道号 -->
+                <label class="col-xs-3 control-label no-padding-right">渠道号:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                       th:text="${data.pn}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户等级 -->
+                <label class="col-xs-3 control-label no-padding-right">用户等级:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.levelId}"></label>
+                <!-- 状态 -->
+                <label class="col-xs-3 control-label no-padding-right">状态:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                       th:text="${data.loginStatus}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户妙币 -->
+                <label class="col-xs-3 control-label no-padding-right">用户妙币:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.miaoMoney}"></label>
+                <!-- 用户 经验 -->
+                <label class="col-xs-3 control-label no-padding-right">用户 经验:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right"
+                       th:text="${data.exp}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 用户名 -->
+                <label class="col-xs-3 control-label no-padding-right">用户名:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.realname}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 邀请人信息-->
+                <label class="col-xs-3 control-label no-padding-right" style="font-size:18px;">邀请人信息</label>
+            </div>
+            <div class="form-group">
+            	<!-- 邀请人ID -->
+                <label class="col-xs-3 control-label no-padding-right">邀请人ID:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.invitedaccountnum}"></label>
+                <!-- 邀请时间 -->
+                <label class="col-xs-3 control-label no-padding-right">邀请时间:</label>
+                <label style="text-align: left;" class="col-sm-4 control-label no-padding-right" 
+                th:text="${data.invitedtime}"></label>
+            </div>
+            <div class="form-group">
+            	<!-- 邀请人手机号 -->
+                <label class="col-xs-3 control-label no-padding-right">邀请人手机号:</label>
+                <label style="text-align: left;" class="col-sm-1 control-label no-padding-right"
+                       th:text="${data.invitedphone}"></label>
+            </div>
+
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/temperature_data"
+            })
+        })
+    /*]]>*/
+</script>
+</html>

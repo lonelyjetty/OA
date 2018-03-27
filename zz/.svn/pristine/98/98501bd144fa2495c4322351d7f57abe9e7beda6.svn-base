@@ -1,0 +1,34 @@
+package com.bizdata.zz.businesstrip.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.bizdata.zz.businesstrip.domain.BusinessTrip;
+
+import me.sdevil507.base.JpaBaseRepository;
+/**
+ * BussinessTripRepository
+ * <p>
+ * Created by wp on 2018/1/10.
+ */
+public interface BusinessTripRepository extends JpaBaseRepository<BusinessTrip, String>{
+	/**
+	 *  //获取所有出差信息
+	 * @Title: getAll
+	 * @Description: TODO
+	 * @return: List<BusinnessTrip>
+	 */
+	@Query(value="select * from zz_business_trip_main desc",nativeQuery=true)
+	List<BusinessTrip>  getAll();
+	/**
+	 *  //通过用户名获取所有出差信息
+	 * @Title: getAll
+	 * @Description: TODO
+	 * @param: staff
+	 * @return: List<BusinnessTrip>
+	 */
+	@Query(value="SELECT  *FROM  zz.zz_business_trip_main WHERE staff =:staff desc",nativeQuery=true)
+	List<BusinessTrip>  getAllByStaff(@Param("staff")String staff);
+}

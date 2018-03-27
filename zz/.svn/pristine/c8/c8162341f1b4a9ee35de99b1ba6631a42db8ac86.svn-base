@@ -1,0 +1,211 @@
+package com.bizdata.zz.project.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.loader.custom.Return;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.bizdata.admin.repository.UserRepository;
+import com.bizdata.zz.project.domain.ProductStoriesAndDuties;
+import com.bizdata.zz.project.repository.ProductStoriesAndDutiesRepository;
+import com.bizdata.zz.project.service.ProductStoriesAndDutiesService;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * BannerServiceImpl
+ * <p>
+ * Created by sdevil507 on 2017/9/6.
+ */
+@Service
+@Slf4j
+public class ProductStoriesAndDutiesServiceImpl implements ProductStoriesAndDutiesService {
+
+	@Autowired
+	private ProductStoriesAndDutiesRepository productStoriesAndDutiesRepository;
+
+	@Autowired
+	private UserRepository userRepository;
+
+	@Transactional
+	@Override
+	public String insertProductStoriesAndDuties(ProductStoriesAndDuties productStoriesAndDuties) {
+		// 获取父元素
+		ProductStoriesAndDuties parentOrganization = productStoriesAndDutiesRepository
+				.findOne(productStoriesAndDuties.getParent());
+		// 统一增加新节点层级
+		productStoriesAndDuties.setLevel(parentOrganization.getLevel() + 1);
+		// 设置当前子节点的父节点如果是叶子类型设置为不是叶子类型
+		if (parentOrganization.getIsleaf()) {
+			parentOrganization.setIsleaf(false);
+			productStoriesAndDutiesRepository.save(parentOrganization);
+		}
+		ProductStoriesAndDuties result_organization = productStoriesAndDutiesRepository.save(productStoriesAndDuties);
+		return result_organization.getId();
+	}
+
+	@Override
+	public String updateProductStoriesAndDuties(ProductStoriesAndDuties productStoriesAndDuties) {
+		ProductStoriesAndDuties result_organization = productStoriesAndDutiesRepository.save(productStoriesAndDuties);
+		return result_organization.getId();
+	}
+
+	@Transactional
+	@Override
+	public void deleteProductStoriesAndDuties(String productStoriesAndDutiesId) {
+		// 根据organizationId获取要删除的SysOrganization
+		ProductStoriesAndDuties delSysOrganization = productStoriesAndDutiesRepository
+				.findOne(productStoriesAndDutiesId);
+		// 根据id删除organization中记录
+		productStoriesAndDutiesRepository.delete(productStoriesAndDutiesId);
+		// 根据父id字段查出孩子们
+		List<ProductStoriesAndDuties> childrens = findChildens(productStoriesAndDutiesId);
+		for (ProductStoriesAndDuties sysOrganization : childrens) {
+			// 递归删除
+			deleteProductStoriesAndDuties(sysOrganization.getId());
+		}
+		// 根据parentId查询
+		int count = productStoriesAndDutiesRepository.countByParentId(delSysOrganization.getParent());
+		if (count < 1) {
+			// 如果父节点下不存在子节点了，则设置父节点为叶子
+			ProductStoriesAndDuties parentSysOrganization = productStoriesAndDutiesRepository
+					.findOne(delSysOrganization.getParent());
+			if (null != parentSysOrganization) {
+				parentSysOrganization.setIsleaf(true);
+				productStoriesAndDutiesRepository.save(parentSysOrganization);
+			}
+		}
+
+	}
+
+	@Override
+	public ProductStoriesAndDuties findOne(String productStoriesAndDutiesId) {
+		return productStoriesAndDutiesRepository.findOne(productStoriesAndDutiesId);
+	}
+
+	@Override
+	public List<ProductStoriesAndDuties> findAll() {
+		return createFormatOrganizationList(productStoriesAndDutiesRepository.findAll());
+	}
+
+	/**
+	 * 创建符合jqgrid treegrid格式的资源列表
+	 *
+	 * @param list
+	 *            组织机构list
+	 * @return List<Organization>
+	 */
+	private List<ProductStoriesAndDuties> createFormatOrganizationList(List<ProductStoriesAndDuties> list) {
+		// 返回的list
+		List<ProductStoriesAndDuties> rootArray = new ArrayList<>();
+		for (ProductStoriesAndDuties organization : list) {
+			if (organization.getParent().equals("0")) {
+				rootArray.add(organization);
+				rootArray.addAll(getNextLevelOrganization(organization, list));
+			}
+		}
+		return rootArray;
+	}
+
+	/**
+	 * 递归查找获取下一级的Organization
+	 *
+	 * @return List<Organization>
+	 */
+	private List<ProductStoriesAndDuties> getNextLevelOrganization(ProductStoriesAndDuties currentNode,
+			List<ProductStoriesAndDuties> list) {
+		List<ProductStoriesAndDuties> temp_list = new ArrayList<>();
+		for (ProductStoriesAndDuties newNode : list) {
+			if (newNode.getParent() != null && newNode.getParent().compareTo(currentNode.getId()) == 0) {
+				temp_list.add(newNode);
+				temp_list.addAll(getNextLevelOrganization(newNode, list));
+			}
+		}
+		return temp_list;
+	}
+
+	@Override
+	public List<ProductStoriesAndDuties> findAllByParentId(String parent_id) {
+		return productStoriesAndDutiesRepository.findAllByParentId(parent_id);
+	}
+
+	@Override
+	public int countByParentId(String parent_id) {
+		return productStoriesAndDutiesRepository.countByParentId(parent_id);
+	}
+
+	@Override
+	public List<ProductStoriesAndDuties> findChildens(String parent_id) {
+		return productStoriesAndDutiesRepository.findAllByParentId(parent_id);
+	}
+
+	@Override
+	public boolean canDeleteProductStoriesAndDuties(String id) {
+		boolean state = true;
+		List<String> ids = new ArrayList<>();
+		ids.add(id);
+		ids.addAll(getWantDeleteId(id));
+		for (String temp_id : ids) {
+			int count = userRepository.countByOrganizationId(temp_id);
+			if (count > 0) {
+				state = false;
+				break;
+			}
+		}
+		return state;
+	}
+
+	/**
+	 * 获取需要删除的id的孩子的id
+	 *
+	 * @return List<String>
+	 */
+	private List<String> getWantDeleteId(String id) {
+		List<String> temp_ids = new ArrayList<>();
+		// 根据父id字段查出孩子们
+		List<ProductStoriesAndDuties> childrens = findChildens(id);
+		for (ProductStoriesAndDuties sysOrganization : childrens) {
+			temp_ids.add(sysOrganization.getId());
+			temp_ids.addAll(getWantDeleteId(sysOrganization.getId()));
+		}
+		return temp_ids;
+	}
+
+	@Override
+	public boolean canInit(String id) {
+		boolean flag = false;
+		ProductStoriesAndDuties temp = productStoriesAndDutiesRepository.canInit(id);
+		if (temp == null) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	@Override
+	public boolean save(ProductStoriesAndDuties productStoriesAndDuties) {
+		boolean flag = false;
+		ProductStoriesAndDuties save = productStoriesAndDutiesRepository.save(productStoriesAndDuties);
+		if(save != null) {
+			flag = true;
+		}
+		return flag;
+	}
+
+	@Override
+	public List<ProductStoriesAndDuties> findAllByProId(String id) {
+		// TODO Auto-generated method stub
+		return createFormatOrganizationList(productStoriesAndDutiesRepository.findAllByProId(id));
+	}
+
+	@Override
+	public ProductStoriesAndDuties getRunNum(String id) {
+		// TODO Auto-generated method stub
+		return productStoriesAndDutiesRepository.getRunNum(id);
+	}
+
+	
+
+}

@@ -1,0 +1,42 @@
+package com.bizdata.zz.businesstrip.service.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.businesstrip.domain.BusinessTrip;
+import com.bizdata.zz.businesstrip.repository.BusinessTripRepository;
+import com.bizdata.zz.businesstrip.service.BusinessTripService;
+import com.bizdata.zz.project.domain.Product;
+
+import lombok.extern.slf4j.Slf4j;
+
+@Service
+@Slf4j
+public class BusinessTripServiceImpl implements BusinessTripService{
+	/**
+	 * BussinessTripServiceImpl
+	 * <p>
+	 * Created by wp on 2018/1/10.
+	 */
+	@Autowired
+	private BusinessTripRepository bussinessTripRepository;
+	@Override
+	public boolean delete(String id) {
+		return false;
+	}
+	@Override
+	public boolean save(BusinessTrip product) {
+		return false;
+	}
+	@Override
+	public BusinessTrip findOne(String id) {
+		return bussinessTripRepository.findOne(id);
+	}
+	@Override
+	public List<BusinessTrip> findAll() {
+		return null;
+	}
+	
+}

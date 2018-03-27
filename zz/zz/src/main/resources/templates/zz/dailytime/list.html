@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>考勤管理</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/fullcalendar.min.css}" />
+<style type="text/css">
+.margin_left_10px {
+	margin-left: 10px;
+}
+
+.search {
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+
+.position {
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>考勤管理</h1>
+</div>
+
+<div class="row">
+
+	<div class="col-xs-12">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="col-sm-12">
+			<div class="space"></div>
+			<!-- calendar  -->
+			<div id="calendar" class="fc fc-ltr fc-unthemed">
+			</div>
+			<!-- calendar  -->
+			
+		</div>
+
+
+		<!-- PAGE CONTENT ENDS -->
+	</div>
+
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			[[@{/assets/js/moment.min.js}]],
+			[[@{/assets/js/fullcalendar.min.js}]],
+			[[@{/assets/js/bootbox.js}]],
+			null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+		// 必须添加
+		//==================================================================================================
+		$(document).one('ajaxloadstart.page', function(e) {
+			//$(grid_selector).jqGrid('GridUnload');
+			//$('.ui-jqdialog').remove();
+		});
+	
+		var date = new Date();
+		var d = date.getDate();
+		var m = date.getMonth();
+		var y = date.getFullYear();
+
+
+		var calendar = $('#calendar').fullCalendar({
+			
+			header: {
+				left: 'prev,next today',
+				center: 'title',
+				right: 'month,agendaWeek,agendaDay'
+			},
+			events: [
+			  {
+				title: '未签到',
+				start: new Date(y, m, d),
+				className: 'label-success'
+			  },
+			  {
+				title: '签到',
+				start: new Date(y, m, 3),
+				className: 'label-success'
+			  },
+			  {
+				title: 'Long Event',
+				start: moment().subtract(5, 'days').format('YYYY-MM-DD'),
+				end: moment().subtract(1, 'days').format('YYYY-MM-DD'),
+				className: 'label-success'
+			  },
+			]
+			,
+			
+			editable: true,
+			droppable: true, // this allows things to be dropped onto the calendar !!!
+			drop: function(date) { // this function is called when something is dropped
+			
+				// retrieve the dropped element's stored Event Object
+				var originalEventObject = $(this).data('eventObject');
+				var $extraEventClass = $(this).attr('data-class');
+				
+				
+				// we need to copy it, so that multiple events don't have a reference to the same object
+				var copiedEventObject = $.extend({}, originalEventObject);
+				
+				// assign it the date that was reported
+				copiedEventObject.start = date;
+				copiedEventObject.allDay = false;
+				if($extraEventClass) copiedEventObject['className'] = [$extraEventClass];
+				
+				// render the event on the calendar
+				// the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+				$('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+				
+				// is the "remove after drop" checkbox checked?
+				if ($('#drop-remove').is(':checked')) {
+					// if so, remove the element from the "Draggable Events" list
+					$(this).remove();
+				}
+				
+			}
+			,
+			selectable: true,
+			selectHelper: true,
+			select: function(start, end, allDay) {
+				
+				bootbox.prompt("New Event Title:", function(title) {
+					if (title !== null) {
+						calendar.fullCalendar('renderEvent',
+							{
+								title: title,
+								start: start,
+								end: end,
+								allDay: allDay,
+								className: 'label-info'
+							},
+							true // make the event "stick"
+						);
+					}
+				});
+				
+
+				calendar.fullCalendar('unselect');
+			}
+			,
+			eventClick: function(calEvent, jsEvent, view) {
+
+				//display a modal
+				var modal = 
+				'<div class="modal fade">\
+				  <div class="modal-dialog">\
+				   <div class="modal-content">\
+					 <div class="modal-body">\
+					   <button type="button" class="close" data-dismiss="modal" style="margin-top:-10px;">&times;</button>\
+					   <form class="no-margin">\
+						  <label>Change event name &nbsp;</label>\
+						  <input class="middle" autocomplete="off" type="text" value="' + calEvent.title + '" />\
+						 <button type="submit" class="btn btn-sm btn-success"><i class="ace-icon fa fa-check"></i> Save</button>\
+					   </form>\
+					 </div>\
+					 <div class="modal-footer">\
+						<button type="button" class="btn btn-sm btn-danger" data-action="delete"><i class="ace-icon fa fa-trash-o"></i> Delete Event</button>\
+						<button type="button" class="btn btn-sm" data-dismiss="modal"><i class="ace-icon fa fa-times"></i> Cancel</button>\
+					 </div>\
+				  </div>\
+				 </div>\
+				</div>';
+			
+				var modal = $(modal).appendTo('body');
+				modal.find('form').on('submit', function(ev){
+					ev.preventDefault();
+
+					calEvent.title = $(this).find("input[type=text]").val();
+					calendar.fullCalendar('updateEvent', calEvent);
+					modal.modal("hide");
+				});
+				modal.find('button[data-action=delete]').on('click', function() {
+					calendar.fullCalendar('removeEvents' , function(ev){
+						return (ev._id == calEvent._id);
+					})
+					modal.modal("hide");
+				});
+				
+				modal.modal('show').on('hidden', function(){
+					modal.remove();
+				});
+			}
+		});
+	
+	
+		
+		
+	
+	
+	})
+	/*]]>*/
+	
+
+	
+</script>
+</html>

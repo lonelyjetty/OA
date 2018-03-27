@@ -1,0 +1,111 @@
+package com.bizdata.zz.project.childrenduties.domain;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+
+import org.springframework.data.annotation.CreatedDate;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import me.sdevil507.base.JpaUUIDBaseEntity;
+
+/**
+ * zz_product_main实体
+ * <p>
+ * Created by xq on 2017/12/7.
+ */
+@Table(name = "zz_product_children_duties")
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ProductChildrenDuties extends JpaUUIDBaseEntity {
+
+    /**
+     * 项目名称
+     */
+    @Column
+    private String name;
+
+    @Column
+    private String creator;
+    
+    //优先级
+    @Column
+    private String state;
+    
+    //项目id
+    @Column
+    private String productId;
+    
+    //
+    @Column
+    private String creatorId;
+    
+    //模版id
+    @Column
+    private String modelId;
+    
+    //任务id
+    @Column
+    private String dutyId;
+    
+    //附件id
+    @Column
+    private String attachId;
+    
+    //风险项
+    @Column
+    private String risk;
+    
+    @Column
+    private String risk_notes;
+    
+    //评审人
+    @Column
+    private String review;
+    
+    //技能项
+    @Column
+    private String skill;
+    
+    //技能项
+    @Column
+    private String skill_notes;
+    
+  //设计约束
+    @Column
+    private String design;
+    
+  //设计约束
+    @Column
+    private String design_notes;
+    
+    
+  //用户场景
+    @Column
+    private String customer;
+    
+  //用户场景
+    @Column
+    private String customer_notes;
+    
+    //完成每个子任务需要的时间
+    @Column
+    private String span;
+    
+    
+    //子任务冲刺周期
+    @Column
+    private String run;
+    
+    //子任务描述
+    @Column
+    private String remark;
+    //文件地址
+    @Column
+    private String picUrl;
+    
+}

@@ -1,0 +1,174 @@
+package com.bizdata.zz.project.model.controller;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.bizdata.commons.constant.BizdataResponseStatus;
+import com.bizdata.zz.project.childrenduties.vo.ChildrenDutiesVo;
+import com.bizdata.zz.project.model.domain.ProductModel;
+import com.bizdata.zz.project.model.service.ProductModelService;
+import com.google.gson.Gson;
+
+import me.sdevil507.resp.ResultUtil;
+import me.sdevil507.resp.ResultVO;
+
+@Controller
+@RequestMapping("/admin/projectmodel")
+public class projectmodelController {
+	
+	@Autowired
+	private ProductModelService productModelService;
+	
+	
+	//跳转遍历
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView view() {
+		return new ModelAndView("zz/project/model/list");
+	}
+	
+	
+	
+	//跳转遍历
+	@RequiresPermissions("projectmodel:view")
+	@RequestMapping(value="/list",method = RequestMethod.GET)
+	@ResponseBody
+	public String list() {
+		Map<String,Object> pmMap = new HashMap<>();
+		List<ProductModel> list = productModelService.getProductModelAllById();
+		pmMap.put("rows", list);
+		return new Gson().toJson(pmMap);
+	}
+	
+	
+	//跳转模板查看页
+		@RequiresPermissions("projectmodel:view")
+		@RequestMapping(value="/turn",method = RequestMethod.GET)
+		public ModelAndView turn(String id) {
+			List<ProductModel> productChildrenModel = new ArrayList<>();
+			List<ProductModel> list = productModelService.getChildrenProductModelAll(id);
+			for (ProductModel p : list) {
+				ProductModel pm = new ProductModel();
+				pm.setId(p.getId());
+				pm.setProductModelName(p.getProductModelName());
+				//pm.setParentId(p.getParentId());
+				productChildrenModel.add(pm);
+			}
+			ModelAndView mav = new ModelAndView("zz/project/model/detail");
+			mav.addObject("pCM",productChildrenModel);
+			mav.addObject("parentId", id);
+			return mav;
+		}
+	
+		/*
+		@RequiresPermissions("projectmodel:view")
+		@RequestMapping(value="/update",method = RequestMethod.GET)
+		public ModelAndView update(String id) {
+			ProductModel productModel = productModelService.getOneById(id);
+			return new ModelAndView("zz/staff/edit","banner",productModel);
+		}*/
+		/**
+		 * 修改父级模板  获取数据 返回json格式
+		 * @param id
+		 * @return json
+		 */
+		@RequiresPermissions("projectmodel:view")
+		@RequestMapping(value="/update",method = RequestMethod.GET)
+		@ResponseBody
+		public String update(String id) {
+			ProductModel productModel = productModelService.getOneById(id);
+			String s = new Gson().toJson(productModel);
+			return new Gson().toJson(productModel);
+		}
+		
+		
+		
+		
+		
+		
+		
+		@RequestMapping(value="/saveOrUpdate",method = RequestMethod.POST)
+		@ResponseBody
+		public ResultVO saveOrUpdate(ProductModel banner) {
+			ResultVO resultVO;
+			
+			if(productModelService.save(banner)) {
+				resultVO = ResultUtil.create(0, "保存成功!");
+			}else {
+	            resultVO = ResultUtil.create(-1, "保存失败!");
+	        }
+			return resultVO;
+		}
+	
+
+		@RequestMapping(value="/del",method = RequestMethod.POST)
+		@ResponseBody
+		public ResultVO del(String id) {
+			System.out.println("**********"+id+"************");
+			ResultVO resultVO;
+			
+			if(productModelService.delProductModel(id) && productModelService.delPcModel(id)) {
+				resultVO = ResultUtil.create(0, "删除成功!");
+			}else {
+	            resultVO = ResultUtil.create(-1, "删除失败!");
+	        }
+			return resultVO;
+		}
+		@RequiresPermissions("projectmodel:view")
+		@RequestMapping(value="/addView",method = RequestMethod.GET)
+		public ModelAndView addView() {
+			return new ModelAndView("zz/staff/add");
+		}
+		@RequestMapping(value="/del_child",method = RequestMethod.POST)
+		@ResponseBody
+		public ResultVO del_child(String id) {
+			System.out.println("**********"+id+"************");
+			ResultVO resultVO;
+			if(productModelService.delProductModel(id)) {
+				resultVO = ResultUtil.create(0, "删除成功!");
+			}else {
+	            resultVO = ResultUtil.create(-1, "删除失败!");
+	        }
+			
+			return resultVO;
+		}
+		
+		
+		@RequestMapping(value="/add_child",method = RequestMethod.GET)
+		@ResponseBody
+		public ModelAndView addChild(String id) {
+			ModelAndView mav = new ModelAndView("zz/staff/add_child");
+			mav.addObject("parid", id);
+			return mav;
+		}
+		/*
+		@RequestMapping(value="/update_c",method = RequestMethod.GET)
+		@ResponseBody
+		public ModelAndView updateChild(String id) {
+			ProductModel productModel = productModelService.getOneById(id);
+			return new ModelAndView("zz/staff/edit_child","banner",productModel);
+		}
+		*/
+		/**
+		 * 修改子模板 获取要修改的数据 并返回json格式
+		 * @param id
+		 * @return json
+		 */
+		@RequiresPermissions("projectmodel:view")
+		@RequestMapping(value="/update_c",method = RequestMethod.GET)
+		@ResponseBody
+		public String updateChild(String id) {
+			ProductModel productModel = productModelService.getOneById(id);
+			String s = new Gson().toJson(productModel);
+			return new Gson().toJson(productModel);
+		}
+}

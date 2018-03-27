@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>添加阳光币奖励规则</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>添加阳光币奖励规则</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	            
+	            <!-- 任务名称 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="taskName"> 任务名称:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="taskName" id="taskName" placeholder="任务名称"
+	                           class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+				<!-- 限制类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="limitType"> 限制类型 :</label>
+	                <div class="col-sm-3">
+	                    <select name="limitType" id="limitType" class="form-control">
+	                        <option value="0">不限制</option>
+	                        <option value="1">按操作的媒体次数限制</option>
+	                        <option value="2">按操作的总次数限制</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 限制次数 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="limitNum"> 限制次数:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="number" name="limitNum" id="limitNum" placeholder="限制次数"
+	                           class="col-xs-10 col-sm-12"/> 
+	                </div>
+	            </div>
+	            
+	            <!-- 阳光币 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="miaoNum"> 阳光币:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="miaoNum" id="miaoNum" placeholder="阳光币 "
+	                           class="col-xs-10 col-sm-12"/> 
+	                </div>
+	            </div>
+	            
+	            <!-- 经验 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="experience"> 经验 :</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="experience" id="experience" placeholder="经验 "
+	                           class="col-xs-10 col-sm-12"/> 
+	                </div>
+	            </div>
+	            
+	            <!-- 状态 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="state"> 状态 :</label>
+	                <div class="col-sm-3">
+	                    <select name="state" id="state" class="form-control">
+	                        <option value="1">正常</option>
+	                        <option value="-1">停用</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置文件上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#prizeUrl').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	generalName: {
+                        required: true
+                    },
+                    prizeType: {
+                        required: true
+                    },
+                    pic: {
+                        required: true
+                    },
+                    bannerPositionEnum: {
+                        required: true
+                    },
+                    startTime: {
+                    	//dateISO : true,
+                        required: true
+                    },
+                    endTime: {
+                    	//dateISO : true,
+                        required: true
+                    }
+                },
+
+                messages: {
+                	generalName: "礼包名称必须填写。",
+                	prizeType: "奖励类型必须填写",
+                    pic: "Banner图片必须上传",
+                    bannerPositionEnum: "展示位置必须填写",
+                    startTime: {
+                    	//dateISO : "开始时间格式必须正确",
+                    	required : "开始时间必须填写",
+                    },
+                    endTime: {
+                    	//dateISO : "结束时间格式必须正确",
+                    	required : "结束时间必须填写",
+                    	
+                    },
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/prize_miao";
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("prize_miao/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/prize_miao/";
+                    } else {
+                        alert(data.message);
+                    }
+                }, "JSON")
+            })
+        })
+        
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>用户管理</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <style type="text/css">
+        .margin_left_10px {
+            margin-left: 10px;
+        }
+
+        .search {
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: Center;
+        }
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>任务模板</h1>
+    <button style='margin-left: 10px; margin-top:10px' class='btn btn-xs btn-primary' title = '添加' onclick="add_child()">
+    <i class='ace-icon fa fa-trash-o align-top bigger-125'></i>添加子模板</button>
+    <!-- 
+    <button style='margin-left: 10px;' class='btn btn-xs btn-primary' title = '添加' th:onclick="'javascript:update('+${single.parentId}+')'"><i class='ace-icon fa fa-trash-o align-top bigger-125'></i>添加</button>
+	 -->
+</div>
+ 
+<div class="row">
+<!-- 
+		 <div class="search col-sm-12">
+			<label class="control-label margin_left_10px">用户名：</label>
+			<input id="searchRegisterIp" type="text" />
+			<label class="control-label margin_left_10px">入职时间：</label>
+			<input id="searchStartTime" type="text" />
+			<span style="margin-left: 15px;margin-right: 20px;">至</span>
+			<input id="searchEndTime" type="text" />
+			<label class="control-label margin_left_10px"><span style="margin-left: 84px;margin-right: 12px;">手机号码:</span></label>
+			<input id="searchDitchNo" type="text" />
+			<button onclick="search()" style="margin-left: 30px;" 
+				class="btn btn-sm btn-primary fa fa-search">查询</button>
+			
+		</div> 
+-->
+    <div class="col-xs-12">
+    	
+    	<input type="hidden" th:value="${parentId}" id="ppId" name="parentId" />
+		 <table class="table table-bordered" id="grid-table">
+		<tr>
+			<!-- <th>编号</th> -->
+			
+			<th>模板名称</th>
+			<th>操作</th>
+		</tr>
+	
+		<tr th:each="single:${pCM}">
+			<!-- <td th:text="${single.id}"></td> --> 
+			<td th:text="${single.productModelName}"></td>
+			<td>
+				<button style='margin-left: 10px;' class='btn btn-xs btn-primary btn-show' id="''+${single.id}+''" title = '修改' th:onclick="'javascript:update(\''+${single.id}+'\')'">
+				<i class='ace-icon fa fa-trash-o align-top bigger-125'></i>修改</button>
+				<button style='margin-left: 10px;' class='btn btn-xs btn-primary' title = '删除' th:onclick="'javascript:del(\''+${single.id}+'\')'">
+				<i class='ace-icon fa fa-trash-o align-top bigger-125'></i>删除</button>
+				
+			</td>
+		</tr>
+</table>
+		
+    </div>
+    <!-- /.col -->
+   	
+</div>
+<div style="display:none;  position:fixed;top:0; z-index:500;width:100%; height:100%;" id='box-show'>
+	<div id="top_tijiao" style="box-shadow:3px 3px 19px #C0C0C0 ;border:1px solid #dee0e0; background-color:#f3f3f3; opacity:0.98 ; top:15%;position:absolute;left:22%; width:40% ; height:300px ;text-align: center; ">
+	    <div style="border-bottom:1px solid #dee0e0; padding-bottom:10px ;color:#1c92d6; font-size: 20px ; margin-top:5% ;  text-align: left; padding-left:5% ;">修改任务模板</div>
+	         <form id='name_tijiao' name="name_tijiao" style=" width:60% ; margin:0 auto ; ;display: flex; justify-content: center; align-items: center; margin-top:5%">
+	              <span id="from-detail" style="margin-right:10px ;">添加名称:</span>
+	              <input type='hidden' name="id" value="" id="id-show"/>
+	              <input type='hidden' name="parentId" value="" id="parentId-show"/>
+	              <input id="productModelName-show" name="productModelName" type="text" placeholder="请输入修改名称" style=" outline:none;padding-left:4px ;" />
+	         </form> 
+	          <div style=" margin-top:6% ;width:100% ; height:60px ; display: flex; justify-content: center; align-items: center;">
+	                <div id="huanhui" style="background:#d6d6d6; line-height:30px ; width:60px ; margin-right:10px ; border-radius:4px ;cursor:pointer">返回</div>
+	                <div id="tijiao" style="background:#85ff96;line-height:30px ; width:60px ;margin-right:10px ; border-radius:4px ;cursor:pointer">提交</div>
+	 </div>
+	</div>
+
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null, /*[[@{/assets/js/jqGrid/jquery.jqGrid.src.js}]]*/ '',
+        /*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+
+        // 必须添加
+        //==================================================================================================
+        $(document).one('ajaxloadstart.page', function (e) {
+            //$(grid_selector).jqGrid('GridUnload');
+            //$('.ui-jqdialog').remove();
+        });
+         
+        
+    })
+    /*]]>*/
+    //添加事件
+    function update(id){    	
+    	//location.href="#page/projectmodel/update_c?id="+id;
+ 
+    	$.ajax({
+    		  url:"projectmodel/update_c",
+    		  data:{id:id},
+    		  dataType:'json',
+    		  type:'get',
+    		  async:false,
+    		  success:function(data){
+    			   			 
+    			  var productModelName=data.productModelName;
+    			  var parentId=data.parentId;
+    			  var ids=data.id;
+    			  
+    			  $("#productModelName-show").val(productModelName) 
+    			  $("#parentId-show").val(parentId) 
+    			  $("#id-show").val(ids)     		  
+    		  },
+    		  error:function(msg){alert(404)}
+    		
+    		
+    	})
+    	document.getElementById('tijiao').addEventListener('click',tijiao,false);
+    	document.getElementById('huanhui').addEventListener('click',huanhui,false);
+    	
+        $('#box-show')[0].style.display='block';
+    	
+    	
+    }	
+   function tijiao(){
+	   
+
+	        var productModelName=$("#productModelName-show").val();
+	        var parentId=$("#parentId-show").val();
+	        var ids=$("#id-show").val();
+	  
+	   
+	   $.ajax({
+		   url:'projectmodel/saveOrUpdate',
+		   type:'post',
+		   dataType:"json",
+		   data:{id:ids,parentId:parentId,productModelName:productModelName},
+		   async:false,
+		   success:function(data){
+			   location.reload()		   
+		   },
+		   error:function(msg){console.log(msg)}
+		   
+		   
+		   
+		   
+	   })
+	   
+		$('#box-show')[0].style.display='none';
+		
+		
+	   
+   } 
+   function huanhui(){
+	   var str=confirm("是否退出")
+	   if(str){
+	        $('#box-show')[0].style.display='none'; 
+	   } 
+   }     
+    
+    
+    
+    
+   
+    
+    function del(id){
+    	location.href = "#page/projectmodel/del_child?id="+id;
+ 	   
+ 	   $.post("projectmodel/del",
+ 	      {id: id},
+ 	      function (data) {
+ 	      if (0 === data.code) {
+ 	    	 var pid = document.getElementById("ppId").value;
+ 	    	 location.href = "#page/projectmodel/turn?id="+pid;
+ 	        } else {
+ 	        alert(data.message)
+ 	        }
+ 	      }),"JSON"	   
+ 	}
+    
+    
+    
+    
+    function add_child(){
+    	var pId=document.getElementById("ppId").value;
+    	location.href ="#page/projectmodel/add_child?id="+pId;
+    }
+    
+    
+  
+
+</script>
+</html>

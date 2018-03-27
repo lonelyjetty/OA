@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>设备管理新增</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+	    <style type="text/css">
+		td{
+			padding: 4px;
+		}
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>设备管理新增</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	        	<!-- 隐藏字段 -->
+	        	<!-- 设备库中的主键 -->
+	        	<input type="hidden" th:value="${addDeviceManagerVO.deviceSource.id}" name="deviceId" />
+	        	<!-- 设备编号 -->
+	        	<input type="hidden" th:value="${addDeviceManagerVO.deviceSource.deviceNo}" name="deviceNo" />
+	        	<input type="hidden" th:value="${addDeviceManagerVO.deviceSource.connectionType}" name="connectType" />
+	        	<input type="hidden" th:value="${addDeviceManagerVO.deviceSource.functionTypeDes}" name="functionTypeDes" />
+	            <!-- 设备编号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="deviceNo">设备编号:</label>
+	                <div class="col-sm-3">
+	                    <input type="text" name="" id="" placeholder="设备编号" disabled="disabled" 
+	                    	th:value="${addDeviceManagerVO.deviceSource.deviceNo}" class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 设备名称 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="deviceName">设备名称:</label>
+	                <div class="col-sm-3">
+	                    <input type="text" name="deviceName" id="deviceName" placeholder="设备名称" 
+	                    	th:value="${addDeviceManagerVO.deviceSource.deviceName}" class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	
+	            <!-- 设备编码 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="deviceCode">设备编码:</label>
+	                <div class="col-sm-3">
+	                    <input type="text" name="deviceCode" id="deviceCode" placeholder="设备编码" th:value="${addDeviceManagerVO.deviceSource.deviceCode}"
+	                           class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 设备授权方式 -->
+	             <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="accreditType">设备授权方式 :</label>
+	                <div class="col-sm-3">
+	                    <!-- <select name="accreditType" id="accreditType" class="form-control">
+	                        <option value="NULL" th:checked="${addDeviceManagerVO.deviceSource.accreditType.toString() == 'NULL'}">无</option>
+	                        <option value="auth" th:checked="${addDeviceManagerVO.deviceSource.accreditType.toString() == 'auth'}">auth</option>
+	                        <option value="authorize" th:checked="${addDeviceManagerVO.deviceSource.accreditType.toString() == 'authorize'}">authorize</option>
+	                        <option value="from_auth" th:checked="${addDeviceManagerVO.deviceSource.accreditType.toString() == 'from_auth'}">from_auth</option>
+	                    </select> -->
+	                </div>
+	            </div>
+	            
+	            <!-- 设备描述 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="description">设备描述:</label>
+	                <div class="col-sm-3">
+	                    <input type="text" name="description" id="description" placeholder="设备描述" th:value="${addDeviceManagerVO.deviceSource.description}"
+	                           class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 设备功能类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="functionType">设备功能类型:</label>
+	                <div class="col-sm-9">
+	                <table>
+	                	<tr>
+	                		<td style="padding: 4px;">
+	                		<input type="checkbox" name="functionType" id="functionType1" value="1"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[0]}"/>运动
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType2" value="2" 
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[1]}"/>睡眠
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType3" value="3"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[2]}"/>血压
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType4" value="4"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[3]}"/>血糖
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType5" value="5"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[4]}"/>温度
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType6" value="6"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[5]}"/>行为监测
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType7" value="7"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[6]}"/>瘦身
+	                		</td>
+	                		<td>
+	                		<input type="checkbox" name="functionType" id="functionType8" value="8"
+	                			th:checked="${addDeviceManagerVO.deviceSource.isChecked[7]}"/>心率
+	                		</td>
+	                	</tr>
+	                </table>
+	                </div>
+	            </div>
+	            
+	            <!-- 连接类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="linkType">连接类型 :</label>
+	                <div class="col-sm-3">
+	                    <select name="linkType" id="linkType" class="form-control">
+	                        <option value="1" th:checked="${addDeviceManagerVO.deviceSource.linkType == '1'}">蓝牙连接</option>
+	                        <option value="2" th:checked="${addDeviceManagerVO.deviceSource.linkType == '2'}">扫描二维码</option>
+	                        <option value="3" th:checked="${addDeviceManagerVO.deviceSource.linkType == '3'}">auth2授权</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 设备分类 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="deviceCataId">设备分类</label>
+	                <div class="col-sm-3">
+	                	<select id="deviceCataId" name="deviceCataId" class="margin_left_10px">
+            			<tr  th:each="deviceCata : ${addDeviceManagerVO.deviceCatas}">
+            			<option th:value="${deviceCata.key}" th:selected="${addDeviceManagerVO.deviceSource.typeId == deviceCata.key}"><td class="text" th:text="${deviceCata.value}" ></td></option>
+		                </tr>  
+        			</select>
+	                </div>
+	            </div>
+	            
+	            <!-- 支持版本号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="supportVersion">支持版本号:</label>
+	                <div class="col-sm-3">
+	                    <select name="supportVersion" id="supportVersion" class="form-control">
+	                        <option value="">--请选择支持版本号--</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 设备状态 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="state">设备状态 :</label>
+	                <div class="col-sm-3">
+	                    <select name="state" id="state" class="form-control">
+	                        <option value="1">上线</option>
+	                        <option value="-1">下线</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 商品编号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="commodityNo">商品编号:</label>
+	                <div class="col-sm-3">
+	                    <input type="text" name="commodityNo" id="commodityNo" placeholder="商品编号"
+	                           class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 绑定人数 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="bindingNum">绑定人数:</label>
+	                <div class="col-sm-3">
+	                    <input type="number" name="bindingNum" id="bindingNum"  value="0"
+	                           class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 是否推荐 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="isRecommend"> 是否推荐:</label>
+	                <div class="col-sm-3">
+	                    <input type="radio" name="isRecommend" value="1" class="ace" /><span class="lbl">是</span>
+	                    <input type="radio" name="isRecommend" value="0" class="ace" checked="checked"/><span class="lbl">否</span>
+	                </div>
+	            </div>
+	
+	            <!-- 绑定设备描述 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pic"> 绑定设备描述:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="hidden" name="bingingImg" id="bingingImg" th:value="${addDeviceManagerVO.deviceSource.descriptionUrl}"/>
+	                    <img id="pic_img1" th:src="${addDeviceManagerVO.deviceSource.descriptionUrl}" class="img-responsive center-block"/>
+	                    <!-- 图片上传组件 -->
+	                    <div id="pic_input1" hidden="hidden">
+	                    	<input multiple="" type="file" id="pic" name="pic"/>
+	                    </div>
+	                </div>
+	            </div>
+	            
+	            <!-- 排序号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for=""> 排序号</label>
+	                <div class="col-sm-3">
+						<button type="button" id="btndownn1" class="btn btn-sm btn-danger">
+						<i class="icon-only  ace-icon ace-icon fa fa-minus bigger-110"></i>
+						</button>
+						<input type="text" id="sortNo" name="sortNo" class="col-xs-2 col-sm-0" value="0" min="0"></input>
+						<button type="button" id="btnupp1" class="btn btn-sm btn-success">
+						<i class="icon-only  ace-icon ace-icon fa fa-plus bigger-110"></i>				
+						</button>
+					</div>
+	            </div>
+	            
+	            <!-- 设备logo -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pic1"> 图片:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="hidden" name="deviceLogo" id="deviceLogo" th:value="${addDeviceManagerVO.deviceSource.deviceLogo}"/>
+	                    <img id="pic_img" th:src="${addDeviceManagerVO.deviceSource.deviceLogo}" class="img-responsive center-block"/>
+	                    <div id="pic_input" hidden="hidden">
+	                        <!-- 图片上传组件 -->
+	                        <input multiple="" type="file" id="pic1" name="pic1"/>
+	                    </div>
+	                </div>
+            	</div>
+	            
+	
+	
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置文件上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#bingingImg').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+            
+            $('#pic1').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic1");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#deviceLogo').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    name: {
+                        required: true
+                    },
+                    serialNum: {
+                        required: true
+                    },
+                    /* pic: {
+                        required: true
+                    }, */
+                    bannerPositionEnum: {
+                        required: true
+                    },
+                    startTime: {
+                        required: true
+                    },
+                    endTime: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                    name: "Banner名称必须填写。",
+                    serialNum: "排序序号必须填写",
+                    //pic: "Banner图片必须上传",
+                    bannerPositionEnum: "展示位置必须填写",
+                    startTime: "开始时间必须填写",
+                    endTime: "结束时间必须填写"
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 开始日期初始化
+            $('#startTime').datetimepicker();
+            // 结束日期初始化
+            $('#endTime').datetimepicker();
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/devicesource";
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("devicemanager/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/devicemanager/";
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+            
+            
+        })
+        
+        // 点击图片隐藏当前图片,并展示图片选择框
+        $('#pic_img').click(function () {
+            $('#pic_img').hide()
+            $('#pic_input').show()
+        })
+        
+        // 点击图片隐藏当前图片,并展示图片选择框
+        $('#pic_img1').click(function () {
+            $('#pic_img1').hide()
+            $('#pic_input1').show()
+        })
+        
+        // 排序号增减
+	    $('#btndownn1').click(function(){
+        	if($('#sort_no').val() == '0')
+        		return false;
+        	$('#sort_no').val(parseInt($('#sort_no').val()) - 1);
+        })
+        $('#btnupp1').click(function(){
+    		$('#sort_no').val(parseInt($('#sort_no').val()) + 1);
+    	}) 
+    /*]]>*/
+</script>
+</html>

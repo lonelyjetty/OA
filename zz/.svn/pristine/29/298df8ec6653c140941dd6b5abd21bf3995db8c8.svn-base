@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>项目资源新增</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>模板新增</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="name">姓名:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="name" id="name" placeholder="请输入姓名"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+           
+           <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="sex">性别:</label>
+                <div class="col-sm-3">
+                    <select name="sex" id="sex" for="sex" class="form-control">
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="birthplace">籍贯:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="birthplace" id="birthplace" placeholder="请输入籍贯"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="age">年龄:</label>
+                    <div class="col-sm-3">
+                    <select name="age" id="age" for="age" class="form-control">
+                    	<option value="">请选择年龄</option>
+                        <option value="18">18岁</option>
+                        <option value="19">19岁</option>
+                        <option value="20">20岁</option>
+                        <option value="21">21岁</option>
+                        <option value="22">22岁</option>
+                        <option value="23">23岁</option>
+                        <option value="24">24岁</option>
+                        <option value="25">25岁</option>
+                        <option value="26">26岁</option>
+                        <option value="27">27岁</option>
+                        <option value="28">28岁</option>
+                        <option value="29">29岁</option>
+                    </select>
+                </div>
+            </div>
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="tel">联系方式:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="tel" id="tel" placeholder="请输入籍贯"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="address">目前住址:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="address" id="address" placeholder="请输入联系地址"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="pic">上传头像:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="pic" id="pic" placeholder="请上传头像"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="hightedu">最高学历:</label>
+
+                <div class="col-sm-3">
+                   <select name="hightedu" id="hightedu" for="hightedu" class="form-control">
+                   		<option value="">请选择</option>
+                   		<option value="大专">大专</option>
+                        <option value="本科">本科</option>
+                        <option value="硕士">硕士</option>
+                        <option value="博士">博士</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="professional">所学专业:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="professional" id="professional" placeholder="请输入专业名称"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 模板名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="gradute_school">毕业学校:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="gradute_school" id="gradute_school" placeholder="请输入毕业学校"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 开始时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="hiredate"> 入职时间:</label>
+				<div class="col-sm-3">
+					<input id="hiredate" type="text"
+						class="col-xs-10 col-sm-12 input-sm form-control" name="hiredate" />
+				</div>
+			</div>
+
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="birthdate">
+					出生时间:</label>
+				<div class="col-sm-3">
+					<input id="birthdate" type="text"
+						class="col-xs-10 col-sm-12 input-sm form-control" name="birthdate" />
+				</div>
+			</div>
+            
+            
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+        	
+        	
+        	
+        	// 开始日期初始化
+			$('#hiredate').datetimepicker();
+			// 结束日期初始化
+			$('#birthdate').datetimepicker();
+        	
+        	
+        	
+        	
+        	
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/staffs"
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("staffs/addshaff", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/staffs"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+           
+        })
+    /*]]>*/
+</script>
+</html>

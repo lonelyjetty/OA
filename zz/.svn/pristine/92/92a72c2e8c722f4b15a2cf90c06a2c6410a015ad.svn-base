@@ -1,0 +1,135 @@
+package com.bizdata.zz.project.childrenduties.service.impl;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.childrenduties.repository.ProductChildrenDutiesRepository;
+import com.bizdata.zz.project.childrenduties.service.ProductChildrenDutiesService;
+import com.bizdata.zz.project.childrenduties.vo.ChildrenDutiesVo;
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.model.domain.ProductModel;
+import com.bizdata.zz.project.model.repository.ProductModelRepository;
+import com.bizdata.zz.project.repository.ProductRepository;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * BannerServiceImpl
+ * <p>
+ * Created by sdevil507 on 2017/9/6.
+ */
+@Service
+@Slf4j
+public class ProductChildrenDutiesServiceImpl implements ProductChildrenDutiesService {
+
+	@Autowired
+	private ProductChildrenDutiesRepository productChildrenDutiesRepository;
+
+	@Autowired
+	private ProductModelRepository productModelRepository;
+	
+	@Autowired
+	private ProductRepository productRepository;
+
+	@Override
+	public boolean save(ProductChildrenDuties productChildrenDuties) {
+		 boolean state;
+	        try {
+	        	//查找项目所属的模版
+	        	String id = productChildrenDuties.getProductId();
+	        	Product onePro = productRepository.findOne(id);
+	        	List<ProductModel> queryByProductId = productModelRepository.queryByProductId(onePro.getProductModel());
+	        	productChildrenDuties.setModelId(queryByProductId.get(0).getId());
+	        	
+	        	productChildrenDutiesRepository.save(productChildrenDuties);
+	            state = true;
+	        } catch (Exception e) {
+	            log.error("保存项目失败:", e);
+	            state = false;
+	        }
+	        return state;
+	}
+
+	@Override
+	public boolean delete(String id) {
+		boolean state;
+        try {
+        	productChildrenDutiesRepository.delete(id);
+            state = true;
+        } catch (Exception e) {
+            log.error("删除失败:", e);
+            state = false;
+        }
+        return state;
+	}
+
+	@Override
+	public ProductChildrenDuties findOne(String id) {
+		return productChildrenDutiesRepository.findOne(id);
+	}
+
+	@Override
+	public List<ProductChildrenDuties> findAll() {
+		return productChildrenDutiesRepository.findAll();
+	}
+
+	@Override
+	public List<ChildrenDutiesVo> findByDutyIdAndModelId(String productid) {
+		List<ChildrenDutiesVo> result = new ArrayList<>();
+		// 查找模版中的类别信息
+		Product findOne = productRepository.findOne(productid);
+		if(findOne.getProductModel() != null) {//根据项目的中model id 查找模版中的类别
+			List<ProductModel> listmodel = productModelRepository.queryByProductId(findOne.getProductModel());
+			if (listmodel != null && listmodel.size() > 0) {
+				for (ProductModel productModel : listmodel) {
+					ChildrenDutiesVo  childrenDutiesVo = new ChildrenDutiesVo();
+					// 根据模版id 和 duty id 查找相应的子任务
+					List<ProductChildrenDuties> listChildren = productChildrenDutiesRepository
+							.queryByModelIdAndDutyId(productModel.getId(),productid);
+					childrenDutiesVo.setProductModel(productModel);
+					childrenDutiesVo.setChildrenDutiesList(listChildren);
+					result.add(childrenDutiesVo);
+				}
+			}
+		}
+		return result;
+	}
+
+	@Override
+	public boolean saveModelId(ProductChildrenDuties productChildrenDuties) {
+		 boolean state;
+	        try {
+	        	productChildrenDutiesRepository.save(productChildrenDuties);
+	            state = true;
+	        } catch (Exception e) {
+	            log.error("保存项目失败:", e);
+	            state = false;
+	        }
+	        return state;
+	}
+
+	@Override
+	public boolean singleUpdate(ProductChildrenDuties productChildrenDuties) {
+		boolean state;
+        try {
+        	productChildrenDutiesRepository.save(productChildrenDuties);
+            state = true;
+        } catch (Exception e) {
+            log.error("保存项目失败:", e);
+            state = false;
+        }
+        return state;
+	}
+
+	@Override
+	public List<ProductChildrenDuties> getAllRun(String pid, String r) {
+		// TODO Auto-generated method stub
+		return productChildrenDutiesRepository.getAllRun(pid, r);
+	}
+
+}

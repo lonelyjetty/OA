@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>推送编辑</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>推送编辑</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+
+            <!-- 消息标题 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="title"> 消息标题</label>
+                <div class="col-sm-3">
+                    <input type="text" name="title" id="title" placeholder="消息标题"
+                           class="col-xs-10 col-sm-12" th:value="{push.title}"/>
+                </div>
+            </div>
+			
+			<!-- 消息内容 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="content"> 消息内容</label>
+                <div class="col-sm-3">
+         			<textarea id="content" name="content" rows="5" cols="41" th:value="{push.content}"></textarea>
+                </div>
+            </div>
+            
+            <!-- 消息通知提示音 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="sound"> 通知提示音</label>
+                <div class="col-sm-3">
+                    <input type="text" name="sound" id="sound" th:value="{push.sound}"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 应用角标 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="icon"> 应用角标</label>
+                <div class="col-sm-3">
+                    <input type="text" name="icon" id="icon"
+                           class="col-xs-10 col-sm-12" th:value="{push.icon}"/>
+                </div>
+            </div>
+            <!-- 跳转类型 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="type"> 跳转类型</label>
+                <div class="col-sm-3">
+                	<select id="skiptype" name="skiptype" class="margin_left_10px" >
+                		<option value="NOON">无操作</option>
+            			<option value="H5SKIP">h5跳转</option>
+            			<option value="NATIVESKIP">native跳转</option>
+        			</select>
+                </div>
+            </div>
+       		
+       		<div class="form-group" id="skipaddress">
+                <label class="col-sm-3 control-label no-padding-right" for="type"> 跳转APP地址</label>
+                
+                	<div class="col-sm-3">
+                    <input type="text" name="addAdress" id="h5skip" placeholder="跳转app地址" 
+                           class="col-xs-10 col-sm-12"/>
+                    <select id="nativeskip" name="nativeskip" class="margin_left_10px">
+                		<option value="NOON">app中模块</option>
+            			<option value="SYSTEM_INF">模块1</option>
+        			</select>
+                	</div>
+                
+            </div>
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/date-time/bootstrap-datepicker.js}]]*/ '',
+        /*[[@{/assets/js/date-time/daterangepicker.js}]]*/ '',
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax(
+            'loadScripts',
+            scripts,
+			function () {
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	title: {
+                        required: true,
+                        maxlength: 30
+                    },
+                    content: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                	title: "消息主题不能为空且不能大于30个字",
+                	content: "消息内容不能为空",
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/push"
+            })
+
+            // 提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("push/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/push/"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+            //正式发布
+            $('#release').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("push/release", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/push/"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+            
+            //跳转类型选择
+            $('#skiptype').change(function(){
+            	if($('#skiptype').val() =="NOON"){
+            		$('#skipaddress').hide();
+            	}else if($('#skiptype').val() =="NATIVESKIP"){
+            		$('#h5skip').hide();
+            		$('#skipaddress').show();
+            		$('#nativeskip').show();
+            	}else if($('#skiptype').val() =="H5SKIP"){
+            		$('#nativeskip').hide();
+            		$('#skipaddress').show();
+            		$('#h5skip').show();
+            	}
+            })
+            
+            $(function(){
+            	$('#skipaddress').hide();
+            })
+        })
+    /*]]>*/
+</script>
+</html>

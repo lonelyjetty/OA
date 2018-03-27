@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache name="es" updateCheck="false" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="http://ehcache.org/ehcache.xsd">
+
+    <diskStore path="java.io.tmpdir"/>
+
+    <!-- 登录时密码重试次数缓存 -->
+    <!-- 当密码重试次数超过规定次数则账号锁定,timeToIdleSeconds="600" 10分钟 -->
+    <cache name="passwordRetryCache" maxEntriesLocalHeap="2000"
+           eternal="false" timeToIdleSeconds="600" timeToLiveSeconds="0"
+           overflowToDisk="false" statistics="true">
+    </cache>
+
+    <cache name="authorizationCache" maxEntriesLocalHeap="2000"
+           eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="0"
+           overflowToDisk="false" statistics="true">
+    </cache>
+
+    <cache name="authenticationCache" maxEntriesLocalHeap="2000"
+           eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="0"
+           overflowToDisk="false" statistics="true">
+    </cache>
+
+    <!-- CachingSessionDao使用该缓存保存session -->
+    <cache name="shiro-activeSessionCache" maxEntriesLocalHeap="2000"
+           eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="0"
+           overflowToDisk="false" statistics="true">
+    </cache>
+
+    <!-- 用户名与使用该用户名登录的session列表映射缓存 -->
+    <!-- 结构类似:[{admin:[session1,session2,...]},{sdevil507:[session1,session2,...]}] -->
+    <!-- 缓存同一账户多人登录时,一个用户名会对应多个session -->
+    <!-- 该缓存可用于控制账户登录人数,或者根据用户名获取当前使用人数等情况 -->
+    <!--<cache name="shiro-currentUserSessionsMapCache" maxEntriesLocalHeap="2000"-->
+           <!--eternal="false" timeToIdleSeconds="3600" timeToLiveSeconds="0"-->
+           <!--overflowToDisk="false" statistics="true">-->
+    <!--</cache>-->
+</ehcache>

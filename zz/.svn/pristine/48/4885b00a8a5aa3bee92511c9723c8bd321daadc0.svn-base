@@ -1,0 +1,23 @@
+package com.bizdata.zz.project.projectTask.repository;
+
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
+
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+
+import me.sdevil507.base.JpaBaseRepository;
+
+/*
+ * Interface:ProductChildDutiesRepository
+ *
+ * Result:Show in the actice log
+ *
+ * Create by zwy on 2018-01-09	
+ */
+public interface ProductChildDutiesTaskRepository extends JpaBaseRepository<ProductChildrenDuties, String>{
+	
+	@Query(value="select * from zz_product_children_duties order by zpsdp.start_time DESC",nativeQuery=true)
+	public Query queryTasksOfProductAndChild();
+
+}

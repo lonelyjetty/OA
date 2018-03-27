@@ -1,0 +1,150 @@
+{
+  "hints": [],
+  "groups": [
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroConfigProperties",
+      "name": "shiro",
+      "type": "com.bizdata.framework.shiro.config.ShiroConfigProperties"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis",
+      "type": "com.bizdata.framework.shiro.config.ShiroRedisProperties"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource",
+      "type": "com.bizdata.commons.utils.ExecSqlUtils"
+    },
+    {
+      "sourceType": "com.bizdata.config.FileUploadConfig",
+      "name": "upload",
+      "type": "com.bizdata.config.FileUploadConfig"
+    }
+  ],
+  "properties": [
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroConfigProperties",
+      "name": "shiro.cluster",
+      "description": "是否支持集群(默认单机环境[true:集群,false:单机])",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroConfigProperties",
+      "name": "shiro.cookie",
+      "description": "控制cookie相关配置",
+      "type": "com.bizdata.framework.shiro.config.CookieProperties"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroConfigProperties",
+      "name": "shiro.password",
+      "description": "控制密码相关配置",
+      "type": "com.bizdata.framework.shiro.config.PasswordProperties"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.cluster",
+      "type": "org.springframework.boot.autoconfigure.data.redis.RedisProperties$Cluster"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.database",
+      "description": "Database index used by the connection factory.",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.host",
+      "description": "Redis server host.",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.password",
+      "description": "Login password of the redis server.",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.pool",
+      "type": "org.springframework.boot.autoconfigure.data.redis.RedisProperties$Pool"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.port",
+      "description": "Redis server port.",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.sentinel",
+      "type": "org.springframework.boot.autoconfigure.data.redis.RedisProperties$Sentinel"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.ssl",
+      "description": "Enable SSL.",
+      "type": "java.lang.Boolean"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.timeout",
+      "description": "Connection timeout in milliseconds.",
+      "type": "java.lang.Integer"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroRedisProperties",
+      "name": "shiro.redis.url",
+      "description": "Redis url, which will overrule host, port and password if set.",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.framework.shiro.config.ShiroConfigProperties",
+      "name": "shiro.session",
+      "description": "控制session相关配置",
+      "type": "com.bizdata.framework.shiro.config.SessionProperties"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource.driver-class-name",
+      "description": "数据库驱动地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource.init-script-file",
+      "description": "初始化脚本文件",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource.password",
+      "description": "数据库密码",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource.url",
+      "description": "数据库连接地址",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.commons.utils.ExecSqlUtils",
+      "name": "spring.datasource.username",
+      "description": "数据库用户名",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.config.FileUploadConfig",
+      "name": "upload.file-path",
+      "description": "文件保存绝对路径",
+      "type": "java.lang.String"
+    },
+    {
+      "sourceType": "com.bizdata.config.FileUploadConfig",
+      "name": "upload.server-prefix",
+      "description": "文件服务器地址前缀",
+      "type": "java.lang.String"
+    }
+  ]
+}

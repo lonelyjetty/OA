@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>白板管理</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}" />
+<style type="text/css">
+.margin_left_10px {
+	margin-left: 10px;
+}
+
+.search {
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+
+.position {
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>白板管理</h1>
+</div>
+
+<div class="row">
+
+	<div class="col-xs-12">
+		<!-- PAGE CONTENT BEGINS -->
+		<div class="" id="main-widget-container">
+			<div class="row">
+			
+				<div class="col-xs-12 col-sm-6 widget-container-col ui-sortable"
+					id="widget-container-col-1" style="min-height: 210px;">
+					<div class="widget-box ui-sortable-handle" id="widget-box-1"
+						style="opacity: 1; z-index: 0;">
+						<div class="widget-header">
+							<h5 class="widget-title">Default Widget Box</h5>
+
+							<div class="widget-toolbar">
+								<div class="widget-menu">
+									<a href="#" data-action="settings" data-toggle="dropdown">
+										<i class="ace-icon fa fa-bars"></i>
+									</a>
+
+									<ul
+										class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+										<li><a data-toggle="tab" href="#dropdown1">Option#1</a></li>
+
+										<li><a data-toggle="tab" href="#dropdown2">Option#2</a></li>
+									</ul>
+								</div>
+
+								<a href="#" data-action="fullscreen" class="orange2"> <i
+									class="ace-icon fa fa-expand"></i>
+								</a> <a href="#" data-action="reload"> <i
+									class="ace-icon fa fa-refresh"></i>
+								</a> <a href="#" data-action="collapse"> <i
+									class="ace-icon fa fa-chevron-up"></i>
+								</a> <a href="#" data-action="close"> <i
+									class="ace-icon fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main">
+								<p class="alert alert-info">Nunc aliquam enim ut arcu
+									aliquet adipiscing. Fusce dignissim volutpat justo non
+									consectetur. Nulla fringilla eleifend consectetur.</p>
+								<p class="alert alert-success">Raw denim you probably
+									haven't heard of them jean shorts Austin.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 widget-container-col ui-sortable"
+					id="widget-container-col-1" style="min-height: 210px;">
+					<div class="widget-box ui-sortable-handle" id="widget-box-1"
+						style="opacity: 1; z-index: 0;">
+						<div class="widget-header">
+							<h5 class="widget-title">Default Widget Box</h5>
+
+							<div class="widget-toolbar">
+								<div class="widget-menu">
+									<a href="#" data-action="settings" data-toggle="dropdown">
+										<i class="ace-icon fa fa-bars"></i>
+									</a>
+
+									<ul
+										class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+										<li><a data-toggle="tab" href="#dropdown1">Option#1</a></li>
+
+										<li><a data-toggle="tab" href="#dropdown2">Option#2</a></li>
+									</ul>
+								</div>
+
+								<a href="#" data-action="fullscreen" class="orange2"> <i
+									class="ace-icon fa fa-expand"></i>
+								</a> <a href="#" data-action="reload"> <i
+									class="ace-icon fa fa-refresh"></i>
+								</a> <a href="#" data-action="collapse"> <i
+									class="ace-icon fa fa-chevron-up"></i>
+								</a> <a href="#" data-action="close"> <i
+									class="ace-icon fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main">
+								<p class="alert alert-info">Nunc aliquam enim ut arcu
+									aliquet adipiscing. Fusce dignissim volutpat justo non
+									consectetur. Nulla fringilla eleifend consectetur.</p>
+								<p class="alert alert-success">Raw denim you probably
+									haven't heard of them jean shorts Austin.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+				
+				<div class="col-xs-12 col-sm-6 widget-container-col ui-sortable"
+					id="widget-container-col-1" style="min-height: 210px;">
+					<div class="widget-box ui-sortable-handle" id="widget-box-1"
+						style="opacity: 1; z-index: 0;">
+						<div class="widget-header">
+							<h5 class="widget-title">Default Widget Box</h5>
+
+							<div class="widget-toolbar">
+								<div class="widget-menu">
+									<a href="#" data-action="settings" data-toggle="dropdown">
+										<i class="ace-icon fa fa-bars"></i>
+									</a>
+
+									<ul
+										class="dropdown-menu dropdown-menu-right dropdown-light-blue dropdown-caret dropdown-closer">
+										<li><a data-toggle="tab" href="#dropdown1">Option#1</a></li>
+
+										<li><a data-toggle="tab" href="#dropdown2">Option#2</a></li>
+									</ul>
+								</div>
+
+								<a href="#" data-action="fullscreen" class="orange2"> <i
+									class="ace-icon fa fa-expand"></i>
+								</a> <a href="#" data-action="reload"> <i
+									class="ace-icon fa fa-refresh"></i>
+								</a> <a href="#" data-action="collapse"> <i
+									class="ace-icon fa fa-chevron-up"></i>
+								</a> <a href="#" data-action="close"> <i
+									class="ace-icon fa fa-times"></i>
+								</a>
+							</div>
+						</div>
+
+						<div class="widget-body">
+							<div class="widget-main">
+								<p class="alert alert-info">Nunc aliquam enim ut arcu
+									aliquet adipiscing. Fusce dignissim volutpat justo non
+									consectetur. Nulla fringilla eleifend consectetur.</p>
+								<p class="alert alert-success">Raw denim you probably
+									haven't heard of them jean shorts Austin.</p>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- /.span -->
+			</div>
+			<!-- /.row -->
+			<hr/>
+			<div class="text-center">
+				<button type="reset" id="reset-widgets"
+					class="btn btn-danger btn-white btn-bold btn-round">Reset
+					Position/State</button>
+			</div>
+		</div>
+		<!-- PAGE CONTENT ENDS -->
+	</div>
+
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/jqGrid/i18n/grid.locale-cn.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/'',
+			/*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/'',
+			null ]
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+			
+						// 必须添加
+						//==================================================================================================
+						$(document).one('ajaxloadstart.page', function(e) {
+							//$(grid_selector).jqGrid('GridUnload');
+							//$('.ui-jqdialog').remove();
+						});
+					})
+	/*]]>*/
+	
+
+		
+		$('.widget-container-col').sortable({
+	        connectWith: '.widget-container-col',
+			items:'> .widget-box',
+			handle: ace.vars['touch'] ? '.widget-title' : false,
+			cancel: '.fullscreen',
+			opacity:0.8,
+			revert:true,
+			forceHelperSize:true,
+			placeholder: 'widget-placeholder',
+			forcePlaceholderSize:true,
+			tolerance:'pointer',
+			start: function(event, ui) {
+				//when an element is moved, it's parent becomes empty with almost zero height.
+				//we set a min-height for it to be large enough so that later we can easily drop elements back onto it
+				ui.item.parent().css({'min-height':ui.item.height()})
+				//ui.sender.css({'min-height':ui.item.height() , 'background-color' : '#F5F5F5'})
+			},
+			update: function(event, ui) {
+				ui.item.parent({'min-height':''})
+				//p.style.removeProperty('background-color');
+				//save widget positions
+				var widget_order = {}
+				$('.widget-container-col').each(function() {
+					var container_id = $(this).attr('id');
+					widget_order[container_id] = []
+					
+					
+					$(this).find('> .widget-box').each(function() {
+						var widget_id = $(this).attr('id');
+						widget_order[container_id].push(widget_id);
+						//now we know each container contains which widgets
+					});
+				});
+				
+				ace.data.set('demo', 'widget-order', widget_order, null, true);
+			}
+	    });
+		
+		//reset saved positions and states
+		$('#reset-widgets').on('click', function() {
+			ace.data.remove('demo', 'widget-state');
+			ace.data.remove('demo', 'widget-order');
+			document.location.reload();
+		});
+</script>
+</html>

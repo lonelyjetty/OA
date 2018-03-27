@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>出差管理</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/dropzone.min.css}" />
+<style type="text/css">
+.margin_left_10px {
+	margin-left: 10px;
+}
+
+.search {
+	padding-bottom: 10px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: Center;
+}
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>出差管理</h1>
+</div>
+
+<div class="row">
+
+	<div class="col-xs-12">
+		<div>
+			<form action="./dummy.html" class="dropzone well dz-clickable"
+				id="dropzone">
+
+				<div class="dz-default dz-message">
+					<span><span class="bigger-150 bolder"><i
+							class="ace-icon fa fa-caret-right red"></i> Drop files</span> to upload
+						<span class="smaller-80 grey">(or click)</span> <br></br> <i
+						class="upload-icon ace-icon fa fa-cloud-upload blue fa-3x"></i></span>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- /.col -->
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [ null,
+		/*[[@{/assets/js/dropzone.min.js}]]*/ '',
+		
+		null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+		
+			
+			  Dropzone.autoDiscover = false;
+			
+			  var myDropzone = new Dropzone('#dropzone', {
+			    previewTemplate: $('#preview-template').html(),
+			    
+				thumbnailHeight: 120,
+			    thumbnailWidth: 120,
+			    maxFilesize: 0.5,
+				
+				//addRemoveLinks : true,
+				//dictRemoveFile: 'Remove',
+				
+				dictDefaultMessage :
+				'<span class="bigger-150 bolder"><i class="ace-icon fa fa-caret-right red"></i> Drop files</span> to upload \
+				<span class="smaller-80 grey">(or click)</span> <br /> \
+				<i class="upload-icon ace-icon fa fa-cloud-upload blue fa-3x"></i>',
+				
+			    thumbnail: function(file, dataUrl) {
+			      if (file.previewElement) {
+			        $(file.previewElement).removeClass("dz-file-preview");
+			        var images = $(file.previewElement).find("[data-dz-thumbnail]").each(function() {
+						var thumbnailElement = this;
+						thumbnailElement.alt = file.name;
+						thumbnailElement.src = dataUrl;
+					});
+			        setTimeout(function() { $(file.previewElement).addClass("dz-image-preview"); }, 1);
+			      }
+			    }
+			
+			  });
+			  
+		// 必须添加
+		//==================================================================================================
+		$(document).one('ajaxloadstart.page', function(e) {
+			//$(grid_selector).jqGrid('GridUnload');
+			//$('.ui-jqdialog').remove();
+		});
+	})
+	/*]]>*/
+</script>
+</html>

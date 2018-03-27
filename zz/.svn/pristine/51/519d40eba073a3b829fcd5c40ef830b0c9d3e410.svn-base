@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>项目查看</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+<link rel="stylesheet" th:href="@{/assets/css/ztree-css/zTreeStyle.css}" />
+<link rel="stylesheet"
+	th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}" />
+<style type="text/css">
+</style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+	<h1>项目查看</h1>
+</div>
+
+<div class="row">
+	<div class="col-xs-12">
+		<!-- form表单 -->
+		<form class="form-horizontal" id="from-detail" role="form">
+			<input type="hidden" th:value="${sm.id}" name="id" />
+			<!-- 图片 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="pic">
+					员工图片:</label>
+				<div class="col-sm-3">
+				<!-- <img alt="员工照片" src="${sm.pic}" width="70px" height="100px" /> -->
+				<input type="text" th:value="${sm.pic}" name="pic" />
+				</div>
+			</div>
+			<!-- 项目名称 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="name">
+					员工姓名:</label>
+
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.name}" name="name" />	
+				</div>
+			</div>
+			<!-- 项目名称 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="sex">
+					员工性别:</label>
+
+				<div class="col-sm-2">
+					<select name="sex" id="sex" for="sex" class="form-control">
+                        <option value="1">男</option>
+                        <option value="2">女</option>
+                    </select>	
+				</div>
+			</div>
+			<!-- 选择模版 -->
+			<div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="age"> 员工年龄:</label>
+                <div class="col-sm-4">
+					<input type="text" th:value="${sm.age}" name="age" />	
+				</div>
+            </div>
+            
+            <!-- 所属部门 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="people"> 员工籍贯:</label>
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.birthplace}" name="birthplace" />	
+				</div>
+			</div>
+            
+            <!-- 项目负责人 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="tel">联系方式:</label>
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.tel}" name="tel" />	
+				</div>
+			</div>
+            
+			<!-- 参与者 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="hiredate"> 入职时间:</label>
+					
+				<div class="col-sm-4" >
+						<input type="text" th:value="${sm.hiredate}" name="hiredate" />
+				</div>
+			</div>
+			
+			<!-- 地点选择 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="address">目前住址:</label>
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.address}" name="address" />
+				</div>
+			</div>        
+
+			<!-- 开始时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right"
+					for="hightedu"> 最高学历:</label>
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.hightedu}" name="hightedu" />	
+				</div>
+			</div>
+			<!-- 迭代周期 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="professional">
+					所学专业:</label>
+				<div class="col-sm-4">
+					<input type="text" th:value="${sm.professional}" name="professional" />	
+				</div>
+			</div>
+			<!-- 结束时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right" for="gradute_school">
+					毕业学校:</label>
+				<div class="col-sm-4">	
+					<input type="text" th:value="${sm.gradute_school}" name="gradute_school" />
+				</div>
+			</div>
+			
+			<div class="clearfix form-actions">
+				<div class="col-md-offset-3 col-md-9">
+					<button id="back" class="btn" type="button">
+						<i class="ace-icon fa fa-check bigger-110"></i> 返回
+					</button>
+					&nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>提交
+                    </button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+	/*<![CDATA[*/
+	var scripts = [
+			null,
+			/*[[@{/assets/js/kindeditor/kindeditor-all-min.js}]]*/'',
+			/*[[@{/assets/js/kindeditor/lang/zh_CN.js}]]*/'',
+			null ]
+
+	$('.page-content-area').ace_ajax('loadScripts',scripts,function() {
+		
+		//富文本框
+		var editor = KindEditor.create("#editor_id",{
+       		width: '550px',
+        	height: '250px',
+        	afterCreate: function () {
+     	        this.sync();
+     	    },
+     	    afterBlur: function () {
+     	        this.sync();
+     	    }
+     	})
+		
+
+		// 返回
+		$('#back').click(function() {
+			location.href = "#page/staffs"
+		})
+		
+		
+		
+		$('#commit').click(function() {
+			$.post("staffs/updateStaff", $("#from-detail").serialize(), function (data) {
+			     if (0 === data.code) {
+			         location.href = "#page/staffs/"
+			     } else {
+			         alert(data.message)
+			     }
+			 }, "JSON")
+			
+		})
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+
+		})
+	/*]]>*/
+</script>
+</html>

@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>编辑跑马圈活动</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+	
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>编辑跑马圈活动</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	        	<!-- 隐藏字段 -->
+	        	<!-- 活动状态 -->
+	        	<input type="hidden" name="state" id="state" th:value="${paoMaVO.paoMa.state}" /> 
+	        	<!-- 是否置顶默认设置为0 -->
+	        	<input type="hidden" name="isStick" id="isStick" th:value="${paoMaVO.paoMa.isStick}" /> 
+	        	<!-- 主键 -->
+        		<input type="hidden" th:value="${paoMaVO.paoMa.id}" name="id" id="id" />
+	        
+	            <!-- 活动序号 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="activityNo"> 活动序号:</label>
+	
+	                <div class="col-sm-3">
+	                    <label class="col-xs-10 col-sm-12" th:text="${paoMaVO.paoMa.activityNo}"></label>
+	                    <input type="hidden" name="activityNo" id="activityNo" th:value="${paoMaVO.paoMa.activityNo}" />
+	                </div>
+	            </div>
+	
+				<!-- 活动名称 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="actionName"> 活动名称:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="actionName" id="actionName" placeholder="最多不超过15个汉字" 
+	                    	class="col-xs-10 col-sm-12" th:value="${paoMaVO.paoMa.actionName}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 报名截止时间 -->
+				<div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="deadline"> 报名截止时间:</label>
+	
+	                <div class="col-sm-3">
+	                    <input id="deadline" type="text" class="col-xs-10 col-sm-12 input-sm form-control"
+	                           name="deadline" th:value="${paoMaVO.paoMa.deadline}"/>
+	                </div>
+             	</div> 
+	
+				<!-- 活动开始时间 -->
+             	<div class="form-group">  
+	                <label class="col-sm-3 control-label no-padding-right" for="startDate"> 开始时间:</label>
+	                
+	                <div class="col-sm-3">
+	                    <input id="startDate" type="text" class="col-xs-10 col-sm-12 input-sm form-control"
+	                           name="startDate" th:value="${paoMaVO.paoMa.startDate}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 活动结束时间 -->
+	            <div class="form-group">
+	               <label class="col-sm-3 control-label no-padding-right" for="endDate"> 结束时间:</label>
+	               
+	                <div class="col-sm-3">
+	                    <input id="endDate" type="text" class="col-xs-10 col-sm-12 input-sm form-control" 
+	                    	name="endDate" th:value="${paoMaVO.paoMa.endDate}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 排行类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="rankingType"> 排行类型:</label>
+	                <div class="col-sm-3">
+	                    <select name="rankingType" id="rankingType" class="form-control">
+	                        <option value="" >选择状态</option>
+	                        <option value="1" th:selected="${paoMaVO.paoMa.rankingType == '1'}">累计公里数</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 排行榜显示排名 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="rankingLimit"> 排行榜显示排名:</label>
+	                <div class="col-sm-3">
+	                    <select name="rankingLimit" id="rankingLimit" class="form-control">
+	                        <option value="">选择状态</option>
+	                        <option value="1" th:selected="${paoMaVO.paoMa.rankingLimit == '1'}">前100名</option>
+	                    </select>
+	                </div>
+	            </div>
+	            
+	            <!-- 活动图片 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pic"> 活动图片:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="hidden" name="picUrl" id="picUrl" th:value="${paoMaVO.paoMa.picUrl}"/>
+	                    <img id="pic_img" th:src="${paoMaVO.paoMa.picUrl}" class="img-responsive center-block"/>
+	                    <!-- 图片上传组件 -->
+	                    <div id="pic_input" hidden="hidden">
+	                    	<input multiple="" type="file" id="pic" name="pic"/>
+	                    </div>
+	                </div>
+	            </div>
+	            
+	            <!-- 奖励介绍图片 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="pic1"> 奖励介绍图片:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="hidden" name="picUrl1" id="picUrl1" th:value="${paoMaVO.paoMa.prizeUrl}"/>
+	                    <img id="pic_img1" th:src="${paoMaVO.paoMa.prizeUrl}" class="img-responsive center-block"/>
+	                    <!-- 图片上传组件 -->
+	                    <div id="pic_input1" hidden="hidden">
+	                    	<input multiple="" type="file" id="pic1" name="pic1"/>
+	                    </div>
+	                    
+	                </div>
+	            </div>
+	            
+	            <!-- 奖励配置 -->
+	            <div class="form-group" style="">
+	            	<input type="button" value="添加一行" onclick="add_record();" class="btn btn-sm btn-success margin_left_10px" style="" />
+	            	<br/>
+	            </div>	
+	            <div class="form-group" style="">
+	            	<label class="col-sm-3 control-label no-padding-right" for="pic1"> 奖品配置:</label>
+	            	
+	            	<div class="col-sm-3" style="">
+	            		<table border="1" id="prizeTable" style="width:750px;height:50px;font-size:16px;" >
+	            			<tr style="">
+	            				<th>奖品名称</th>
+	            				<th>名次</th>
+	            				<th>奖品图片</th>
+	            				<th>奖品id</th>
+	            				<th>操作</th>
+	            			</tr>
+		                
+	            			<tr th:each="paoMaMapPrize : ${paoMaVO.paoMaMapPrizes}">
+	            				<td>
+	            					<input type="hidden" th:value="${paoMaMapPrizeStat.index}" id="index"/>
+	            					<input type="text" name="paoMaMapPrizes[].prizeName" style="width:100px;"
+	            						th:value="${paoMaMapPrize.prizeName}" />
+	            				</td>
+	            				<td>
+	            					<input type="number" name="paoMaMapPrizes[].ranking" style="width:60px;" 
+	            						th:value="${paoMaMapPrize.ranking}"/>
+	            					 - 
+	            					<input type="number" name="paoMaMapPrizes[].rankingEnd" style="width:60px;"
+	            						th:value="${paoMaMapPrize.rankingEnd}"/>
+	            				</td>
+	            				<td>
+	            					<input type="hidden" name="paoMaMapPrizes[].picUrl" id="url0"/>
+				                    <!-- 图片上传组件 -->
+				                    <img id="pic_img" th:src="${paoMaMapPrize.picUrl}" class="img-responsive center-block"/>
+				                    <div id="pic_input" hidden="hidden">
+				                        <!-- 图片上传组件 -->
+				                        <input multiple="" type="file" id="picUrl${i.index}" name="picUrl${paoMaMapPrizeStat.index}" class="file"/>
+				                    </div>
+				                </td>
+	            				<td><input type="text" name="paoMaMapPrizes[].prizeId" th:value="${paoMaMapPrize.prizeId}" /></td>
+	            				<td><input type="button" value="删除" onclick="del_record(0);" class="btn btn-xs btn-danger"/></td>
+	            			</tr>
+	            		</table>
+	                </div>
+	            </div>
+	
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+	<!-- inline scripts related to this page -->
+	<script type="text/javascript" th:inline="javascript">
+		/*<![CDATA[*/
+	    var scripts = [
+	        null,
+	        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+	        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+	        null
+	    ]
+	
+	    $('.page-content-area').ace_ajax(
+	        'loadScripts',
+	        scripts,
+	        function () {
+	            // 设置文件上传
+	            $('#pic').ace_file_input({
+	                style: 'well',
+	                btn_choose: '点击选择您要上传的图片',
+	                btn_change: null,
+	                no_icon: 'ace-icon fa fa-cloud-upload',
+	                droppable: false,
+	                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+	                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+	                thumbnail: 'fit',
+	                preview_error: function (filename, error_code) {
+	                }
+	            }).on('change', function () {
+	//                console.log("文件上传开始...")
+	                //获取文件
+	                var fileInput = document.getElementById("pic");
+	                var file = fileInput.files[0];
+	                var formData = new FormData();
+	                formData.append("file", file);
+	                $.ajax({
+	                    type: "POST",    //必须POST
+	                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+	                    processData: false,    //必须设置
+	                    contentType: false,    //必须设置
+	                    data: formData,    //直接把formData对象作为data属性的值发送
+	                    success: function (data) {
+	                        console.log(data)
+	                        if (0 === data.code) {
+	                            //如果上传成功,设置url地址
+	                            $('#picUrl').val(data.content)
+	                        } else {
+	                            alert(data.message)
+	                        }
+	                    }
+	                })
+	            }).on('file.error.ace', function (e, info) {
+	                alert('请保证上传的为图片文件！')
+	            });
+	            
+	            $('#pic1').ace_file_input({
+	                style: 'well',
+	                btn_choose: '点击选择您要上传的图片',
+	                btn_change: null,
+	                no_icon: 'ace-icon fa fa-cloud-upload',
+	                droppable: false,
+	                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+	                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+	                thumbnail: 'fit',
+	                preview_error: function (filename, error_code) {
+	                }
+	            }).on('change', function () {
+	//                console.log("文件上传开始...")
+	                //获取文件
+	                var fileInput = document.getElementById("pic1");
+	                var file = fileInput.files[0];
+	                var formData = new FormData();
+	                formData.append("file", file);
+	                $.ajax({
+	                    type: "POST",    //必须POST
+	                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+	                    processData: false,    //必须设置
+	                    contentType: false,    //必须设置
+	                    data: formData,    //直接把formData对象作为data属性的值发送
+	                    success: function (data) {
+	                        console.log(data)
+	                        if (0 === data.code) {
+	                            //如果上传成功,设置url地址
+	                            $('#picUrl1').val(data.content)
+	                        } else {
+	                            alert(data.message)
+	                        }
+	                    }
+	                })
+	            }).on('file.error.ace', function (e, info) {
+	                alert('请保证上传的为图片文件！')
+	            });
+	
+	            // 报名截止时间
+	            $('#deadline').datetimepicker();
+	            // 开始日期初始化
+	            $('#startDate').datetimepicker();
+	            // 结束日期初始化
+	            $('#endDate').datetimepicker();
+	
+	            // 返回
+	            $('#back').click(function () {
+	                console.log("返回到前一个页面");
+	                location.href = "#page/paoma";
+	            })
+	
+	            // 执行提交
+	            $('#commit').click(function () {
+	                //将picUrl只展示文件名
+	                var url = $('#picUrl').val();
+	                var slice = url.split("/")
+	                $('#picUrl').val(slice[slice.length - 1])
+	
+	                if (!$('#from-detail').valid())
+	                    return false;
+	                $.post("paoma/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+	                    if (0 === data.code) {
+	                        location.href = "#page/paoma";
+	                    } else {
+	                        alert(data.message)
+	                    }
+	                }, "JSON")
+	            })
+	
+	            // 点击图片隐藏当前图片,并展示图片选择框
+	            $('#pic_img').click(function () {
+	                $('#pic_img').hide()
+	                $('#pic_input').show()
+	            })
+	            $('#pic_img1').click(function () {
+	                $('#pic_img1').hide()
+	                $('#pic_input1').show()
+	            })
+	        })
+	        
+		    /*]]>*/
+	</script>
+</html>

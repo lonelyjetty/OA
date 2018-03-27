@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+<title>模版列表</title>
+<link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}" />
+</head>
+
+<style type="text/css">
+#container {
+	height: calc(100vh - 150px);
+}
+.pricing-span{
+	margin: 10px;
+    max-width: 200px !important;
+}
+</style>
+<div class="row">
+	<div class="page-header">
+		<h1>模版列表信息</h1>
+	</div>
+</div>
+
+<!--主体类容  -->
+<div class="row">
+	<div class="col-xs-12">
+			<div class="pricing-span">
+				<div class="widget-box pricing-box-small widget-color-red3">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">模板一</h5>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding">
+							<ul class="list-unstyled list-striped pricing-table">
+								<li>创建者：白水</li>
+								<li>描述：</li>
+							</ul>
+							<div class="price">
+								<span class="label label-lg label-inverse arrowed-in arrowed-in-right">
+									$5 <small>/month</small>
+								</span>
+							</div>
+						</div>
+
+						<div>
+							<a class="btn btn-block btn-sm btn-danger"> <span>删除</span>
+							</a>
+							<a class="btn btn-block btn-sm btn-danger"> <span>编辑</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="pricing-span">
+				<div class="widget-box pricing-box-small widget-color-orange">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">Starter</h5>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding">
+							<ul class="list-unstyled list-striped pricing-table">
+								<li>创建者：白水</li>
+								<li>描述：</li>
+							</ul>
+
+							<div class="price">
+								<span
+									class="label label-lg label-inverse arrowed-in arrowed-in-right">
+									$10 <small>/month</small>
+								</span>
+							</div>
+						</div>
+
+						<div>
+							<a class="btn btn-block btn-sm btn-warning"> <span>删除</span>
+							</a>
+							<a class="btn btn-block btn-sm btn-warning"> <span>编辑</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="pricing-span">
+				<div class="widget-box pricing-box-small widget-color-blue">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">Business</h5>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding">
+							<ul class="list-unstyled list-striped pricing-table">
+								<li>创建者：白水</li>
+								<li>描述：</li>
+							</ul>
+
+							<div class="price">
+								<span
+									class="label label-lg label-inverse arrowed-in arrowed-in-right">
+									$15 <small>/month</small>
+								</span>
+							</div>
+						</div>
+
+						<div>
+							<a class="btn btn-block btn-sm btn-primary"> <span>删除</span>
+							</a>
+							<a class="btn btn-block btn-sm btn-primary"> <span>编辑</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="pricing-span">
+				<div class="widget-box pricing-box-small widget-color-green">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">Unlimited</h5>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding">
+							<ul class="list-unstyled list-striped pricing-table">
+								<li>创建者：白水</li>
+								<li>描述：</li>
+							</ul>
+
+							<div class="price">
+								<span
+									class="label label-lg label-inverse arrowed-in arrowed-in-right">
+									$25 <small>/month</small>
+								</span>
+							</div>
+						</div>
+
+						<div>
+						    <a class="btn btn-block btn-sm btn-success"> <span>删除</span>
+							</a>
+							<a class="btn btn-block btn-sm btn-success"> <span>编辑</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="pricing-span">
+				<div class="widget-box pricing-box-small widget-color-grey">
+					<div class="widget-header">
+						<h5 class="widget-title bigger lighter">Extreme</h5>
+					</div>
+
+					<div class="widget-body">
+						<div class="widget-main no-padding">
+							<ul class="list-unstyled list-striped pricing-table">
+								<li>创建者：白水</li>
+								<li>描述：</li>
+							</ul>
+
+							<div class="price">
+								<span
+									class="label label-lg label-inverse arrowed-in arrowed-in-right">
+									$30 <small>/month</small>
+								</span>
+							</div>
+						</div>
+
+						<div>
+							<a class="btn btn-block btn-sm btn-grey"> <span>删除</span>
+							</a>
+							<a class="btn btn-block btn-sm btn-grey"> <span>编辑</span>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</div>
+
+
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+/*<![CDATA[*/
+	var scripts = [
+		null,
+		[[@{/assets/js/moment.min.js}]],
+		[[@{/assets/js/fullcalendar.min.js}]],
+		[[@{/assets/js/bootbox.min.js}]],
+		[[@{/assets/js/echarts.min.js}]],
+		null ]
+	$('.page-content-area').ace_ajax('loadScripts', scripts, function() {
+
+	// 必须添加
+	//==================================================================================================
+	$(document).one('ajaxloadstart.page', function(e) {
+		//$(grid_selector).jqGrid('GridUnload');
+		//$('.ui-jqdialog').remove();
+	});
+	
+	//删除 编辑按钮
+	$(".pricing-span").each(function(index,element){
+		$(element).find("a").each(function(index,element){
+			if('0' == index){//删除按钮
+				$(this).on("click",function(){
+					$(this).parents(".pricing-span").remove()
+				})
+			}
+			
+			if('1' == index){//编辑
+				$(this).on("click",function(){
+					alert("编辑")
+				})
+			}
+		})
+	})
+	
+
+})
+/*]]>*/
+
+</script>
+</html>

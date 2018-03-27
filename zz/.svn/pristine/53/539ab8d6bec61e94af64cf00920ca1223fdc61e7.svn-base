@@ -1,0 +1,468 @@
+package com.bizdata.zz.project.controller;
+
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.bizdata.admin.domain.Organization;
+import com.bizdata.admin.domain.User;
+import com.bizdata.admin.service.OrganizationService;
+import com.bizdata.admin.service.UserService;
+import com.bizdata.commons.utils.DateEditor;
+import com.bizdata.zz.project.childrenduties.domain.ProductChildrenDuties;
+import com.bizdata.zz.project.childrenduties.service.ProductChildrenDutiesService;
+import com.bizdata.zz.project.controller.vo.IdVo;
+import com.bizdata.zz.project.controller.vo.ProjectTemp;
+import com.bizdata.zz.project.controller.vo.UserTemp;
+import com.bizdata.zz.project.domain.Product;
+import com.bizdata.zz.project.domain.ProductStoriesAndDuties;
+import com.bizdata.zz.project.model.domain.ProductModel;
+import com.bizdata.zz.project.model.service.ProductModelService;
+import com.bizdata.zz.project.projectSourceEdit.constant.ProjectSourceEditPositionEnum;
+import com.bizdata.zz.project.projectSourceEdit.domain.ProjectSourceEdit;
+import com.bizdata.zz.project.projectSourceEdit.service.ProjectSourceEditService;
+import com.bizdata.zz.project.service.ProductService;
+import com.bizdata.zz.project.service.ProductStoriesAndDutiesService;
+import com.bizdata.zz.project.vo.OrganizationAndUsers;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
+import com.google.gson.Gson;
+
+import me.sdevil507.resp.ResultUtil;
+import me.sdevil507.resp.ResultVO;
+
+@Controller
+@RequestMapping("/admin/projectList")
+public class ProjectController {
+
+	@InitBinder
+	protected void initBinder(HttpServletRequest request, ServletRequestDataBinder binder) throws Exception {
+		// 对于需要转换为Date类型的属性，使用DateEditor进行处理
+		binder.registerCustomEditor(Date.class, new DateEditor());
+	}
+
+	@Autowired
+	private OrganizationService organizationService;
+
+	@Autowired
+	private UserService userService;
+
+	@Autowired
+	private ProductService productService;
+	
+	@Autowired
+	private ProductModelService productModelService;
+	
+	@Autowired
+	private ProjectSourceEditService projectSourceEditService;
+	
+	@Autowired
+	private ProductChildrenDutiesService productChildrenDutiesService;
+	
+	@Autowired
+	private ProductStoriesAndDutiesService productStoriesAndDutiesService;
+	
+	
+	// 跳转详情
+	@RequestMapping(value = "/detail", method = RequestMethod.GET)
+	public ModelAndView detail(String id) {
+		System.out.println(id+"  项目id===================");
+		ProductStoriesAndDuties p = productStoriesAndDutiesService.getRunNum(id);
+		int a = p.getRun().length();
+		int num;
+		if(a<7) {
+			num = Integer.parseInt(p.getRun())+1;
+		}else {
+			num = 1;
+		}
+		
+		System.out.println("最后一个冲刺周期"+num);
+		ModelAndView mavnew = new ModelAndView("zz/project/detail");
+		mavnew.addObject("proId", id);
+		mavnew.addObject("col", num);
+		return mavnew;
+	}
+
+	// 跳转遍历
+	// 跳转详情
+	@RequiresPermissions("projectList:view")
+	@RequestMapping(method = RequestMethod.GET)
+	public ModelAndView view() {
+		return new ModelAndView("zz/project/list");
+	}
+	
+	// 跳转增加故事和任务
+	@RequestMapping(value = "/addStoryOrDuty",method = RequestMethod.GET)
+	public ModelAndView addStoryOrDuty() {
+		return new ModelAndView("zz/project/storyorduty/add");
+	}
+
+
+	/**
+	 * getAll
+	 * 
+	 * @Title: view
+	 * @Description: TODO
+	 * @return
+	 * @return: ModelAndView
+	 */
+	@RequestMapping(value = "/findAllPro", method = RequestMethod.GET)
+	@ResponseBody
+	public String findAll() {
+		List<Product> allProductVo = new ArrayList<>();
+		Map<String, Object> productMap = new HashMap<>();
+		List<Product> allProduct = productService.findAll();
+		for (Product product : allProduct) {
+			if(product.getIslocked().equals("0")) {
+				allProductVo.add(product);
+			}
+			String mid = product.getProductManager();
+			User findOne = userService.findOne(mid);
+			String deptid = product.getProductDept();
+			Organization findOne2 = organizationService.findOne(deptid);
+			product.setProductManagerName(findOne.getUsername());
+			product.setProductDeptName(findOne2.getName());
+		}
+		productMap.put("rows", allProductVo);
+		return new Gson().toJson(productMap);
+	}
+	
+	
+	
+
+	// 查询所有的部门
+	@RequestMapping(value = "/organizationList", method = RequestMethod.GET)
+	@ResponseBody
+	public String organizationList() {
+		List<OrganizationAndUsers> OrganizationAndUsers = new ArrayList<>();
+		Map<String, Object> organizationMap = new HashMap<>();
+		List<Organization> allOrganization = organizationService.findAll();
+		// 根据部门id查询员工
+		for (Organization organization : allOrganization) {
+			List<User> allusers = userService.findAllByOrganizationId(organization.getId());
+			for (User user : allusers) {
+				OrganizationAndUsers temp = new OrganizationAndUsers();
+				temp.setId(user.getId());
+				temp.setName(user.getUsername());
+				temp.setParent(organization.getId());
+				OrganizationAndUsers.add(temp);
+			}
+			OrganizationAndUsers temp = new OrganizationAndUsers();
+			temp.setId(organization.getId());
+			temp.setName(organization.getName());
+			temp.setParent(organization.getParent());
+			temp.setNocheck(true);
+			OrganizationAndUsers.add(temp);
+		}
+		organizationMap.put("rows", OrganizationAndUsers);
+		return new Gson().toJson(organizationMap);
+	}
+	
+    /**
+     *  根据部门id进行查找人员
+     * @Title: findAllByOrganizationId 
+     * @Description: TODO
+     * @param organizationId
+     * @return
+     * @return: String
+     */
+    @RequestMapping(value = "/findAllByOrganizationId",method = RequestMethod.GET)
+    @ResponseBody
+    public String findAllByOrganizationId(String organizationId) {
+    	List<UserTemp> allusers = new ArrayList<>();
+    	Map<String, Object> usersMap = new HashMap<>();
+    	System.out.println(organizationId+"组织部门id==================");
+    	List<User> users = userService.findAllByOrganizationId(organizationId);
+    	for (User user : users) {
+    		UserTemp temp = new UserTemp();
+    		temp.setId(user.getId());
+    		temp.setUsername(user.getUsername());
+    		allusers.add(temp);
+		}
+    	usersMap.put("rows", allusers);
+    	return new Gson().toJson(usersMap);
+    }
+
+	// 跳转增加
+	@RequiresPermissions("projectList:add")
+	@RequestMapping(value = "/add", method = RequestMethod.GET)
+	public ModelAndView add() {
+		return new ModelAndView("zz/project/add");
+	}
+
+	// 跳转编辑页面
+	@RequestMapping(value = "/edit_view", method = RequestMethod.GET)
+	public ModelAndView editView(String id) {
+		System.out.println(id+"=================");
+		List<User> usersList  =new ArrayList<>();
+		ProjectTemp projectTemp = new ProjectTemp();
+		System.out.println(id+"=================");
+		Product findOne = productService.findOne(id);
+		if(findOne != null) {
+			//查询管理者
+			String productManagerid = findOne.getProductManager();
+			User manager = userService.findOne(productManagerid);
+			//查询部门信息
+			String productDeptid = findOne.getProductDept();
+			Organization organization = organizationService.findOne(productDeptid);
+			//查询人员
+			String productActorids = findOne.getProductActor();
+			if (StringUtils.containsAny(productActorids, ",")) {
+				String[] ids = productActorids.split(",");
+					for (String singleid : ids) {
+						User users = userService.findOne(singleid);
+						usersList.add(users);
+				}
+			}else {
+				User singleUser = userService.findOne(productActorids);
+				usersList.add(singleUser);
+			}
+			//查询模板信息
+			String mid = findOne.getProductModel();
+			ProductModel pm = productModelService.getOneById(mid);
+			
+			projectTemp.setUsers(usersList);
+			projectTemp.setOrganization(organization);
+			projectTemp.setManager(manager);
+			projectTemp.setProduct(findOne);
+			projectTemp.setProductModel(pm);
+		}
+		return new ModelAndView("zz/project/edit_view","edit",projectTemp);
+	}
+	
+	// 跳转编辑页面
+	@RequestMapping(value = "/view", method = RequestMethod.GET)
+	public ModelAndView view(String id) {
+		List<User> usersList  =new ArrayList<>();
+		ProjectTemp projectTemp = new ProjectTemp();
+		System.out.println(id+"++++=================");
+		Product findOne = productService.findOne(id);
+		ProductModel pm = productModelService.getOneById(findOne.getProductModel());
+		if(findOne != null) {
+			//查询管理者
+			String productManagerid = findOne.getProductManager();
+			User manager = userService.findOne(productManagerid);
+			//查询部门信息
+			String productDeptid = findOne.getProductDept();
+			Organization organization = organizationService.findOne(productDeptid);
+			//查询人员
+			String productActorids = findOne.getProductActor();
+			if (StringUtils.containsAny(productActorids, ",")) {
+				String[] ids = productActorids.split(",");
+					for (String singleid : ids) {
+						User users = userService.findOne(singleid);
+						usersList.add(users);
+				}
+			}else {
+				User singleUser = userService.findOne(productActorids);
+				usersList.add(singleUser);
+			}
+			projectTemp.setUsers(usersList);
+			projectTemp.setOrganization(organization);
+			projectTemp.setManager(manager);
+			projectTemp.setProduct(findOne);
+			projectTemp.setProductModel(pm);
+		}
+		return new ModelAndView("zz/project/view","view",projectTemp);
+	}
+
+	/**
+	 * 增加项目
+	 *
+	 * @param 项目
+	 *            实体
+	 * @return 执行反馈
+	 */
+	@RequestMapping(value = "/addProduct", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultVO addProduct(Product product) {
+		ResultVO resultVO;
+		product.setIslocked("0");
+		String i = product.getIteration();
+		i = i.substring(0,i.indexOf("工"));
+		int it = Integer.parseInt(i);
+		String w = product.getWorkhour();
+		int wo = Integer.parseInt(w);
+		product.setWorkhour((it*wo)+"小时/周期");
+		
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		Date date = new Date();
+		date = ts;
+		String dateStr="";
+		DateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");	
+		dateStr = sdf.format(date);
+		product.setAddtime(dateStr);
+		
+		if (productService.save(product)) {
+			
+			resultVO = ResultUtil.create(0, "项目保存成功!");
+		} else {
+			resultVO = ResultUtil.create(-1, "项目保存失败!");
+		}
+		return resultVO;
+	}
+	
+	@RequestMapping(value = "/editProduct", method = RequestMethod.POST)
+	@ResponseBody
+	public ResultVO editProduct(Product product) {
+		ResultVO resultVO;
+		product.setIslocked("0");
+		String i = product.getIteration();
+		i = i.substring(0,i.indexOf("工"));
+		int it = Integer.parseInt(i);
+		String w = product.getWorkhour();
+		int wo = Integer.parseInt(w);
+		product.setWorkhour((it*wo)+"小时/周期");
+		if (productService.save(product)) {
+			
+			resultVO = ResultUtil.create(0, "项目保存成功!");
+		} else {
+			resultVO = ResultUtil.create(-1, "项目保存失败!");
+		}
+		return resultVO;
+	}
+	
+	
+	// 跳转增加
+	@RequestMapping(value = "/toProductDetail", method = RequestMethod.GET)
+	public ModelAndView toProductDetail(String id, Model model) {
+		System.out.println(id + "====================================");
+		ModelAndView mav = new ModelAndView("zz/project/productDetails");
+		mav.addObject("messages", id);
+		return mav;
+	}
+
+	// 跳转增加任务
+	@RequestMapping(value = "/addduty", method = RequestMethod.GET)
+	public ModelAndView addduty(String dutyid,String projectid,Model model) {
+		System.out.println(dutyid + "===================================="+projectid);
+		ModelAndView mav1 = new ModelAndView("zz/project/addduty");
+		String[] idStrings = dutyid.split(",");
+		IdVo id = new IdVo();
+		id.setDutyid(idStrings[0]);
+		id.setProjectid(idStrings[1]);
+		mav1.addObject("id", id);
+		
+		//查找   技能项   风险项     设计约束   用户场景
+		Multimap<String, ProjectSourceEdit> sources = findProjectSource();
+		System.out.println(sources);
+		mav1.addObject("sources", sources);
+		//冲刺
+		String run = productStoriesAndDutiesService.findOne(idStrings[0]).getRun();
+		mav1.addObject("run", run);
+		
+		double alltime =0.0;
+		List<ProductChildrenDuties> list = productChildrenDutiesService.getAllRun(idStrings[1], run);
+		for (ProductChildrenDuties p : list) {
+			String onetime = p.getSpan().substring(0, p.getSpan().indexOf("小"));
+			System.out.println(onetime+"\t ***");
+			double ntime=Double.parseDouble(onetime);
+			alltime +=ntime;		
+		}
+		mav1.addObject("alltime", alltime);
+		String workhour = productService.findOne(idStrings[1]).getWorkhour();
+		workhour = workhour.substring(0, workhour.indexOf("小"));
+		double whour = Double.parseDouble( workhour);
+		mav1.addObject("whour", whour);
+		return mav1;
+	}
+	
+	
+	//查找   技能项   风险项     设计约束   用户场景
+	Multimap<String, ProjectSourceEdit> findProjectSource() {
+		Multimap<String, ProjectSourceEdit> teMap = ArrayListMultimap.create(); 
+		//List<ProjectSourceEdit> allSource = projectSourceEditService.findAll();
+		List<ProjectSourceEdit> allSource = projectSourceEditService.findAllByShow();
+		for (ProjectSourceEdit projectSourceEdit : allSource) {
+			ProjectSourceEditPositionEnum bannerPositionEnum = projectSourceEdit.getBannerPositionEnum();
+			String string = bannerPositionEnum.toString();
+			switch(string){
+			case "SKILL":
+				teMap.put("skill", projectSourceEdit);
+			    break;
+			case "RISK":
+				teMap.put("risk", projectSourceEdit);
+			    break;
+			case "DESIGN":
+				teMap.put("design", projectSourceEdit);
+			    break;
+			case "CUSTOMER":
+				teMap.put("customer", projectSourceEdit);
+			    break;
+			}
+		}
+		return teMap;
+	}
+	
+	
+	@RequestMapping(value = "/toAdddutyEdit", method = RequestMethod.GET)
+	public ModelAndView toAdddutyEdit(String id,Model model) {
+		System.out.println(id + "====================================");
+		ModelAndView mav2 = new ModelAndView("zz/project/addduty_edit");
+		String[] idStrings = id.split(",");
+		IdVo idv = new IdVo();
+		idv.setDutyid(idStrings[0]);
+		idv.setProjectid(idStrings[1]);
+		mav2.addObject("editid", idv);
+		//传入对象
+		ProductChildrenDuties one = productChildrenDutiesService.findOne(idStrings[0]);
+		mav2.addObject("oneproject", one);
+		
+		//查找   技能项   风险项     设计约束   用户场景
+		Multimap<String, ProjectSourceEdit> sources = findProjectSource();
+		mav2.addObject("sources", sources);
+		return mav2;
+	}
+	
+	//逻辑删除
+    /**
+     * 根据ID删除某条Banner
+     *
+     * @param id id
+     * @return 执行反馈
+     */
+    @RequestMapping(value = "/deleteByIslocked", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultVO del(String id) {
+    	System.out.println(id+"==================");
+    	String islocked = "0";
+        ResultVO resultVO;
+        Product one = productService.findOne(id);
+        if(one.getIslocked().equals("0")) {
+        	islocked="1";
+        }
+        int flag = productService.deleteByIslocked(id,islocked);
+        if(flag > 0 ) {
+        	 resultVO = ResultUtil.create(0, "商品状态修改成功!");
+        }else {
+        	 resultVO = ResultUtil.create(-1, "商品状态修改失败!");
+        }
+        return resultVO;
+    }
+
+	// 跳转地图取点
+	@RequestMapping(value = "/toBaiduMap", method = RequestMethod.GET)
+	public ModelAndView toBaiduMap() {
+		return new ModelAndView("zz/project/baidumap");
+	}
+
+}

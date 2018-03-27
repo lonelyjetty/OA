@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>栏目新增</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>栏目新增</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+            <!-- 栏目名称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="column_name"> 栏目名称:</label>
+                <div class="col-sm-3">
+                    <input type="text" name="column_name" id="column_name" placeholder="栏目名称"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 栏目简称 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="column_short_name"> 栏目简称:</label>
+                <div class="col-sm-3">
+                    <input type="text" name="column_short_name" id="column_short_name" placeholder="栏目简称"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+	
+			<!-- 栏目图标 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="pic"> 栏目图标:</label>
+
+                <div class="col-sm-3">
+                    <input type="hidden" name="column_ico" id="column_ico"/>
+                    <!-- 图片上传组件 -->
+                    <input multiple="" type="file" id="pic" name="pic"/>
+                </div>
+            </div>
+			<!-- 栏目banner -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="pic"> 栏目banner:</label>
+
+                <div class="col-sm-3">
+                    <input type="hidden" name="columnbanner" id="columnbanner"/>
+                    <!-- 图片上传组件 -->
+                    <input multiple="" type="file" id="picbanner" name="pic"/>
+                </div>
+            </div>
+            <!-- 栏目描述 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="descripiton"> 栏目描述:</label>
+                <div class="col-sm-3">
+                    <input type="text" name="descripiton" id="descripiton" placeholder="栏目描述" class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            <!-- 排序号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="serialNum"> 排序号:</label>
+
+                <div class="col-sm-3">
+                    <input type="number" name="sort_no" id="sort_no" placeholder="排序号" class="col-xs-10 col-sm-12" min="0"/>
+                </div>
+            </div>
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+	//栏目图标
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置栏目图标上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片(支持jpeg、jpg、png、gif、bmp,文件不大于2M)',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                maxFileSize : 2000,
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#column_ico').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+         // 设置栏目banner上传
+            $('#picbanner').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片(支持jpeg、jpg、png、gif、bmp,文件不大于2M)',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                maxFileSize : 2000,
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("picbanner");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#columnbanner').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	column_name: {
+                        required: true
+                    },
+                    pic: {
+                        required: true
+                    },
+                    sort_no: {
+                    	//dateISO : true,
+                        range: [1,10000]
+                    }
+                },
+
+                messages: {
+                	column_name: "栏目名称不能为空",
+                    pic: "栏目图标必须上传",
+                    picbanner: "展示位置必须填写",
+                    sort_no: {
+                    	required : "序号在1-10000",
+                    }
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 开始日期初始化
+            $('#startTime').datetimepicker();
+            // 结束日期初始化
+            $('#endTime').datetimepicker();
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/column"
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                var kk = "column/checkSort?sort_no="+$('#sort_no').val();
+                $.get(kk,function(data){
+                	if(data){
+                		$.post("column/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                            if (0 === data.code) {
+                                location.href = "#page/column/"
+                            } else {
+                                alert(data.message)
+                            }
+                        }, "JSON")}
+                	else alert('该类型下已存在此位置序号');
+                       
+                })
+            })
+        })
+    /*]]>*/
+</script>
+</html>

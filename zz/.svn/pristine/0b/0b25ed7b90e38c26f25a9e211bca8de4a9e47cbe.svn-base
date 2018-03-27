@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>添加app配置</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/ui.jqgrid.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/datepicker.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/css/daterangepicker.css}"/>
+
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>添加app配置</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+			
+			<!-- 平台号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="platformnum">平台号</label>
+                <div class="col-sm-3">
+                	<select id="platformnum" name="platformnum" class="col-xs-10 col-sm-12" >
+                		<option value="ALL">- - 全部   - -</option>
+        			</select>
+                </div>
+            </div>
+            <!-- 版本号 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="versionnum">版本号</label>
+                <div class="col-sm-3">
+                	<select id="versionnum" name="versionnum" class="col-xs-10 col-sm-12" >
+                		<option value="ALL">- - 全部   - -</option>
+        			</select>
+                </div>
+            </div>
+            <!-- 类型 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="type">类型</label>
+                <div class="col-sm-3">
+                	<select id="type" name="type" class="col-xs-10 col-sm-12" >
+                		<option value="ALL">- - 全部   - -</option>
+        			</select>
+                </div>
+            </div>
+			<!-- 下载地址 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="downaddress">下载地址</label>
+                <div class="col-sm-3">
+                    <input type="text" name="downaddress" id="downaddress"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+            
+            <!-- 开始时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right">开始时间:</label>
+				<div class="col-sm-3">
+        			<input id="startdate" name="startdate" type="text" class="col-xs-10 col-sm-12 input-sm form-control"/>
+        		</div>
+            </div>
+            
+            <!-- 结束时间 -->
+			<div class="form-group">
+				<label class="col-sm-3 control-label no-padding-right">结束时间:</label>
+				<div class="col-sm-3">
+        			<input id="enddate" name="enddate" type="text" class="col-xs-10 col-sm-12 input-sm form-control"/>
+        		</div>
+            </div>
+            
+            
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+                    &nbsp; &nbsp; &nbsp;
+                    
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/date-time/bootstrap-datepicker.js}]]*/ '',
+        /*[[@{/assets/js/date-time/daterangepicker.js}]]*/ '',
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        null
+    ]
+    $('.page-content-area').ace_ajax(
+            'loadScripts',
+            scripts,
+			function () {
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	platformnum: {
+                        required: true
+                    },
+                    versionnum: {
+                        required: true
+                    },
+                    type: {
+                        required: true
+                    },
+                    downaddress: {
+                        required: true
+                    },
+                    startdate: {
+                        required: true
+                    },
+                    enddate: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                  	platformnum: "平台号不能为空",
+                  	versionnum: "版本号不能为空",
+                  	type: "类型不能为空",
+                  	downaddress: "下载地址不能为空",
+                  	startdate: "开始时间不能为空",
+                  	enddate: "结束时间不能为空",
+                  	
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+			
+            
+        	// 开始日期初始化
+            $('#startdate').datetimepicker();
+            // 结束日期初始化
+            $('#enddate').datetimepicker();
+            
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/app_mag"
+            })
+
+            // 提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("app_mag/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/app_mag/"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+        })
+    /*]]>*/
+</script>
+</html>

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>新增流量充值</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>新增流量充值</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+	            <!-- 充值方式 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="rechargeType"> 充值方式:</label>
+	
+	                <div class="col-sm-3">
+	                    <select name="rechargeType" id="rechargeType" class="form-control" onchange="gradeChange()">
+	                        <option value="1" checked="checked">单次充值</option>
+	                        <option value="2">批量充值</option>
+	                    </select>
+	                </div>
+	            </div>
+	
+	            <!-- 手机号 -->
+	            <div class="form-group" id="phone" style="display:block;">
+	                <label class="col-sm-3 control-label no-padding-right" for="mobile"> 手机号:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="mobile" id="mobile" placeholder="手机号" class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 面值 -->
+	            <div class="form-group" id="faceValues" style="display:block;">
+	                <label class="col-sm-3 control-label no-padding-right" for="faceValue"> 面值:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="faceValue" id="faceValue" placeholder="面值" class="col-xs-10 col-sm-12"/>
+	                </div>
+	            </div>
+			</form>
+			
+	        <form class="form-horizontal" id="from-detail1" role="form" enctype="multipart/form-data">
+	            <!-- 上传文件 -->
+	            <div class="form-group" id="files" style="display:none;">
+	                <label class="col-sm-3 control-label no-padding-right" for="file"> 上传文件 :</label>
+					
+	                <div class="col-sm-3">
+	                    <input id="file" type="file" name="file" style="width:200px"
+						class="margin_left_10px"/>
+					</div>
+	            </div>
+	            
+	            <div class="form-group" id="remark" style="display:none;">
+	            	<label class="col-sm-3 control-label no-padding-right"></label>
+	            	
+	            	<div class="col-sm-3">
+	                    <p>备注：</p>
+	                    <br/>
+	                    <p>1.文件格式为：*.txt</p>
+	                    <br/>
+	                    <p>2.文件内容格式：手机号-流量，例如：13896282489-30</p>
+	                    <br/>
+	                    <p>3.文件内容：每行一个手机号及流量</p>
+					</div>
+	            </div>
+	        </form>
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+	    </div>
+	</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            // 设置文件上传
+            $('#pic').ace_file_input({
+                style: 'well',
+                btn_choose: '点击选择您要上传的图片',
+                btn_change: null,
+                no_icon: 'ace-icon fa fa-cloud-upload',
+                droppable: false,
+                allowExt: ["jpeg", "jpg", "png", "gif", "bmp"],
+                allowMime: ["image/jpg", "image/jpeg", "image/png", "image/gif", "image/bmp"],
+                thumbnail: 'fit',
+                preview_error: function (filename, error_code) {
+                }
+            }).on('change', function () {
+//                console.log("文件上传开始...")
+                //获取文件
+                var fileInput = document.getElementById("pic");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("file", file);
+                $.ajax({
+                    type: "POST",    //必须POST
+                    url: /*[[@{/upload}]]*/ '',    //接收请求的URL
+                    processData: false,    //必须设置
+                    contentType: false,    //必须设置
+                    data: formData,    //直接把formData对象作为data属性的值发送
+                    success: function (data) {
+                        console.log(data)
+                        if (0 === data.code) {
+                            //如果上传成功,设置url地址
+                            $('#picUrl').val(data.content)
+                        } else {
+                            alert(data.message)
+                        }
+                    }
+                })
+            }).on('file.error.ace', function (e, info) {
+                alert('请保证上传的为图片文件！')
+            });
+
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	mobile: {
+                        required: true
+                    },
+                    faceValue: {
+                        required: true
+                    }
+                },
+
+                messages: {
+                	mobile: "手机号不能为空",
+                	faceValue: "面值不能为空",
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/flow";
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+            	var objS = document.getElementById("rechargeType");
+            	var value = objS.options[objS.selectedIndex].value;
+            	if(value == '1') {
+	                if (!$('#from-detail').valid()) {
+	                    return false
+	                }
+	                $.post("flow/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+	                    if (0 === data.code) {
+	                        location.href = "#page/flow/";
+	                    } else {
+	                        alert(data.message)
+	                    }
+	                }, "JSON")
+            	} else if(value == '2'){
+            		var formData = new FormData();
+             		formData.append("file",document.getElementById("file").files[0]); 
+             		$.ajax({
+             			url:"flow/savefile",
+             			type: "POST",
+                        data: formData,
+                      /**
+                        *必须false才会自动加上正确的Content-Type
+                        */
+                        contentType: false,
+                      /**
+                        * 必须false才会避开jQuery对 formdata 的默认处理
+                        * XMLHttpRequest会对 formdata 进行正确的处理
+                        */
+                        processData: false,
+                        success:function (data){
+                        	if (0 === data.code) {
+    	                        location.href = "#page/flow/";
+    	                    } else {
+    	                        alert(data.message)
+    	                    }
+                        },
+             			error:function (){
+             				alert("上传失败！");
+             			}
+             		});
+            		/* $.post("flow/savefile", $("#from-detail1").serialize(), function (data) {
+	                    if (0 === data.code) {
+	                        location.href = "#page/flow/";
+	                    } else {
+	                        alert(data.message)
+	                    }
+	                }, "JSON") */
+            	}
+            })
+        })
+    	
+    	function gradeChange() {
+    		var objS = document.getElementById("rechargeType");
+        	var value = objS.options[objS.selectedIndex].value;
+        	if(value == '2') {
+        		$('#files').css('display','block');
+        		$('#remark').css('display','block');
+        		$('#phone').css('display','none');
+        		$('#faceValues').css('display','none');
+        	} else if(value == '1') {
+        		$('#files').css('display','none');
+        		$('#remark').css('display','none');
+        		$('#phone').css('display','block');
+        		$('#faceValues').css('display','block');
+        	}
+    	}
+    /*]]>*/
+</script>
+</html>

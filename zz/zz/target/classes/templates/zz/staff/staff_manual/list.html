@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>员工手册</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <style type="text/css">
+        .margin_left_10px {
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>员工手册</h1>
+</div>
+
+<div class="row">
+	<!-- 员工手册 -->
+	<div class="col-xs-12">
+		<span class="editable editable-click" id="about">
+		<p>手册前言</p>
+<p>对这份员工手册的目的和效力给予说明。</p>
+<p>公司简介</p>
+<p>使每一位员工都对公司的过去、现状和文化有深入的了解。可以介绍公司的历史、宗旨、客户名单等。</p>
+<p>手册总则</p>
+<p>一般包括礼仪守则、公共财产、办公室安全、人事档案管理、员工关系、客户关系、供应商关系等条款。这有助于保证员工按照公司认同的方式行事，从而达成员工和公司之间的彼此认同。</p>
+<p>培训开发</p>
+<p>一般新员工上岗前均须参加人力资源部等统一组织的入职培训；以及公司不定期举行的各种培训提高业务素质以及专业技能。</p>
+<p>任职聘用</p>
+<p>说明任职开始、试用期、员工评估、调任以及离职等相关事项。</p>
+<p>考核晋升</p>
+<p>一般分为试用转正考核、晋升考核、定期考核等。考核评估内容一般包括：指标完成情况、工作态度、工作能力、工作绩效、合作精神、服务意识、专业技能、等。考核结果为“优秀、良好、合格、延长及辞退”。</p>
+<p>员工薪酬</p>
+<p>员工最关心的问题之一。应对公司的薪酬结构，薪酬基准，薪资发放和业绩评估方法等给予详细的说明。</p>
+<p>员工福利</p>
+<p>阐述公司的福利政策和为员工提供的福利项目。</p>
+<p>工作时间</p>
+<p>使员工了解公司关于工作时间的规定，往往和费用相关。基本内容是：办公时间、出差政策、各种假期的详细规定已经相关的费用政策等。</p>
+<p>行政管理</p>
+<p>多为约束性条款。比如，对办公用品和设备的管理、各人对自己工作区域的管理、奖惩、员工智力成果的版权声明等。</p>
+<p>安全守则</p>
+<p>一般分为安全规则、火情处理、意外紧急事故处理等。</p>
+<p>手册附件</p>
+<p>与以上各条款相关的或需要员工了解的其它文件。如财务制度、社会保险制度等。</p>
+		
+		
+		</span>
+	</div>
+
+</div>
+<!-- /.row -->
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        [[@{/assets/js/bootstrap-wysiwyg.min.js}]],
+        [[@{/assets/js/bootstrap-editable.min.js}]],
+		[[@{/assets/js/ace-editable.min.js}]],
+        null
+    ]
+    $('.page-content-area').ace_ajax('loadScripts', scripts, function () {
+
+        //配置settings设置
+        $(document).on('settings.ace.jqGrid', function (ev, event_name, collapsed) {
+            if (event_name === 'sidebar_collapsed' || event_name === 'main_container_fixed') {
+                //setTimeout is for webkit only to give time for DOM changes and then redraw!!!
+                setTimeout(function () {
+                    $(grid_selector).jqGrid('setGridWidth', parent_column.width());
+                }, 0);
+            }
+        })
+
+       	$('#about').editable({
+			mode: 'inline',
+	        type: 'wysiwyg',
+			name : 'about',
+	
+			wysiwyg : {
+				//css : {'max-width':'300px'}
+			},
+			success: function(response, newValue) {
+			}
+		});
+        
+
+
+        // 必须添加
+        //==================================================================================================
+        $(document).one('ajaxloadstart.page', function (e) {
+            //$(grid_selector).jqGrid('GridUnload');
+            //$('.ui-jqdialog').remove();
+        });
+    })
+    /*]]>*/
+
+
+
+</script>
+</html>

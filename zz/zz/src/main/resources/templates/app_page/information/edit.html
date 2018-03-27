@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+	<head>
+	    <title>消息编辑</title>
+	    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+	    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+	    <style type="text/css">
+	
+	    </style>
+	</head>
+	<!-- ajax layout which only needs content area -->
+	<div class="page-header">
+	    <h1>消息编辑</h1>
+	</div>
+
+	<div class="row">
+	    <div class="col-xs-12">
+	        <!-- form表单 -->
+	        <form class="form-horizontal" id="from-detail" role="form">
+                <input type="hidden" name="id" th:value="${information.id}"/>
+                <input type="hidden" name="createdate" th:value="${information.createdate}"/>
+                <input type="hidden" name="state" th:value="${information.state}"/>
+	            <!-- 消息主题 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="theme"> 消息主题:</label>
+	
+	                <div class="col-sm-3">
+	                    <input type="text" name="theme" id="theme" placeholder="消息主题"
+	                           class="col-xs-10 col-sm-12" th:value="${information.theme}"/>
+	                </div>
+	            </div>
+	            
+	            <!-- 消息类型 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="type"> 消息类型</label>
+	                <div class="col-sm-3">
+	                	<select id="informationTypeEnum" name="informationTypeEnum" class="margin_left_10px">
+	            			<option value="SYSTEM_INF" th:selected="${information.informationTypeEnum.toString() == 'SYSTEM_INF'}">系统消息</option>
+	            			<option value="OTHERS_INF" th:selected="${information.informationTypeEnum.toString() == 'OTHERS_INF'}">第三方消息</option>
+	        			</select>
+	                </div>
+	            </div>
+	            
+	            <!-- 消息接收人 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="user"> 接收消息人</label>
+	                <div class="col-sm-3">
+	                	<select id="informationTargetEnum" name="informationTargetEnum" class="margin_left_10px">
+	            			<option value="USER" th:selected="${information.informationTargetEnum.toString() == 'USER'}">指定用户</option>
+	            			<option value="GROUP" th:selected="${information.informationTargetEnum.toString() == 'GROUP'}">指定用户组</option>
+	        			</select>
+	                </div>
+	            </div>
+	            
+	            <!-- 用户ID -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="userinf"> 用户ID</label>
+	                <div class="col-sm-3">
+	         			<textarea id="userinf" name="userinf" rows="4" cols="41" th:text="${information.userinf}"></textarea>
+	                </div>
+	            </div>
+	            
+	            <div class="form-group">
+	            	<!-- 隐藏为空 -->
+	            	<label class="col-sm-3 control-label no-padding-right"></label>
+	            	<label class="col-sm-3">备注：多个用户id之间用英文逗号隔开，例如：284608,284607</label>
+	            </div>
+	            
+	            <!-- 消息内容 -->
+	            <div class="form-group">
+	                <label class="col-sm-3 control-label no-padding-right" for="informationcontent"> 消息内容</label>
+	                <!-- <div class="col-sm-3">
+	         			<textarea id="informationcontent" name="informationcontent" rows="4" cols="41"></textarea>
+	                </div> -->
+	                <div style="width:750px;height:400px;" class="col-sm-3">
+		            	<textarea name="informationcontent" id="informationcontent" th:value="${information.informationcontent}"
+		            		style="width:680px;height:400px;visibility:hidden;"></textarea>
+		            
+		            </div>
+	            </div>
+	
+	            <div class="clearfix form-actions">
+	                <div class="col-md-offset-3 col-md-9">
+	                    <button id="back" class="btn" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        返回
+	                    </button>
+	
+	                    &nbsp; &nbsp; &nbsp;
+	                    <button id="commit" class="btn btn-success" type="button">
+	                        <i class="ace-icon fa fa-check bigger-110"></i>
+	                        提交
+	                    </button>
+	                </div>
+	            </div>
+	        </form>
+	    </div>
+	</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+        	
+        	var editor = KindEditor.create("#informationcontent",{
+        	    width: '680px',
+        	    height: '400px',
+        	});
+
+        	// 初始化时,将原来的数据带出来
+        	var content=  [[${information.informationcontent}]];
+        	console.log(content);
+        	editor.html(content);
+
+        	 //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                    theme: {
+                        required: true,
+                        maxlength: 30,
+                    },
+                    userinf: {
+                        required: true
+                    },
+                    informationcontent: {
+                    	required: true
+                    }
+                },
+
+                messages: {
+                	theme: {
+                		required:"消息主题必须填写",
+                		maxlength:"消息主题不能大于30个字",
+                	},
+                    userinf: "对象id必须填写",
+                    informationcontent: "消息内容不能为空",
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/information";
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+            	editor.sync(); // 将编译器的内容设置到原来的textarea控件里
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("information/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/information/";
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+
+        })
+    /*]]>*/
+</script>
+</html>

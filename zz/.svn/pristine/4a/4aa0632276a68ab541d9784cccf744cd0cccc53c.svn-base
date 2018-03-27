@@ -1,0 +1,25 @@
+package com.bizdata.zz.project.projectSourceEdit.constant;
+
+/**
+ * Banner展示位置枚举
+ * <p>
+ * Created by sdevil507 on 2017/9/5.
+ */
+public enum ProjectSourceEditPositionEnum {
+    /**
+     * 技能项
+     */
+    SKILL,
+    /**
+     * 风险项
+     */
+    RISK,
+    /**
+     * 设计约束
+     */
+    DESIGN,
+    /**
+     * 用户场景
+     */
+    CUSTOMER
+}

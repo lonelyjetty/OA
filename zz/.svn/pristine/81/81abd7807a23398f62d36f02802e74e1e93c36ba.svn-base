@@ -1,0 +1,50 @@
+package com.bizdata.zz.project.model.repository;
+
+import java.util.List;
+
+import javax.transaction.Transactional;
+
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+
+import com.bizdata.zz.project.model.domain.ProductModel;
+
+import me.sdevil507.base.JpaBaseRepository;
+
+/**
+ * BannerRepository
+ * <p>
+ * Created by sdevil507 on 2017/9/5.
+ */
+public interface ProductModelRepository extends JpaBaseRepository<ProductModel, String> {
+	
+	
+	/**
+	 *  根据项目的id查找相关的子节点信息
+	 * @Title: deleteByIslocked 
+	 * @Description: TODO
+	 * @param id
+	 * @return
+	 * @return: int
+	 */
+	@Query(value="select * from zz_product_model_main where parent_id=:id",nativeQuery=true)
+	List<ProductModel> queryByProductId(@Param("id")String id);
+	
+	
+	@Query(value="select * from zz_product_model_main where parent_id = 0 order by id desc",nativeQuery=true)
+	List<ProductModel> getProductModelAllById();
+	
+	/**
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@Modifying
+	@Transactional
+	@Query(value="delete from zz_product_model_main where parent_id =:id ",nativeQuery=true)
+	void delPCModel(@Param("id")String id);
+	
+	@Query(value="select id from goods order by id desc limit 1",nativeQuery=true)
+	String getLastId();
+}

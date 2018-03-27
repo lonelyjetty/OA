@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <title>资讯位置新增</title>
+    <link rel="stylesheet" th:href="@{/assets/css/jquery-ui.css}"/>
+    <link rel="stylesheet" th:href="@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.css}"/>
+    <style type="text/css">
+
+    </style>
+</head>
+<!-- ajax layout which only needs content area -->
+<div class="page-header">
+    <h1>资讯位置新增</h1>
+</div>
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- form表单 -->
+        <form class="form-horizontal" id="from-detail" role="form">
+        	<input type="hidden" name="state" value="NOMAL"/>
+            <!-- 资讯id -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="informId"> 资讯id:</label>
+
+                <div class="col-sm-3">
+                    <input type="text" name="informId" id="informId" placeholder="资讯id"
+                           class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+
+            <!-- 标题 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="title"> 标题:</label>
+                <div class="col-sm-3">
+                    <input type="text" name="title" id="title" placeholder="标题" class="col-xs-10 col-sm-12"/>
+                </div>
+            </div>
+
+            <!-- 位置类型 -->
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="location"> 位置类型:</label>
+                <div class="col-sm-3">
+				<select id="location" name="location" class="form-control">
+	            	<option value="">全部</option>
+	            	<option value="TOP_INFORM">首页资讯</option>
+	            	<option value="SPORT_INFORM">运动资讯</option>
+	            	<option value="SLEEP_INFORM">睡眠资讯</option>
+	            	<option value="THIN_INFORM">瘦身资讯</option>
+	        	</select>
+	        	</div>
+            </div>
+            <!-- 排序 -->
+			<div class="form-group">
+					<label class="col-sm-3 control-label no-padding-right" for="pic">排序:</label>
+					<div class="col-sm-3">
+					<button type="button" id="btndownn" class="btn btn-sm btn-danger">
+					<i class="icon-only  ace-icon ace-icon fa fa-minus bigger-110"></i>
+					</button>
+					<input type="text" id="sort" name="sort" class="col-xs-2 col-sm-0" value="0"></input>
+					<button type="button" id="btnupp" class="btn btn-sm btn-success">
+					<i class="icon-only  ace-icon ace-icon fa fa-plus bigger-110"></i>				
+					</button>
+					</div>
+			</div>
+
+			<!-- 提交返回 -->
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button id="back" class="btn" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        返回
+                    </button>
+
+                    &nbsp; &nbsp; &nbsp;
+                    <button id="commit" class="btn btn-success" type="button">
+                        <i class="ace-icon fa fa-check bigger-110"></i>
+                        提交
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- inline scripts related to this page -->
+<script type="text/javascript" th:inline="javascript">
+    /*<![CDATA[*/
+    var scripts = [
+        null,
+        /*[[@{/assets/js/jquery.validate.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-timepicker-addon.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/jquery-ui-sliderAccess.js}]]*/ '',
+        /*[[@{/assets/js/jquery-ui-timepicker-addon/i18n/jquery-ui-timepicker-zh-CN.js}]]*/ '',
+        null
+    ]
+    
+    
+    $('.page-content-area').ace_ajax(
+        'loadScripts',
+        scripts,
+        function () {
+            //设置校验
+            $('#from-detail').validate({
+                errorElement: 'div',
+                errorClass: 'help-block',
+                focusInvalid: false,
+                ignore: "",
+                rules: {
+                	informId: {
+                        required: true
+                    },
+                    title: {
+                        required: true
+                    },
+                    location: {
+                        required: true
+                    },
+                },
+
+                messages: {
+                	informId: "资讯ID不能为空",
+                	title: "标题不能为空",
+                	location: "请选择位置类型",
+                },
+
+                highlight: function (e) {
+                    $(e).closest('.form-group').addClass('has-error');
+                },
+
+                success: function (e) {
+                    $(e).closest('.form-group').removeClass('has-error');
+                    $(e).remove();
+                },
+
+                errorPlacement: function (error, element) {
+                    if (element.is('input[type=checkbox]') || element.is('input[type=radio]')) {
+                        var controls = element.closest('div[class*="col-"]');
+                        if (controls.find(':checkbox,:radio').length > 1)
+                            controls.append(error);
+                        else
+                            error.insertAfter(element.nextAll('.lbl:eq(0)').eq(0));
+                    } else if (element.is('.select2')) {
+                        error.insertAfter(element.siblings('[class*="select2-container"]:eq(0)'));
+                    } else if (element.is('.chosen-select')) {
+                        error.insertAfter(element.siblings('[class*="chosen-container"]:eq(0)'));
+                    } else
+                        error.insertAfter(element.parent());
+                },
+            });
+            
+            // 返回
+            $('#back').click(function () {
+                location.href = "#page/inform_location"
+            })
+
+            // 执行提交
+            $('#commit').click(function () {
+                if (!$('#from-detail').valid())
+                    return false;
+                $.post("inform_location/saveOrUpdate", $("#from-detail").serialize(), function (data) {
+                    if (0 === data.code) {
+                        location.href = "#page/inform_location"
+                    } else {
+                        alert(data.message)
+                    }
+                }, "JSON")
+            })
+        })
+        
+        $('#btndownn').click(function(){
+        	if($('#sort').val() == '0')
+        		return false;
+        	$('#sort').val(parseInt($('#sort').val()) - 1);
+        })
+        $('#btnupp').click(function(){
+    		$('#sort').val(parseInt($('#sort').val()) + 1);
+    	})
+        
+    /*]]>*/
+</script>
+</html>

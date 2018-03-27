@@ -1,0 +1,193 @@
+package com.bizdata.zz.project.projectSourceEdit.domain;
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.Table;
+
+import com.bizdata.app.banner.constant.BannerPositionEnum;
+import com.bizdata.zz.project.projectSourceEdit.constant.ProjectSourceEditPositionEnum;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import me.sdevil507.base.JpaUUIDBaseEntity;
+
+/**
+ * zz_product_main实体
+ * <p>
+ * Created by xq on 2017/12/7.
+ */
+@Table(name = "zz_project_source_edit")
+@Entity
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ProjectSourceEdit extends JpaUUIDBaseEntity {
+
+    /**
+     * banner名称
+     */
+    @Column
+    private String name;
+
+    /**
+     * banner图片地址
+     */
+    @Column
+    private String picUrl;
+
+    /**
+     * 排序号
+     */
+    @Column
+    private int serialNum;
+
+    /**
+     * 开始时间
+     */
+    @Column
+    private Date startTime;
+
+    /**
+     * 结束时间
+     */
+    @Column
+    private Date endTime;
+
+    /**
+     * 跳转URL
+     */
+    @Column
+    private String targetUrl;
+    /**
+     * 具体内容
+     */
+    @Column
+    private String notes;
+    
+    /**
+     * banner展示位置
+     *
+     * @see BannerPositionEnum
+     */
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ProjectSourceEditPositionEnum bannerPositionEnum;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getPicUrl() {
+		return picUrl;
+	}
+
+	public void setPicUrl(String picUrl) {
+		this.picUrl = picUrl;
+	}
+
+	public int getSerialNum() {
+		return serialNum;
+	}
+
+	public void setSerialNum(int serialNum) {
+		this.serialNum = serialNum;
+	}
+
+	public Date getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(Date startTime) {
+		this.startTime = startTime;
+	}
+
+	public Date getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(Date endTime) {
+		this.endTime = endTime;
+	}
+
+	public String getTargetUrl() {
+		return targetUrl;
+	}
+
+	public void setTargetUrl(String targetUrl) {
+		this.targetUrl = targetUrl;
+	}
+
+	public ProjectSourceEditPositionEnum getBannerPositionEnum() {
+		return bannerPositionEnum;
+	}
+
+	public void setBannerPositionEnum(ProjectSourceEditPositionEnum bannerPositionEnum) {
+		this.bannerPositionEnum = bannerPositionEnum;
+	}
+	
+	
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ProjectSourceEdit other = (ProjectSourceEdit) obj;
+		if (bannerPositionEnum != other.bannerPositionEnum)
+			return false;
+		if (endTime == null) {
+			if (other.endTime != null)
+				return false;
+		} else if (!endTime.equals(other.endTime))
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		if (picUrl == null) {
+			if (other.picUrl != null)
+				return false;
+		} else if (!picUrl.equals(other.picUrl))
+			return false;
+		if (serialNum != other.serialNum)
+			return false;
+		if (startTime == null) {
+			if (other.startTime != null)
+				return false;
+		} else if (!startTime.equals(other.startTime))
+			return false;
+		if (targetUrl == null) {
+			if (other.targetUrl != null)
+				return false;
+		} else if (!targetUrl.equals(other.targetUrl))
+			return false;
+		return true;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((bannerPositionEnum == null) ? 0 : bannerPositionEnum.hashCode());
+		result = prime * result + ((endTime == null) ? 0 : endTime.hashCode());
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		result = prime * result + ((picUrl == null) ? 0 : picUrl.hashCode());
+		result = prime * result + serialNum;
+		result = prime * result + ((startTime == null) ? 0 : startTime.hashCode());
+		result = prime * result + ((targetUrl == null) ? 0 : targetUrl.hashCode());
+		return result;
+	}
+	
+    
+}
